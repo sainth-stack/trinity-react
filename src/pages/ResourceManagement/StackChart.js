@@ -69,10 +69,22 @@ export const options = {
     enabled: false,
     position: 'nearest',
     external: externalTooltipHandler
+  },
+  scales: {
+    x: {
+      grid: {
+        display: false
+      }
+    },
+    y: {
+      grid: {
+        display: false
+      }
+    }
   }
 };
 
-const labels = ['Feb 2023', 'Mar 2023', 'Apr 2023', 'Jun 2023', 'Jul 2023', 'Aug 2023', 'Sep 2023','Oct 2023','Nov 2023','Dec 2023'];
+const labels = ['Feb 2023', 'Mar 2023', 'Apr 2023','May 2023', 'Jun 2023', 'Jul 2023', 'Aug 2023', 'Sep 2023','Oct 2023','Nov 2023','Dec 2023'];
 export const data = {
   labels,
   datasets: [
@@ -105,11 +117,11 @@ export const data = {
     {
       id: 1,
       label: 'Dataset 2',
-      data: [1, 20, 20, 8, 44, 30, 10,20,25,34],
-      backgroundColor: 'lightGreen',
+      data: [1, 20, 20, 23,8, 44, 30, 10,20,25,34],
+      backgroundColor: 'lightBlue',
     },
   ],
 };
 export default function StackChart() {
-  return <Bar options={options} data={data} />;
+  return <Bar options={options} data={data} />
 }

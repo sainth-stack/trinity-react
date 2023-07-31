@@ -1,17 +1,21 @@
 import './styles.css'
 import { FiSearch } from 'react-icons/fi'
 import StackChart from './StackChart';
+import { BubbleChartE } from './bubbleChart';
+import { Accordian } from './accordian';
+import { LuUserPlus } from 'react-icons/lu'
+import { ResourceAvailability } from './table';
 export const ResourceManagement = () => {
     function Heading(props) {
         return (
             <div className="d-flex justify-content-between align-items-center p-2">
-                <h6>{props.title}</h6>
+                {props.icon && props.icon} <h5>{props.title}</h5>
                 {props.title === "OKR Progress" && <button
                     className="text-left justify-content-start bg-green text-light"
                     style={{ borderRadius: "4px", textTransform: "uppercase" }}
-                    // onClick={() => {
-                    //     props.setOrderModalShow3(true)
-                    // }}
+                // onClick={() => {
+                //     props.setOrderModalShow3(true)
+                // }}
                 >
                     Add OKR
                 </button>}
@@ -32,9 +36,9 @@ export const ResourceManagement = () => {
                     >
                         <button
                             className="dropdown-item text-capitalize text-left justify-content-start"
-                            // onClick={() => {
-                            //     downloadSheet2()
-                            // }}
+                        // onClick={() => {
+                        //     downloadSheet2()
+                        // }}
                         >
                             Export as Excel
                         </button>
@@ -45,15 +49,14 @@ export const ResourceManagement = () => {
         );
     }
     return (
-        <>
-            <div className="p-2 d-flex" style={{
+        <div>
+            <div className="p-3 pb-1 pt-4 ps-3 d-flex" style={{
                 justifyContent: 'space-between'
             }} >
                 {/* <TitleHeader name="Resource Management" /> */}
                 <h1 className="top-header">Resource Management</h1>
                 <div style={{ width: '80%' }}>
-                    <span className="search"><FiSearch /></span>
-                    <input type="text" style={{
+                    <input type="text" className='search-input' style={{
                         width: '100%', height: '38px', borderRadius: '6px',
                         backgroundColor: 'lightgrey',
                         padding: '13.999px 250.001px 13.941px 33.999px',
@@ -66,12 +69,34 @@ export const ResourceManagement = () => {
                     />
                 </div>
             </div>
-            <div className={`col-md-8 m-0 p-0`} >
-                <div className={`gradient-color card shadow rounded m-1 p-1 graphCardHeight`}>
-                <Heading title="Resource Allocation" data={[]} employees={[]} />
-                    <StackChart data={[]} labels={['Remaining', 'Achieved']} />
+            <div className='row p-4 pt-3'>
+                <div className={`col-md-8 m-0 p-0`} >
+                    <div className={`gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 `}>
+                        <Heading title="Resource Allocation" data={[]} employees={[]} />
+                        <hr />
+                        <StackChart data={[]} labels={['Remaining', 'Achieved']} />
+                    </div>
+                    {/* <div className='col-md-8 availability ml-0 mr-0 p-0'> */}
+                    <div className={`gradient-color card shadow rounded m-1 mt-2 p-1 graphCardHeight border-0`}>
+                        <Heading title="Resource Availability" data={[]} employees={[]} />
+                        <hr />
+                        {/* <BubbleChartE /> */}
+                        <ResourceAvailability />
+                    </div>
+                    {/* </div> */}
+                </div>
+                <div className={`col-md-4 m-0 p-0`}>
+                    <div className={`gradient-color card shadow rounded m-1 p-1 me-0 pe-0 graphCardHeight border-0`}>
+                        <Heading title="Resource Requests" data={[]} employees={[]} />
+                        <Accordian />
+                    </div>
+                    <div className={`gradient-color card shadow rounded m-1 p-1 me-0 pe-0 graphCardHeight border-0`}>
+                        <Heading title="Skills" data={[]} employees={[]} />
+                        <hr style={{ padding: 0 }} />
+                        <BubbleChartE />
+                    </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

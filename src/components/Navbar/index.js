@@ -14,11 +14,6 @@ function Navbar() {
   return (
     <>
       <nav class="navbar navbar-expand-lg  navbar-light bg-white shadow-sm sticky-top bg-white-fixed">
-        {/* <!--<img src="{% static 'images/logo.png' %}" id="logo" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-   <!-- <img src="{% static 'images/logo1.png' %}" id="logo" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--> */}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" style={{ marginLeft: '0px' }} id="navbarNav">
           <img
             src={Logo}
