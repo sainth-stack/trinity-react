@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from '../../assets/images/Logo2.png'
 import avatar from '../../assets/svg/avatar.svg'
-function Navbar() {
+function NavbarV2() {
   const navigate = useNavigate()
   const handleLogout = () => {
     localStorage.removeItem("token")
@@ -13,16 +13,22 @@ function Navbar() {
   }
   return (
     <>
-      <nav class="navbar navbar-expand-lg  navbar-light bg-white shadow-sm sticky-top bg-white-fixed">
+      <nav class="navbar navbar-expand-lg  navbar-light bg-white shadow-sm sticky-top" style={{
+        position:'fixed',
+        top:0,
+        left:220,
+        right:0
+      }}>
         <div class="collapse navbar-collapse" style={{ marginLeft: '0px' }} id="navbarNav">
-          <img
+          {/* <img
             src={Logo}
             style={{ width: '160px' }}
             id="logo_RL"
-          />
+          /> */}
           <div style={{
-            marginLeft:'80px',
-            marginTop:'10px',
+            marginLeft:'10px',
+            marginTop:'0px',
+            padding:'12px',
             fontWeight:700,
             fontSize:'23px'
           }}>
@@ -61,4 +67,4 @@ function Navbar() {
   );
 
 }
-export default Navbar;
+export default NavbarV2;
