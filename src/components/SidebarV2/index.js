@@ -21,39 +21,21 @@ export default function SidebarV2() {
         </div>
         <ul class="sidebar-list-items" id="menu" style={{marginLeft:'10px'}}>
           <li class="sidebar-list-item pt-4 cursor-pointer">
-            <Link to="#" class="nav-link align-middle px-2 nav-item">
+            <Link to="/temp" class="nav-link align-middle px-2 nav-item">
               {/* <HiUserGroup size={20} /> */}
-              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Plant Search</span>
+              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Temperature</span>
             </Link>
           </li>
           <li class="sidebar-list-item pt-4 cursor-pointer">
-            <Link to="#" class="nav-link align-middle px-2 nav-item">
+            <Link to="/humidity" class="nav-link align-middle px-2 nav-item">
               {/* <HiUserGroup size={20} /> */}
-              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Rooms</span>
+              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Humidity</span>
             </Link>
           </li>
           <li class="sidebar-list-item pt-4 cursor-pointer">
-            <Link to="#" class="nav-link align-middle px-2 nav-item">
+            <Link to="/harvest" class="nav-link align-middle px-2 nav-item">
               {/* <HiUserGroup size={20} /> */}
-              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Strains</span>
-            </Link>
-          </li>
-          <li class="sidebar-list-item pt-4 cursor-pointer">
-            <Link to="#" class="nav-link align-middle px-2 nav-item">
-              {/* <HiUserGroup size={20} /> */}
-              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Hardware</span>
-            </Link>
-          </li>
-          <li class="sidebar-list-item pt-4 cursor-pointer">
-            <Link to="#" class="nav-link align-middle px-2 nav-item">
-              {/* <HiUserGroup size={20} /> */}
-              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Automation</span>
-            </Link>
-          </li>
-          <li class="sidebar-list-item pt-4 cursor-pointer">
-            <Link to="#" class="nav-link align-middle px-2 nav-item">
-              {/* <HiUserGroup size={20} /> */}
-              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Analysis/AI</span>
+              <span class="ms-1 d-none d-sm-inline link-text text-black px-1">Harvest</span>
             </Link>
           </li>
         </ul>

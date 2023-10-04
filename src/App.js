@@ -8,7 +8,9 @@ import { Projects } from './pages/Projects';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Report } from './pages/Reports';
 import { Twin } from './pages/Twin';
+import {Humidity} from './pages/Humidity'
 import { AdminLayoutV2 } from './layoutV2';
+import { Harvest } from './pages/Harvest';
 function App() {
   return (
     <BrowserRouter>
@@ -21,7 +23,9 @@ function App() {
         </Route>
         <Route path="/reports" element={<Report />} />
         <Route path="/" element={<AdminLayoutV2 />}>
-          <Route path="/twin" element={<Twin />} />
+          <Route path="/temp" element={<Twin />} />
+          <Route path="/humidity" element={<Humidity />} />
+          <Route path="/harvest" element={<Harvest />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

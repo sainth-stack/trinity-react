@@ -3,14 +3,28 @@ import React, { useEffect, useState } from "react";
 // import "./styles.scss";
 // import userprofile from '../../assets/images/userprofile.png'
 import { useNavigate } from "react-router-dom";
-import Logo from '../../assets/images/Logo2.png'
+import { useLocation } from "react-router-dom";
 import avatar from '../../assets/svg/avatar.svg'
+
 function NavbarV2() {
   const navigate = useNavigate()
+  const [name, setName] = useState("Dashboard")
+
   const handleLogout = () => {
     localStorage.removeItem("token")
     navigate('/login')
   }
+
+  let location = useLocation();
+  useEffect(() => {
+    if (location.pathname == '/temp') {
+      setName("Temperature")
+    } else if (location.pathname == '/humidity') {
+      setName("Humidity")
+    } else if (location.pathname == '/harvest') {
+      setName("Harvest")
+    }
+  }, [location.pathname])
   return (
     <>
       <nav class="navbar navbar-expand-lg  navbar-light bg-white shadow-sm sticky-top" style={{
@@ -32,7 +46,7 @@ function NavbarV2() {
             fontWeight:700,
             fontSize:'23px'
           }}>
-            Dashboard
+            {name}
           </div>
         </div>
         <div class="nav-item dropdown d-flex align-items-center mr-2 pr-5" style={{ color: 'black' }}>

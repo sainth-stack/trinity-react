@@ -6,7 +6,7 @@ import './index.css'
 import { addDays } from 'date-fns';
 import moment from 'moment';
 
-export const Twin = () => {
+export const Humidity = () => {
     const labels1 = ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05']
     const data1 = {
         labels: labels1,
@@ -40,100 +40,6 @@ export const Twin = () => {
                 data: [69, 70, 68, 64, 69, 66, 65],
                 borderColor: 'rgba(61, 155, 53, 0.8)',
                 backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            },
-        ],
-    };
-    const fin1 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'week1',
-                data: [61, 64, 72, 60, 73, 68, 64],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            },
-            {
-                label: 'week2',
-                data: [70, 65, 65, 68, 67, 77, 71],
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week3',
-                data: [63, 70, 68, 68, 68, 67, 66],
-                borderColor: 'rgba(53, 162, 235, 0.5)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week4',
-                data: [65, 68, 65, 68, 68, 71, 73],
-                borderColor: 'rgba(155, 88, 53, 0.8)',
-                backgroundColor: 'rgba(155, 88, 53, 0.8)',
-            },
-            {
-                label: 'week5',
-                data: [65, 70, 60, 63, 66, 62, 63],
-                borderColor: 'rgba(61, 155, 53, 0.8)',
-                backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            },
-            {
-                label: 'week6',
-                data: [69, 70, 66, 60, 66, 68, 70],
-                borderColor: 'rgba(59, 128, 220, 0.8)',
-                backgroundColor: 'rgba(59, 128, 220, 0.8)',
-            },
-            {
-                label: 'week7',
-                data: [69, 68, 68, 67, 72, 70, 73],
-                borderColor: 'rgba(77, 51, 154, 0.8)',
-                backgroundColor: 'rgba(77, 51, 154, 0.8)',
-            },
-        ],
-    };
-    const fin2 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'week1',
-                data: [64, 65, 66, 65, 63, 66, 64],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            },
-            {
-                label: 'week2',
-                data: [69, 74, 66, 65, 68, 70, 71],
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week3',
-                data: [69, 70, 68, 70, 69, 65, 64],
-                borderColor: 'rgba(53, 162, 235, 0.5)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week4',
-                data: [70, 75, 66, 68, 73, 73, 70],
-                borderColor: 'rgba(155, 88, 53, 0.8)',
-                backgroundColor: 'rgba(155, 88, 53, 0.8)',
-            },
-            {
-                label: 'week5',
-                data: [66, 72, 68, 63, 69, 65, 68],
-                borderColor: 'rgba(61, 155, 53, 0.8)',
-                backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            },
-            {
-                label: 'week6',
-                data: [69, 70, 66, 60, 68, 69, 72],
-                bdataorderColor: 'rgba(59, 128, 220, 0.8)',
-                backgroundColor: 'rgba(59, 128, 220, 0.8)',
-            },
-            {
-                label: 'week7',
-                data: [72, 67, 68, 60, 72, 68, 60],
-                borderColor: 'rgba(77, 51, 154, 0.8)',
-                backgroundColor: 'rgba(77, 51, 154, 0.8)',
             },
         ],
     };
@@ -213,8 +119,8 @@ export const Twin = () => {
     }
 
     const getRandomData = (diff) => {
-        const max = 70;
-        const min = 45;
+        const max = 60;
+        const min = 40;
         const randomNumbers = [];
         for (let i = 0; i <= diff; i++) {
             randomNumbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
