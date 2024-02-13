@@ -5,11 +5,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import avatar from '../../assets/svg/avatar.svg'
+import { GoHome } from "react-icons/go";
+import { IoMdSettings } from "react-icons/io";
 
 function NavbarV2() {
   const navigate = useNavigate()
   const [name, setName] = useState("Dashboard")
-
+  const [selectedIcon, setSelectedIcon] = useState('settings')
   const handleLogout = () => {
     localStorage.removeItem("token")
     navigate('/login')
@@ -17,12 +19,12 @@ function NavbarV2() {
 
   let location = useLocation();
   useEffect(() => {
-    if (location.pathname == '/temp') {
-      setName("Temperature")
-    } else if (location.pathname == '/humidity') {
-      setName("Humidity")
-    } else if (location.pathname == '/harvest') {
-      setName("Harvest")
+    if (location.pathname == '/accounts') {
+      setName("Accounts")
+    } else if (location.pathname == '/rooms') {
+      setName("Rooms")
+    } else if (location.pathname == '/hardware') {
+      setName("Hardware")
     }
     else if (location.pathname == '/new-harvest') {
       setName("Harvest")
@@ -32,6 +34,10 @@ function NavbarV2() {
       setName("Dashboard")
     }
   }, [location.pathname])
+  const handleIconClick = (iconName) => {
+    setSelectedIcon(iconName);
+    navigate('/harvest')
+  };
   return (
     <>
       <nav class="navbar navbar-expand-lg  navbar-light bg-white shadow-sm sticky-top" style={{
@@ -56,30 +62,12 @@ function NavbarV2() {
             {name}
           </div>
         </div>
-        <div class="nav-item dropdown d-flex align-items-center mr-2 pr-5" style={{ color: 'black' }}>
-          <img
-            src={avatar}
-            style={{ width: "32px", marginRight: '5px' }}
-            id="logo_RL"
-          />
-          <a
-            className="nav-link dropdown-toggle p-0 m-0 pe-5"
-            href="/#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            style={{ textDecoration: 'none', color: 'black' }}
-          >
-            <span className="fs14 text-dark" title={"Admin"}>
-              {localStorage.getItem("userName") || 'admin'}
-            </span>
-            <i class="bi bi-caret-down-fill"></i>
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style={{ position: "absolute", left: "-30px", top: "35px" }}>
-            <span class="dropdown-item cursor-pointer" style={{cursor:'pointer'}} onClick={()=>navigate('/accounts')}>Settings</span>
-            <span class="dropdown-item cursor-pointer" style={{cursor:'pointer'}} onClick={() => handleLogout()}>Logout</span>
+        <div className="nav-item dropdown d-flex align-items-center mr-2 pr-5 me-4" style={{ color: '#333', backgroundColor: '#fff', padding: '5px', borderRadius: '8px', boxShadow: 'none' }}>
+          <div style={{ cursor: 'pointer', backgroundColor: selectedIcon === 'home' ? '#007bff' : '#ffffff', borderRadius: '10%', padding: '10px', marginRight: '10px' }} onClick={() => handleIconClick('home')}>
+            <GoHome size={30} style={{ color: selectedIcon === 'home' ? '#ffffff' : '#007bff' }} />
+          </div>
+          <div style={{ cursor: 'pointer', backgroundColor: selectedIcon === 'settings' ? '#007bff' : '#ffffff', borderRadius: '10%', padding: '10px' }} onClick={() => handleIconClick('settings')}>
+            <IoMdSettings size={30} style={{ color: selectedIcon === 'settings' ? '#ffffff' : '#007bff' }} />
           </div>
         </div>
       </nav>

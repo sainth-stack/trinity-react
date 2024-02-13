@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import "./styles.css";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
 export default function SidebarV2() {
   const location = useLocation();
   const [selectedItem, setSelectedItem] = useState('');
@@ -11,7 +10,6 @@ export default function SidebarV2() {
   useEffect(() => {
     setSelectedItem(location.pathname);
   }, [location]);
-
   return (
     <div className="shadow sidebar-scroll sticky-top zindex99 bg-white" style={{ overflow: 'auto', width: '220px', height: '100vh' }}>
       <div style={{
@@ -25,11 +23,11 @@ export default function SidebarV2() {
         /> */}
       </div>
       <ul className="sidebar-list-items" id="menu" style={{marginLeft:'10px'}}>
-      <SidebarItem to="/dashboard" label="Dashboard" selected={selectedItem === "/dashboard"} />
-        <SidebarItem to="/temp" label="Temperature" selected={selectedItem === "/temp"} />
-        <SidebarItem to="/humidity" label="Humidity" selected={selectedItem === "/humidity"} />
-        <SidebarItem to="/harvest" label="Harvest" selected={selectedItem === "/harvest"} />
-        <SidebarItem to="/strains" label="Strains" selected={selectedItem === "/strains"} />
+        <SidebarItem to="/accounts" label="Accounts" selected={selectedItem === "/accounts"} />
+        <SidebarItem to="/rooms" label="Rooms" selected={selectedItem === "/rooms"} />
+        <SidebarItem to="/hardware" label="Hardware" selected={selectedItem === "/hardware"} />
+        <SidebarItem to="/api" label="API" selected={selectedItem === "/api"} />
+        <SidebarItem to="/updates" label="Updates" selected={selectedItem === "/updates"} />
       </ul>
     </div>
   );
@@ -37,7 +35,7 @@ export default function SidebarV2() {
 
 // SidebarItem component for individual sidebar items
 function SidebarItem({ to, label, selected }) {
-  const navigate = useNavigate();
+  const navigate=useNavigate()
   return (
     <li className={`sidebar-list-item py-2 cursor-pointer ${selected ? 'selected' : ''}`} style={{cursor:'pointer'}} onClick={()=>navigate(to)}>
       <Link to={to} className={`nav-link align-middle px-2 nav-item`} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>

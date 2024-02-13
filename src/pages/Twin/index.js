@@ -41,6 +41,12 @@ export const Twin = () => {
                 borderColor: 'rgba(61, 155, 53, 0.8)',
                 backgroundColor: 'rgba(61, 155, 53, 0.8)',
             },
+            {
+                label: 'average',
+                data: [65, 65, 65, 65, 65, 65, 65],
+                borderColor: 'rgb(255, 0, 0)',
+                backgroundColor: 'rgb(145, 56, 49)',
+            },
         ],
     };
     const fin1 = {
@@ -188,10 +194,10 @@ export const Twin = () => {
         label: '1A4000312A000F2B0000012395(Blue Dream)', value: "1A4000312A000F2B0000012395(Blue Dream)"
     },
     {
-        label: '1A4000312A000F2B0000012396(Blue Dream)', value: "1A4000312A000F2B0000012396(Blue Dream)"
+        label: '1A4000312A000F2B0000012396(Soure Diesel)', value: "1A4000312A000F2B0000012396(Soure Diesel)"
     },
     {
-        label: '1A4000312A000F2B0000012397(Blue Dream)', value: "1A4000312A000F2B0000012397(Blue Dream)"
+        label: '1A4000312A000F2B0000012397(Golden Goat)', value: "1A4000312A000F2B0000012397(Golden Goat)"
     }
     ]
 
@@ -212,48 +218,54 @@ export const Twin = () => {
         return constantsArray
     }
 
-    const getRandomData = (diff) => {
+    const getRandomData = (diff, avg) => {
         const max = 70;
         const min = 45;
         const randomNumbers = [];
         for (let i = 0; i <= diff; i++) {
-            randomNumbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            randomNumbers.push(avg ? avg : Math.floor(Math.random() * (max - min + 1)) + min);
         }
         return randomNumbers
     }
 
-    const getDataSets = (diff) => {
+    const getDataSets = (diff,strain) => {
         const dataSets = [
+            // {
+            //     label: 'strain',
+            //     data: getRandomData(diff),
+            //     borderColor: 'rgb(255, 99, 132)',
+            //     backgroundColor: 'rgba(108, 97, 91, 0.8)',
+            // },
             {
-                label: 'reading1',
-                data: getRandomData(diff),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            },
-            {
-                label: 'reading2',
+                label: strain,
                 data: getRandomData(diff),
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
+            // {
+            //     label: 'reading3',
+            //     data: getRandomData(diff),
+            //     borderColor: 'rgba(53, 162, 235, 0.5)',
+            //     backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            // },
+            // {
+            //     label: 'reading4',
+            //     data: getRandomData(diff),
+            //     borderColor: 'rgba(155, 88, 53, 0.8)',
+            //     backgroundColor: 'rgba(155, 88, 53, 0.8)',
+            // },
+            // {
+            //     label: 'reading5',
+            //     data: getRandomData(diff),
+            //     borderColor: 'rgba(61, 155, 53, 0.8)',
+            //     backgroundColor: 'rgba(61, 155, 53, 0.8)',
+            // },
             {
-                label: 'reading3',
-                data: getRandomData(diff),
-                borderColor: 'rgba(53, 162, 235, 0.5)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                label: 'average',
+                data: getRandomData(diff, 63),
+                // borderColor: 'rgb(255, 0, 0)',
+                // backgroundColor: 'rgb(145, 56, 49)',
             },
-            {
-                label: 'reading4',
-                data: getRandomData(diff),
-                borderColor: 'rgba(155, 88, 53, 0.8)',
-                backgroundColor: 'rgba(155, 88, 53, 0.8)',
-            },
-            {
-                label: 'reading5',
-                data: getRandomData(diff),
-                borderColor: 'rgba(61, 155, 53, 0.8)',
-                backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            }
         ]
         return dataSets
     }
@@ -267,21 +279,21 @@ export const Twin = () => {
             const labels1 = getLabels(toDate, differenceInDays)
             const data1 = {
                 labels: labels1,
-                datasets: getDataSets(differenceInDays),
+                datasets: getDataSets(differenceInDays,'Blue Dream'),
             };
             setData(data1)
         } else if (tag == "1A4000312A000F2B0000012396") {
             const labels1 = getLabels(toDate, differenceInDays)
             const data1 = {
                 labels: labels1,
-                datasets: getDataSets(differenceInDays),
+                datasets: getDataSets(differenceInDays,'Soure Diesel'),
             };
             setData(data1)
         } else {
             const labels1 = getLabels(toDate, differenceInDays)
             const data1 = {
                 labels: labels1,
-                datasets: getDataSets(differenceInDays),
+                datasets: getDataSets(differenceInDays,'Blue Dream'),
             };
             setData(data1)
         }
@@ -308,7 +320,7 @@ export const Twin = () => {
                         }
                     </select>
                 </label>
-                <div className="d-flex mb-2">
+                <div className="d-flex mb-2" style={{alignItems:'center'}}>
                     <div className="me-2">
                         <span>To:</span>
                         <DatePicker selected={toDate} onChange={date => setToDate(date)} />
@@ -318,10 +330,10 @@ export const Twin = () => {
                         <DatePicker selected={fromDate} onChange={date => setFromDate(date)} />
                     </div>
                     <div className="ms-2">
-                        <button onClick={() => handleFilter()}>submit</button>
+                        <button className="btn btn-primary" onClick={() => handleFilter()}>submit</button>
                     </div>
                 </div>
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}>
+                <div className={`col gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{height:'450px'}}>
                     <Heading title="Overall Cultivation Temperature" data={[]} employees={[]} />
                     <hr />
                     <LineChart data={data} />
