@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactBubbleChart from 'react-bubble-chart';
 import './styles.css'
 // import Actions          from '../Actions';
 import Bubble from '../../assets/images/bubblechart.png'
