@@ -8,7 +8,7 @@ import { Projects } from './pages/Projects';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Report } from './pages/Reports';
 import { Twin } from './pages/Twin';
-import {Humidity} from './pages/Humidity'
+import { Humidity } from './pages/Humidity'
 import { AdminLayoutV2 } from './layoutV2';
 import { Harvest } from './pages/Harvest';
 import { Strains } from './pages/strains';
@@ -24,14 +24,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AdminLayout />}>
-          <Route path="/timesheet" element={<TimeSheet />} />
-          <Route path="/resource-management" element={<ResourceManagement />} />
-          <Route path="/projects" element={<Projects />} />
-          {/* <Route path="/reports" element={<Report />}/> */}
-        </Route>
-        <Route path="/reports" element={<Report />} />
         <Route path="/" element={<AdminLayoutV2 />}>
+        <Route path="/" element={<Dashboard />} />
           <Route path="/temp" element={<Twin />} />
           <Route path="/humidity" element={<Humidity />} />
           <Route path="/new-harvest" element={<Harvest />} />
