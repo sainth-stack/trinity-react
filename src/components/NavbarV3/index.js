@@ -21,17 +21,17 @@ function NavbarV2() {
   useEffect(() => {
     if (location.pathname == '/accounts') {
       setName("Accounts")
-    } else if (location.pathname == '/rooms') {
-      setName("Rooms")
+    } else if (location.pathname == '/layout') {
+      setName("Layout")
     } else if (location.pathname == '/hardware') {
       setName("Hardware")
     }
-    else if (location.pathname == '/new-harvest') {
-      setName("Harvest")
-    } else if (location.pathname == '/strains') {
-      setName("Strains")
-    } else if (location.pathname == '/dashboard') {
-      setName("Dashboard")
+    else if (location.pathname == '/software') {
+      setName("Software")
+    } else if (location.pathname == '/about') {
+      setName("About")
+    } else if (location.pathname == '/updates') {
+      setName("Updates")
     }
   }, [location.pathname])
   const handleIconClick = (iconName) => {

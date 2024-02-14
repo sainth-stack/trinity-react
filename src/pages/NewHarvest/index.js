@@ -6,6 +6,9 @@ import GroupedBarChart from './barChart'
 const generateRandomData = (length) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 100) + 1);
 };
+const generateConstantData = (length,value) => {
+    return Array.from({ length }, () => value);
+};
 
 const data = {
     labels: Array.from({ length: 70 }, (_, i) => `${i + 1}`),
@@ -60,6 +63,7 @@ export const NewHarvest = () => {
                     { label: `${item?.hb} - humidity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
                     { label: `${item?.hb} - light intensity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
                     { label: `${item?.hb} - co2`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
+                    // { label: `${item?.hb} - g/sqft(avg)`, data: generateConstantData(70,66), borderColor: 'red', borderDash: [4, 2],pointRadius: 0,pointStyle: 'line'}
                 ],)
             })
             setGraphData({ ...data, datasets: finData })
@@ -73,8 +77,8 @@ export const NewHarvest = () => {
                 { label: `humidity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
                 { label: `light intensity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
                 { label: `co2`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
+                { label: `avg-g/sqft`, data: generateConstantData(70,66), borderColor: 'red', borderDash: [4, 2],pointRadius: 0,pointStyle: 'line'}
             ],)
-            console.log(finData)
             setGraphData({ ...data,datasets: finData })
         }
     };
@@ -127,7 +131,8 @@ export const NewHarvest = () => {
                     display: false
                 }
             }
-        }
+        },
+        
     };
     return (
         <div className="p-2 mt-4">

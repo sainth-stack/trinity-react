@@ -1,0 +1,84 @@
+/* index.css */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically center align items */
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin: 0; /* Reset margin */
+    font-size: 24px; /* Increase font size for header */
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.buttonsc {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.buttons button:hover {
+    background-color: #0056b3;
+}
+
+.facility {
+    margin: 0 auto 20px; /* Center the facility boxes horizontally */
+    padding: 20px; /* Add padding for better spacing */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.rooms {
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+}
+
+.room {
+    flex: 0 0 calc(50% - 10px); /* Flex basis */
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.details {
+    margin-top: 10px;
+}
+
+.room p {
+    margin: 5px 0;
+}

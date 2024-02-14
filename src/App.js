@@ -16,7 +16,10 @@ import Zwhoosh from './pages/zwhoosh';
 import Dashboard from './pages/dashboard';
 import { NewHarvest } from './pages/NewHarvest';
 import { AdminLayoutV3 } from './layoutV3';
-import { Accounts,Rooms } from './pages/Settings';
+import { Accounts } from './pages/Settings';
+import { Layout } from './pages/Settings/Layout';
+import { Hardware } from './pages/Settings/Hardware';
+import { Software } from './pages/Settings/Software';
 function App() {
   return (
     <BrowserRouter>
@@ -38,10 +41,10 @@ function App() {
         </Route>
         <Route path="/" element={<AdminLayoutV3 />}>
           <Route path="/accounts" element={<Accounts />} />
-          <Route path="/rooms" element={<Rooms />} />
-          <Route path="/hardware" element={<Rooms />} />
-          <Route path="/api" element={<Rooms />} />
-          <Route path="/updates" element={<Rooms />} />
+          <Route path="/layout" element={<Layout />} />
+          <Route path="/hardware" element={<Hardware />} />
+          <Route path="/software" element={<Software />} />
+          <Route path="/updates" element={<Software />} />
         </Route>
         <Route path="/zwhoosh" element={<Zwhoosh />} />
         <Route path="/login" element={<Login />} />

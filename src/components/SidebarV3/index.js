@@ -24,9 +24,9 @@ export default function SidebarV2() {
       </div>
       <ul className="sidebar-list-items" id="menu" style={{marginLeft:'10px'}}>
         <SidebarItem to="/accounts" label="Accounts" selected={selectedItem === "/accounts"} />
-        <SidebarItem to="/rooms" label="Rooms" selected={selectedItem === "/rooms"} />
+        <SidebarItem to="/layout" label="Layout" selected={selectedItem === "/layout"} />
         <SidebarItem to="/hardware" label="Hardware" selected={selectedItem === "/hardware"} />
-        <SidebarItem to="/api" label="API" selected={selectedItem === "/api"} />
+        <SidebarItem to="/software" label="Software" selected={selectedItem === "/software"} />
         <SidebarItem to="/updates" label="Updates" selected={selectedItem === "/updates"} />
       </ul>
     </div>
