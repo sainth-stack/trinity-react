@@ -113,6 +113,7 @@ export const Layout = () => {
                                 <div className="headerContainer">
                                     <h3 onClick={() => setDisplayNotes(!displayNotes)} style={{cursor:'pointer'}}>{facility.facilityName}</h3>
                                     <div style={{ display: 'flex', gap: '10px' }}>
+                                    <button className="buttonsc" onClick={() => toggleEditFacility(facility.id)}>Add</button>
                                         <button className="buttonsc" onClick={() => toggleEditFacility(facility.id)}>Edit</button>
                                     </div>
                                 </div>

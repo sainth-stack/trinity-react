@@ -27,7 +27,7 @@ export default function SidebarV2() {
         <SidebarItem to="/layout" label="Layout" selected={selectedItem === "/layout"} />
         <SidebarItem to="/hardware" label="Hardware" selected={selectedItem === "/hardware"} />
         <SidebarItem to="/software" label="Software" selected={selectedItem === "/software"} />
-        <SidebarItem to="/updates" label="Updates" selected={selectedItem === "/updates"} />
+        <SidebarItem to="/updates" label="About Us" selected={selectedItem === "/updates"} />
       </ul>
     </div>
   );

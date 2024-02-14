@@ -38,7 +38,7 @@ export const Software = () => {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Metric</td>
+                        <td>METRC</td>
                         <td><span className="chip active">Active</span></td>
                         <td>
                             {editMode ? (
@@ -65,7 +65,7 @@ export const Software = () => {
                         <td>sample-api-key</td>
                     </tr>
                     <tr>
-                        <td>Status</td>
+                        <td>Third Party</td>
                         <td><span className="chip inactive">Inactive</span></td>
                         <td>sample-api-key</td>
                     </tr>
