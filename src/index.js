@@ -6,11 +6,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "font-awesome/css/font-awesome.min.css";
 import reportWebVitals from './reportWebVitals';
+import HttpsRedirect from 'react-https-redirect';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <HttpsRedirect>
+      <App />
+    </HttpsRedirect >
   </React.StrictMode>
 );
 
