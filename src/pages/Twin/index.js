@@ -49,104 +49,10 @@ export const Twin = () => {
             },
         ],
     };
-    const fin1 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'week1',
-                data: [61, 64, 72, 60, 73, 68, 64],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            },
-            {
-                label: 'week2',
-                data: [70, 65, 65, 68, 67, 77, 71],
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week3',
-                data: [63, 70, 68, 68, 68, 67, 66],
-                borderColor: 'rgba(53, 162, 235, 0.5)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week4',
-                data: [65, 68, 65, 68, 68, 71, 73],
-                borderColor: 'rgba(155, 88, 53, 0.8)',
-                backgroundColor: 'rgba(155, 88, 53, 0.8)',
-            },
-            {
-                label: 'week5',
-                data: [65, 70, 60, 63, 66, 62, 63],
-                borderColor: 'rgba(61, 155, 53, 0.8)',
-                backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            },
-            {
-                label: 'week6',
-                data: [69, 70, 66, 60, 66, 68, 70],
-                borderColor: 'rgba(59, 128, 220, 0.8)',
-                backgroundColor: 'rgba(59, 128, 220, 0.8)',
-            },
-            {
-                label: 'week7',
-                data: [69, 68, 68, 67, 72, 70, 73],
-                borderColor: 'rgba(77, 51, 154, 0.8)',
-                backgroundColor: 'rgba(77, 51, 154, 0.8)',
-            },
-        ],
-    };
-    const fin2 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'week1',
-                data: [64, 65, 66, 65, 63, 66, 64],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            },
-            {
-                label: 'week2',
-                data: [69, 74, 66, 65, 68, 70, 71],
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week3',
-                data: [69, 70, 68, 70, 69, 65, 64],
-                borderColor: 'rgba(53, 162, 235, 0.5)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-            {
-                label: 'week4',
-                data: [70, 75, 66, 68, 73, 73, 70],
-                borderColor: 'rgba(155, 88, 53, 0.8)',
-                backgroundColor: 'rgba(155, 88, 53, 0.8)',
-            },
-            {
-                label: 'week5',
-                data: [66, 72, 68, 63, 69, 65, 68],
-                borderColor: 'rgba(61, 155, 53, 0.8)',
-                backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            },
-            {
-                label: 'week6',
-                data: [69, 70, 66, 60, 68, 69, 72],
-                bdataorderColor: 'rgba(59, 128, 220, 0.8)',
-                backgroundColor: 'rgba(59, 128, 220, 0.8)',
-            },
-            {
-                label: 'week7',
-                data: [72, 67, 68, 60, 72, 68, 60],
-                borderColor: 'rgba(77, 51, 154, 0.8)',
-                backgroundColor: 'rgba(77, 51, 154, 0.8)',
-            },
-        ],
-    };
     const [data, setData] = useState(data1)
     const [toDate, setToDate] = useState(new Date("2023-01-01"));
     const [fromDate, setFromDate] = useState(new Date("2023-02-19"));
-    const [tag, setTag] = useState("1A4000312A000F2B0000012395(Blue Dream)")
+    const [tag, setTag] = useState("Room1")
     function Heading(props) {
         return (
             <div className="d-flex justify-content-between align-items-center p-2">
@@ -191,13 +97,13 @@ export const Twin = () => {
     }
 
     const plantTags = [{
-        label: '1A4000312A000F2B0000012395(Blue Dream)', value: "1A4000312A000F2B0000012395(Blue Dream)"
+        label: 'Room1', value: "Room1"
     },
     {
-        label: '1A4000312A000F2B0000012396(Soure Diesel)', value: "1A4000312A000F2B0000012396(Soure Diesel)"
+        label: 'Room2', value: "Room2"
     },
     {
-        label: '1A4000312A000F2B0000012397(Golden Goat)', value: "1A4000312A000F2B0000012397(Golden Goat)"
+        label: 'Room3', value: "Room3"
     }
     ]
 
@@ -211,16 +117,15 @@ export const Twin = () => {
         function addConstant(value) {
             constantsArray.push(value);
         }
-        for (let i = 1; i <= diff + 1; i++) {
+        for (let i = 0; i < diff + 1; i++) {
             addConstant(`${moment(addDays(toDate, i)).format("YYYY-MM-DD")}`);
         }
-        console.log(constantsArray)
         return constantsArray
     }
 
-    const getRandomData = (diff, avg) => {
-        const max = 70;
-        const min = 45;
+    const getRandomData = (diff, avg,maximum,minimum) => {
+        const max = maximum || 70;
+        const min = minimum || 50;
         const randomNumbers = [];
         for (let i = 0; i <= diff; i++) {
             randomNumbers.push(avg ? avg : Math.floor(Math.random() * (max - min + 1)) + min);
@@ -228,7 +133,7 @@ export const Twin = () => {
         return randomNumbers
     }
 
-    const getDataSets = (diff,strain) => {
+    const getDataSets = (diff, strain) => {
         const dataSets = [
             // {
             //     label: 'strain',
@@ -237,35 +142,35 @@ export const Twin = () => {
             //     backgroundColor: 'rgba(108, 97, 91, 0.8)',
             // },
             {
-                label: strain,
+                label: "Temperature",
                 data: getRandomData(diff),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                borderColor: '#88CCEE',
+                backgroundColor: '#88CCEE',
             },
-            // {
-            //     label: 'reading3',
-            //     data: getRandomData(diff),
-            //     borderColor: 'rgba(53, 162, 235, 0.5)',
-            //     backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            // },
-            // {
-            //     label: 'reading4',
-            //     data: getRandomData(diff),
-            //     borderColor: 'rgba(155, 88, 53, 0.8)',
-            //     backgroundColor: 'rgba(155, 88, 53, 0.8)',
-            // },
-            // {
-            //     label: 'reading5',
-            //     data: getRandomData(diff),
-            //     borderColor: 'rgba(61, 155, 53, 0.8)',
-            //     backgroundColor: 'rgba(61, 155, 53, 0.8)',
-            // },
             {
-                label: 'average',
-                data: getRandomData(diff, 63),
-                // borderColor: 'rgb(255, 0, 0)',
-                // backgroundColor: 'rgb(145, 56, 49)',
+                label: "Humidity",
+                data: getRandomData(diff,false,65,45),
+                borderColor: '#44AA99',
+                backgroundColor: '#44AA99',
             },
+            {
+                label: 'CO2',
+                data: getRandomData(diff,false,300,1200),
+                borderColor: '#332288',
+                backgroundColor: '#332288',
+            },
+            {
+                label: 'LSI',
+                data: getRandomData(diff,false,300,1200),
+                borderColor: '#999933',
+                backgroundColor: '#999933',
+            },
+            // {
+            //     label: 'average',
+            //     data: getRandomData(diff, 63),
+            //     // borderColor: 'rgb(255, 0, 0)',
+            //     // backgroundColor: 'rgb(145, 56, 49)',
+            // },
         ]
         return dataSets
     }
@@ -279,21 +184,21 @@ export const Twin = () => {
             const labels1 = getLabels(toDate, differenceInDays)
             const data1 = {
                 labels: labels1,
-                datasets: getDataSets(differenceInDays,'Blue Dream'),
+                datasets: getDataSets(differenceInDays, 'Blue Dream'),
             };
             setData(data1)
         } else if (tag == "1A4000312A000F2B0000012396") {
             const labels1 = getLabels(toDate, differenceInDays)
             const data1 = {
                 labels: labels1,
-                datasets: getDataSets(differenceInDays,'Soure Diesel'),
+                datasets: getDataSets(differenceInDays, 'Soure Diesel'),
             };
             setData(data1)
         } else {
             const labels1 = getLabels(toDate, differenceInDays)
             const data1 = {
                 labels: labels1,
-                datasets: getDataSets(differenceInDays,'Blue Dream'),
+                datasets: getDataSets(differenceInDays, 'Blue Dream'),
             };
             setData(data1)
         }
@@ -307,9 +212,10 @@ export const Twin = () => {
     return (
         <div className="ms-4 me-4">
             <div className="row mt-3">
+                <div style={{display:'flex',gap:'20px',marginBottom:'10px'}}>
                 <label>
-                    <span className="mb-2">Choose a Plant Tag:</span>
-                    <select className="select-css mb-4" onChange={(e) => onSelect(e)} value={tag}>
+                    <span className="mt-1 me-1" style={{fontWeight:500}}>Room:</span>
+                    <select className="select-css2" style={{minWidth:'300px'}} onChange={(e) => onSelect(e)} value={tag}>
                         <option>Select</option>
                         {
                             plantTags.map((item) => {
@@ -320,21 +226,22 @@ export const Twin = () => {
                         }
                     </select>
                 </label>
-                <div className="d-flex mb-2" style={{alignItems:'center'}}>
+                <div className="d-flex" style={{ alignItems: 'center' }}>
                     <div className="me-2">
-                        <span>To:</span>
-                        <DatePicker selected={toDate} onChange={date => setToDate(date)} />
+                    <span className="me-1" style={{display:'block',fontWeight:500}}>Start Date:</span>
+                        <DatePicker selected={toDate} onChange={date => setToDate(date)} className="select-css2"/>
                     </div>
                     <div>
-                        <span>From:</span>
-                        <DatePicker selected={fromDate} onChange={date => setFromDate(date)} />
+                    <span className="me-1" style={{display:'block',fontWeight:500}}>End Date:</span>
+                        <DatePicker selected={fromDate} onChange={date => setFromDate(date)} className="select-css2"/>
                     </div>
-                    <div className="ms-2">
-                        <button className="btn btn-primary" onClick={() => handleFilter()}>submit</button>
+                    <div className="ms-2 mt-4">
+                        <button className="btn btn-primary" style={{alignContent:'center',alignItems:'center',height:'40px'}} onClick={() => handleFilter()}>submit</button>
                     </div>
                 </div>
-                <div className={`col gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{height:'450px'}}>
-                    <Heading title="Overall Cultivation Temperature" data={[]} employees={[]} />
+                </div>
+                <div className={`col gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
+                    <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
                     <LineChart data={data} />
                 </div>

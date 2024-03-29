@@ -17,8 +17,8 @@ function NavbarV2() {
 
   let location = useLocation();
   useEffect(() => {
-    if (location.pathname == '/temp') {
-      setName("Temperature")
+    if (location.pathname == '/rooms') {
+      setName("Rooms")
     } else if (location.pathname == '/humidity') {
       setName("Humidity")
     } else if (location.pathname == '/harvest') {

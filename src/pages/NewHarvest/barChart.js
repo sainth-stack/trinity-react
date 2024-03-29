@@ -92,7 +92,7 @@ const GroupedBarChart = ({ selBatches }) => {
               padding: 5
           },
           grid: {
-              display: false,
+              display: true,
           },
       },
       y: {
@@ -104,7 +104,7 @@ const GroupedBarChart = ({ selBatches }) => {
               padding: 5
           },
           grid: {
-              display: false
+              display: true
           },
           suggestedMin: 0,
       }

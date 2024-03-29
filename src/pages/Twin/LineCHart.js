@@ -49,7 +49,7 @@ export const options = {
     y: {
       title: {
         display: true,
-        text: 'Temperature',
+        text: '',
         color: 'black',
         fontWeight: 700,
         padding: 5

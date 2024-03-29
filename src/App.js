@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AdminLayoutV2 />}>
         <Route path="/" element={<Dashboard />} />
-          <Route path="/temp" element={<Twin />} />
+          <Route path="/rooms" element={<Twin />} />
           <Route path="/humidity" element={<Humidity />} />
           <Route path="/new-harvest" element={<Harvest />} />
           <Route path="/harvest" element={<NewHarvest />} />
