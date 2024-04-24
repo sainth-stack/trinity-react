@@ -222,15 +222,15 @@ const Dashboard = () => {
         <div className="p-3">
             <div className="d-flex mb-2">
                 <div className="me-2">
-                    <span>To:</span>
+                    <span className="labelHeading">To:</span>
                     <DatePicker selected={toDate} onChange={date => setToDate(date)} />
                 </div>
                 <div>
-                    <span>From:</span>
+                    <span className="labelHeading">From:</span>
                     <DatePicker selected={fromDate} onChange={date => setFromDate(date)} />
                 </div>
                 <div className="ms-2">
-                    <button onClick={() => handleFilter()}>submit</button>
+                    <button onClick={() => handleFilter()} className="btn btn-primary mt-1">submit</button>
                 </div>
             </div>
             <div className="row">
@@ -279,14 +279,14 @@ const Dashboard = () => {
             </div>
             <div className="row">
                 <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}>
-                    <h5 className="mt-2 mb-4">g {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
+                    <h5 className="mt-2 mb-4">Yield (g) {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
                     <LineChart data={getGramsData()} height={120} options={{
                         ...options, scales: {
                             ...options.scales,
                             y: {
                                 title: {
                                     display: true,
-                                    text: 'g',
+                                    text: 'Yield (g)',
                                     color: 'black',
                                     fontWeight: 700,
                                     padding: 5

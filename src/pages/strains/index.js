@@ -173,11 +173,11 @@ export const Strains = () => {
         <div className="p-3">
             <div className="d-flex mb-2" style={{alignItems:'center'}}>
                 <div className="me-2">
-                    <span>To:</span>
+                    <span className="labelHeading">To:</span>
                     <DatePicker selected={toDate} onChange={date => setToDate(date)} />
                 </div>
                 <div>
-                    <span>From:</span>
+                    <span className="labelHeading">From:</span>
                     <DatePicker selected={fromDate} onChange={date => setFromDate(date)} />
                 </div>
                 <div className="ms-2">

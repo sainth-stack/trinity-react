@@ -13,3 +13,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.labelHeading{
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 4px;
+}

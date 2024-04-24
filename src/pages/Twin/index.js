@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import './index.css'
 import { addDays } from 'date-fns';
 import moment from 'moment';
-
+import { read, utils } from 'xlsx'
+import { data50 } from './data'
 export const Twin = () => {
     const labels1 = ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05']
     const data1 = {
@@ -50,9 +51,12 @@ export const Twin = () => {
         ],
     };
     const [data, setData] = useState(data1)
-    const [toDate, setToDate] = useState(new Date("2023-01-01"));
-    const [fromDate, setFromDate] = useState(new Date("2023-02-19"));
+    const [data2, setData2] = useState(data1)
+    
+    const [toDate, setToDate] = useState(new Date("2024-01-31"));
+    const [fromDate, setFromDate] = useState(new Date("2024-02-27"));
     const [tag, setTag] = useState("Room1")
+    const [facility, setFacility] = useState('Facility 1')
     function Heading(props) {
         return (
             <div className="d-flex justify-content-between align-items-center p-2">
@@ -96,14 +100,21 @@ export const Twin = () => {
         );
     }
 
-    const plantTags = [{
+    const [plantTags, setPlanttags] = useState([{
         label: 'Room1', value: "Room1"
-    },
-    {
+    }, {
         label: 'Room2', value: "Room2"
+    }
+    ])
+
+    const facilitys = [{
+        label: 'Facility 1', value: "Facility 1"
     },
     {
-        label: 'Room3', value: "Room3"
+        label: 'Facility 2', value: "Facility 2"
+    },
+    {
+        label: 'Facility 3', value: "Facility 3"
     }
     ]
 
@@ -111,6 +122,35 @@ export const Twin = () => {
         setTag(e.target.value)
     }
 
+    const onSelectfacility = (e) => {
+        if (e.target.value === 'Facility 1') {
+            setPlanttags([{
+                label: 'Room1', value: "Room1"
+            },
+            {
+                label: 'Room2', value: "Room2"
+            }
+            ])
+        } else if (e.target.value === 'Facility 2') {
+            setPlanttags([{
+                label: 'Room3', value: "Room3"
+            },
+            {
+                label: 'Room4', value: "Room4"
+            }
+            ])
+        }
+        else if (e.target.value === 'Facility 3') {
+            setPlanttags([{
+                label: 'Room5', value: "Room5"
+            },
+            {
+                label: 'Room6', value: "Room6"
+            }
+            ])
+        }
+        setFacility(e.target.value)
+    }
 
     const getLabels = (toDate, diff) => {
         const constantsArray = [];
@@ -123,7 +163,7 @@ export const Twin = () => {
         return constantsArray
     }
 
-    const getRandomData = (diff, avg,maximum,minimum) => {
+    const getRandomData = (diff, avg, maximum, minimum) => {
         const max = maximum || 70;
         const min = minimum || 50;
         const randomNumbers = [];
@@ -132,6 +172,106 @@ export const Twin = () => {
         }
         return randomNumbers
     }
+
+    const [apiData, setApiData] = useState(null);
+    const groupDataByDay = (data) => {
+        function excelSerialDateToJSDate(serial) {
+            const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+            const excelEpoch = new Date(Date.UTC(1899, 11, 30)); // Excel's epoch date
+
+            // Calculate the number of milliseconds corresponding to the Excel date
+            const milliseconds = (serial - 1) * millisecondsPerDay; // Subtracting 1 to account for Excel's epoch starting on December 30, 1899
+
+            // Create a new Date object by adding the milliseconds to the Excel epoch date
+            const jsDate = new Date(excelEpoch.getTime() + milliseconds);
+
+            return jsDate;
+        }
+        const groupedData = {};
+        data.forEach(obj => {
+            const milliseconds = excelSerialDateToJSDate(obj["Date-Time (MST)"]);
+            const date = new Date(milliseconds);
+            date.setDate(date.getDate() + 1);
+            const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
+            if (!groupedData[day]) {
+                groupedData[day] = [];
+            }
+            groupedData[day].push(obj);
+        });
+        return groupedData;
+    };
+
+    const calculateAverages = (groupedData) => {
+        const averages = {};
+        for (const day in groupedData) {
+            const dayData = groupedData[day];
+            const averageObj = {};
+            Object.keys(dayData[0]).forEach(key => {
+                if (key !== "Date-Time (MST)") { // Exclude Date-Time from averaging
+                    const sum = dayData.reduce((acc, obj) => acc + obj[key], 0);
+                    averageObj[key] = sum / dayData.length;
+                }
+            });
+            averages[day] = averageObj;
+        }
+        return averages;
+    };
+
+    useEffect(() => {
+        const datanew = groupDataByDay(data50)
+        const averages = calculateAverages(datanew);
+        const labels = []
+        const temp = []
+        const humidity = []
+        // const vpd=[]
+        Object.keys(averages).map((item) => {
+            const keys=Object.keys(averages[item])
+            labels.push(item);
+            temp.push(averages[item][keys[1]])
+            humidity.push(averages[item][keys[2]])
+        })
+        const data1 = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Temperature",
+                    data: temp,
+                    borderColor: '#88CCEE',
+                    backgroundColor: '#88CCEE',
+                    yAxisID: 'y',
+                },
+                {
+                    label: "Humidity",
+                    data: humidity,
+                    borderColor: '#44AA99',
+                    backgroundColor: '#44AA99',
+                    yAxisID: 'y',
+                },
+                // {
+                //     label: "VPD",
+                //     data: getRandomData(30, false, 35, 45),
+                //     borderColor: '#DDCC77',
+                //     backgroundColor: '#DDCC77',
+                //     yAxisID: 'y1',
+                // },
+                // {
+                //     label: 'CO2',
+                //     data: getRandomData(2300, false, 300, 1200),
+                //     borderColor: '#332288',
+                //     backgroundColor: '#332288',
+                //     yAxisID: 'y',
+                // },
+                // {
+                //     label: 'LSI',
+                //     data: getRandomData(2500, false, 300, 1200),
+                //     borderColor: '#999933',
+                //     backgroundColor: '#999933',
+                //     yAxisID: 'y',
+                // }
+            ],
+        };
+        setData2(data1)
+    }, []);
 
     const getDataSets = (diff, strain) => {
         const dataSets = [
@@ -146,24 +286,35 @@ export const Twin = () => {
                 data: getRandomData(diff),
                 borderColor: '#88CCEE',
                 backgroundColor: '#88CCEE',
+                yAxisID: 'y1',
             },
             {
                 label: "Humidity",
-                data: getRandomData(diff,false,65,45),
+                data: getRandomData(diff, false, 65, 45),
                 borderColor: '#44AA99',
                 backgroundColor: '#44AA99',
+                yAxisID: 'y1',
+            },
+            {
+                label: "VPD",
+                data: getRandomData(diff, false, 35, 45),
+                borderColor: '#DDCC77',
+                backgroundColor: '#DDCC77',
+                yAxisID: 'y1',
             },
             {
                 label: 'CO2',
-                data: getRandomData(diff,false,300,1200),
+                data: getRandomData(diff, false, 300, 1200),
                 borderColor: '#332288',
                 backgroundColor: '#332288',
+                yAxisID: 'y',
             },
             {
                 label: 'LSI',
-                data: getRandomData(diff,false,300,1200),
+                data: getRandomData(diff, false, 300, 1200),
                 borderColor: '#999933',
                 backgroundColor: '#999933',
+                yAxisID: 'y',
             },
             // {
             //     label: 'average',
@@ -178,6 +329,8 @@ export const Twin = () => {
 
 
     const handleFilter = () => {
+        console.log(fromDate,toDate)
+        console.log(data2)
         const differenceInTime = fromDate.getTime() - toDate.getTime();
         const differenceInDays = differenceInTime / (1000 * 3600 * 24);
         if (tag == "1A4000312A000F2B0000012395") {
@@ -212,38 +365,57 @@ export const Twin = () => {
     return (
         <div className="ms-4 me-4">
             <div className="row mt-3">
-                <div style={{display:'flex',gap:'20px',marginBottom:'10px'}}>
-                <label>
-                    <span className="mt-1 me-1" style={{fontWeight:500}}>Room:</span>
-                    <select className="select-css2" style={{minWidth:'300px'}} onChange={(e) => onSelect(e)} value={tag}>
-                        <option>Select</option>
-                        {
-                            plantTags.map((item) => {
-                                return (
-                                    <option>{item.label}</option>
-                                )
-                            })
-                        }
-                    </select>
-                </label>
-                <div className="d-flex" style={{ alignItems: 'center' }}>
-                    <div className="me-2">
-                    <span className="me-1" style={{display:'block',fontWeight:500}}>Start Date:</span>
-                        <DatePicker selected={toDate} onChange={date => setToDate(date)} className="select-css2"/>
-                    </div>
-                    <div>
-                    <span className="me-1" style={{display:'block',fontWeight:500}}>End Date:</span>
-                        <DatePicker selected={fromDate} onChange={date => setFromDate(date)} className="select-css2"/>
-                    </div>
-                    <div className="ms-2 mt-4">
-                        <button className="btn btn-primary" style={{alignContent:'center',alignItems:'center',height:'40px'}} onClick={() => handleFilter()}>submit</button>
+                <div style={{ display: 'flex', gap: '20px', marginBottom: '10px' }}>
+                    <label>
+                        <span className="labelHeading" style={{ fontWeight: 500 }}>Facilities:</span>
+                        <select className="select-css2" style={{ minWidth: '300px' }} onChange={(e) => onSelectfacility(e)} value={facility}>
+                            <option>Select</option>
+                            {
+                                facilitys.map((item) => {
+                                    return (
+                                        <option>{item.label}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        <span className="labelHeading" style={{ fontWeight: 500 }}>Room:</span>
+                        <select className="select-css2" style={{ minWidth: '300px' }} onChange={(e) => onSelect(e)} value={tag}>
+                            <option>Select</option>
+                            {
+                                plantTags.map((item) => {
+                                    return (
+                                        <option>{item.label}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </label>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                        <div className="me-2">
+                            <span style={{ display: 'block', fontWeight: 500 }} className="labelHeading">To:</span>
+                            <DatePicker selected={toDate} onChange={date => setToDate(date)} className="select-css2" />
+                        </div>
+                        <div>
+                            <span style={{ display: 'block', fontWeight: 500 }} className="labelHeading">From:</span>
+                            <DatePicker selected={fromDate} onChange={date => setFromDate(date)} className="select-css2" />
+                        </div>
+                        <div className="ms-2 mt-4">
+                            <button className="btn btn-primary" style={{ alignContent: 'center', alignItems: 'center', height: '40px' }} onClick={() => handleFilter()}>submit</button>
+                        </div>
                     </div>
                 </div>
-                </div>
-                <div className={`col gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
+                <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
-                    <LineChart data={data} />
+                    <LineChart data={data} options={true}/>
+                </div>
+
+                <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
+                    <Heading title="Overall Cultivation" data={[]} employees={[]} />
+                    <hr />
+                    <LineChart data={data2}/>
                 </div>
             </div>
         </div>
