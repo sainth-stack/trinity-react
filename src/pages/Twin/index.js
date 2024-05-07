@@ -1,7 +1,7 @@
 import { LineChart } from "./LineCHart";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './index.css'
 import { addDays } from 'date-fns';
 import moment from 'moment';
@@ -52,7 +52,7 @@ export const Twin = () => {
     };
     const [data, setData] = useState(data1)
     const [data2, setData2] = useState(data1)
-    
+    const [excelData, setExcelData] = useState(null);
     const [toDate, setToDate] = useState(new Date("2024-01-31"));
     const [fromDate, setFromDate] = useState(new Date("2024-02-27"));
     const [tag, setTag] = useState("Room1")
@@ -173,7 +173,6 @@ export const Twin = () => {
         return randomNumbers
     }
 
-    const [apiData, setApiData] = useState(null);
     const groupDataByDay = (data) => {
         function excelSerialDateToJSDate(serial) {
             const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
@@ -218,60 +217,62 @@ export const Twin = () => {
     };
 
     useEffect(() => {
-        const datanew = groupDataByDay(data50)
-        const averages = calculateAverages(datanew);
-        const labels = []
-        const temp = []
-        const humidity = []
-        // const vpd=[]
-        Object.keys(averages).map((item) => {
-            const keys=Object.keys(averages[item])
-            labels.push(item);
-            temp.push(averages[item][keys[1]])
-            humidity.push(averages[item][keys[2]])
-        })
-        const data1 = {
-            labels: labels,
-            datasets: [
-                {
-                    label: "Temperature",
-                    data: temp,
-                    borderColor: '#88CCEE',
-                    backgroundColor: '#88CCEE',
-                    yAxisID: 'y',
-                },
-                {
-                    label: "Humidity",
-                    data: humidity,
-                    borderColor: '#44AA99',
-                    backgroundColor: '#44AA99',
-                    yAxisID: 'y',
-                },
-                // {
-                //     label: "VPD",
-                //     data: getRandomData(30, false, 35, 45),
-                //     borderColor: '#DDCC77',
-                //     backgroundColor: '#DDCC77',
-                //     yAxisID: 'y1',
-                // },
-                // {
-                //     label: 'CO2',
-                //     data: getRandomData(2300, false, 300, 1200),
-                //     borderColor: '#332288',
-                //     backgroundColor: '#332288',
-                //     yAxisID: 'y',
-                // },
-                // {
-                //     label: 'LSI',
-                //     data: getRandomData(2500, false, 300, 1200),
-                //     borderColor: '#999933',
-                //     backgroundColor: '#999933',
-                //     yAxisID: 'y',
-                // }
-            ],
-        };
-        setData2(data1)
-    }, []);
+        if (excelData) {
+            const datanew = groupDataByDay(excelData)
+            const averages = calculateAverages(datanew);
+            const labels = []
+            const temp = []
+            const humidity = []
+            // const vpd=[]
+            Object.keys(averages).map((item) => {
+                const keys = Object.keys(averages[item])
+                labels.push(item);
+                temp.push(averages[item][keys[1]])
+                humidity.push(averages[item][keys[2]])
+            })
+            const data1 = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Temperature",
+                        data: temp,
+                        borderColor: '#88CCEE',
+                        backgroundColor: '#88CCEE',
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: "Humidity",
+                        data: humidity,
+                        borderColor: '#44AA99',
+                        backgroundColor: '#44AA99',
+                        yAxisID: 'y',
+                    },
+                    // {
+                    //     label: "VPD",
+                    //     data: getRandomData(30, false, 35, 45),
+                    //     borderColor: '#DDCC77',
+                    //     backgroundColor: '#DDCC77',
+                    //     yAxisID: 'y1',
+                    // },
+                    // {
+                    //     label: 'CO2',
+                    //     data: getRandomData(2300, false, 300, 1200),
+                    //     borderColor: '#332288',
+                    //     backgroundColor: '#332288',
+                    //     yAxisID: 'y',
+                    // },
+                    // {
+                    //     label: 'LSI',
+                    //     data: getRandomData(2500, false, 300, 1200),
+                    //     borderColor: '#999933',
+                    //     backgroundColor: '#999933',
+                    //     yAxisID: 'y',
+                    // }
+                ],
+            };
+            setData2(data1)
+        }
+    }, [excelData]);
 
     const getDataSets = (diff, strain) => {
         const dataSets = [
@@ -329,7 +330,7 @@ export const Twin = () => {
 
 
     const handleFilter = () => {
-        console.log(fromDate,toDate)
+        console.log(fromDate, toDate)
         console.log(data2)
         const differenceInTime = fromDate.getTime() - toDate.getTime();
         const differenceInDays = differenceInTime / (1000 * 3600 * 24);
@@ -361,6 +362,39 @@ export const Twin = () => {
         handleFilter()
     }, [])
 
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (evt) => {
+            const binaryString = evt.target.result;
+            const workbook = read(binaryString, { type: 'binary' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const data = utils.sheet_to_json(sheet, { header: 1 });
+            const formattedData = data?.slice(1)?.map(row => ({
+                "#": row[0],
+                "Ch:1 - Temperature (°C)": row[2],
+                "Ch:2 - RH (%)": row[3],
+                "Date-Time (MST)": row[1],
+                "Dew Point (°C)": row[4]
+            }));
+
+            setExcelData(formattedData);
+
+        };
+
+        reader.readAsBinaryString(file);
+    };
+
+    const inputFileRef = useRef(null);
+
+    const onBtnClick = () => {
+        /*Collecting node-element and performing click*/
+        inputFileRef.current.click();
+    }
+
+    console.log(data2)
 
     return (
         <div className="ms-4 me-4">
@@ -404,18 +438,24 @@ export const Twin = () => {
                         <div className="ms-2 mt-4">
                             <button className="btn btn-primary" style={{ alignContent: 'center', alignItems: 'center', height: '40px' }} onClick={() => handleFilter()}>submit</button>
                         </div>
+                        <div className="ms-2 mt-4">
+                            <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} ref={inputFileRef} />
+                            <button className="btn btn-primary" style={{ alignContent: 'center', alignItems: 'center', height: '40px' }} onClick={onBtnClick}>
+                                upload
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
-                    <LineChart data={data} options={true}/>
+                    <LineChart data={data} options={true} />
                 </div>
 
                 <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
-                    <LineChart data={data2}/>
+                    <LineChart data={data2} />
                 </div>
             </div>
         </div>
