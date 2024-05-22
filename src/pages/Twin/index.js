@@ -52,7 +52,7 @@ export const Twin = () => {
     };
     const [data, setData] = useState(data1)
     const [data2, setData2] = useState(data1)
-    const [excelData, setExcelData] = useState(null);
+    const [excelData, setExcelData] = useState(data50);
     const [toDate, setToDate] = useState(new Date("2024-01-31"));
     const [fromDate, setFromDate] = useState(new Date("2024-02-27"));
     const [tag, setTag] = useState("Room1")
@@ -174,23 +174,9 @@ export const Twin = () => {
     }
 
     const groupDataByDay = (data) => {
-        function excelSerialDateToJSDate(serial) {
-            const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
-            const excelEpoch = new Date(Date.UTC(1899, 11, 30)); // Excel's epoch date
-
-            // Calculate the number of milliseconds corresponding to the Excel date
-            const milliseconds = (serial - 1) * millisecondsPerDay; // Subtracting 1 to account for Excel's epoch starting on December 30, 1899
-
-            // Create a new Date object by adding the milliseconds to the Excel epoch date
-            const jsDate = new Date(excelEpoch.getTime() + milliseconds);
-
-            return jsDate;
-        }
         const groupedData = {};
         data.forEach(obj => {
-            const milliseconds = excelSerialDateToJSDate(obj["Date-Time (MST)"]);
-            const date = new Date(milliseconds);
-            date.setDate(date.getDate() + 1);
+            const date = new Date(obj["Date-Time (MST)"]);
             const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
             if (!groupedData[day]) {
                 groupedData[day] = [];
@@ -204,14 +190,28 @@ export const Twin = () => {
         const averages = {};
         for (const day in groupedData) {
             const dayData = groupedData[day];
-            const averageObj = {};
-            Object.keys(dayData[0]).forEach(key => {
-                if (key !== "Date-Time (MST)") { // Exclude Date-Time from averaging
-                    const sum = dayData.reduce((acc, obj) => acc + obj[key], 0);
-                    averageObj[key] = sum / dayData.length;
-                }
+            const total = {
+                "Ch:1 - Temperature (°C)": 0,
+                "Ch:2 - RH (%)": 0,
+                "CO2": 0,
+                "LSI": 0,
+                count: 0
+            };
+    
+            dayData.forEach(obj => {
+                total["Ch:1 - Temperature (°C)"] += parseFloat(obj["Ch:1 - Temperature (°C)"]);
+                total["Ch:2 - RH (%)"] += parseFloat(obj["Ch:2 - RH (%)"]);
+                total["CO2"] += parseFloat(obj["CO2"]);
+                total["LSI"] += parseFloat(obj["LSI"]);
+                total.count++;
             });
-            averages[day] = averageObj;
+    
+            averages[day] = {
+                "Average Temperature (°C)": total["Ch:1 - Temperature (°C)"] / total.count,
+                "Average RH (%)": total["Ch:2 - RH (%)"] / total.count,
+                "Average CO2": total["CO2"] / total.count,
+                "Average LSI": total["LSI"] / total.count,
+            };
         }
         return averages;
     };
@@ -223,12 +223,16 @@ export const Twin = () => {
             const labels = []
             const temp = []
             const humidity = []
+            const lsi=[]
+            const co2=[]
             // const vpd=[]
             Object.keys(averages).map((item) => {
                 const keys = Object.keys(averages[item])
                 labels.push(item);
-                temp.push(averages[item][keys[1]])
-                humidity.push(averages[item][keys[2]])
+                temp.push(averages[item][keys[0]])
+                humidity.push(averages[item][keys[1]])
+                co2.push(averages[item][keys[2]])
+                lsi.push(averages[item][keys[3]])
             })
             const data1 = {
                 labels: labels,
@@ -238,14 +242,14 @@ export const Twin = () => {
                         data: temp,
                         borderColor: '#88CCEE',
                         backgroundColor: '#88CCEE',
-                        yAxisID: 'y',
+                        yAxisID: 'y1',
                     },
                     {
                         label: "Humidity",
                         data: humidity,
                         borderColor: '#44AA99',
                         backgroundColor: '#44AA99',
-                        yAxisID: 'y',
+                        yAxisID: 'y1',
                     },
                     // {
                     //     label: "VPD",
@@ -254,20 +258,20 @@ export const Twin = () => {
                     //     backgroundColor: '#DDCC77',
                     //     yAxisID: 'y1',
                     // },
-                    // {
-                    //     label: 'CO2',
-                    //     data: getRandomData(2300, false, 300, 1200),
-                    //     borderColor: '#332288',
-                    //     backgroundColor: '#332288',
-                    //     yAxisID: 'y',
-                    // },
-                    // {
-                    //     label: 'LSI',
-                    //     data: getRandomData(2500, false, 300, 1200),
-                    //     borderColor: '#999933',
-                    //     backgroundColor: '#999933',
-                    //     yAxisID: 'y',
-                    // }
+                    {
+                        label: 'CO2',
+                        data: getRandomData(2300, false, 300, 1200),
+                        borderColor: '#332288',
+                        backgroundColor: '#332288',
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'LSI',
+                        data: getRandomData(2500, false, 300, 1200),
+                        borderColor: '#999933',
+                        backgroundColor: '#999933',
+                        yAxisID: 'y',
+                    }
                 ],
             };
             setData2(data1)
@@ -330,8 +334,6 @@ export const Twin = () => {
 
 
     const handleFilter = () => {
-        console.log(fromDate, toDate)
-        console.log(data2)
         const differenceInTime = fromDate.getTime() - toDate.getTime();
         const differenceInDays = differenceInTime / (1000 * 3600 * 24);
         if (tag == "1A4000312A000F2B0000012395") {
@@ -373,13 +375,14 @@ export const Twin = () => {
             const sheet = workbook.Sheets[sheetName];
             const data = utils.sheet_to_json(sheet, { header: 1 });
             const formattedData = data?.slice(1)?.map(row => ({
-                "#": row[0],
-                "Ch:1 - Temperature (°C)": row[2],
-                "Ch:2 - RH (%)": row[3],
-                "Date-Time (MST)": row[1],
-                "Dew Point (°C)": row[4]
+                "Ch:1 - Temperature (°C)": row[1],
+                "Ch:2 - RH (%)": row[2],
+                "Date-Time (MST)": new Date(row[0]),
+                "Dew Point (°C)": row[3],
+                "CO2":row[4],
+                'LSI':row[5]
             }));
-
+            console.log(formattedData)
             setExcelData(formattedData);
 
         };
@@ -394,7 +397,6 @@ export const Twin = () => {
         inputFileRef.current.click();
     }
 
-    console.log(data2)
 
     return (
         <div className="ms-4 me-4">
@@ -446,16 +448,16 @@ export const Twin = () => {
                         </div>
                     </div>
                 </div>
-                <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
+                {/* <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
                     <LineChart data={data} options={true} />
-                </div>
+                </div> */}
 
-                <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
+                <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: 'fit-content' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
-                    <LineChart data={data2} />
+                    <LineChart data={data2} options={true}/>
                 </div>
             </div>
         </div>
