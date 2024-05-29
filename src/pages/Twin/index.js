@@ -374,6 +374,21 @@ export const Twin = () => {
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const data = utils.sheet_to_json(sheet, { header: 1 });
+            // const convertToJSON = (data) => {
+            //     const headers = data[0];
+            //     const rows = data.slice(1);
+            //     const result = rows.map(row => {
+            //         let obj = {};
+            //         row.forEach((value, index) => {
+            //             obj[headers[index]] = value;
+            //         });
+            //         return obj;
+            //     });
+            //     return result;
+            // };
+            
+            // const jsonData = convertToJSON(data);
+            // console.log(jsonData);
             const formattedData = data?.slice(1)?.map(row => ({
                 "Ch:1 - Temperature (°C)": row[1],
                 "Ch:2 - RH (%)": row[2],

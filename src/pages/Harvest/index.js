@@ -1,7 +1,5 @@
 import './index.css'
 import { options, finalData, finalData2, finalData3, finalData4, finalData5, finalData6, finalData7, finalData8, bubbleOptions, humidityOptions } from './constants'
-import { ApexChart } from './LineCHart'
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react'
 import { LineChart } from "../Twin/LineCHart";
