@@ -129,5 +129,5 @@ export const options2 = {
 };
 
 export function LineChart(props) {
-  return <Line options={props.options===true ? options2 : options} data={props.data} height={props.height ? props.height : 80} width={props.width} />;
+  return <Line options={props.options===true ? options2 : props.options} data={props.data} height={props.height ? props.height : 80} width={props.width} />;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
-const GroupedBarChart = ({ selBatches }) => {
+const GroupedBarChart = ({ selBatches,height }) => {
   const generateRandomNumber = () => {
     const newRandomNumber = Math.floor(Math.random() * 51) + 50; // Generates a random number between 50 and 100
     return newRandomNumber;
@@ -31,9 +31,9 @@ const GroupedBarChart = ({ selBatches }) => {
     ]
     selBatches.map((item) => {
       labels.push(item.hb)
-      datasets[0].data.push(generateRandomNumber())
-      datasets[1].data.push(generateRandomNumber())
-      datasets[2].data.push(generateRandomNumber())
+      datasets[0].data.push(item['Bud %'] *100)
+      datasets[1].data.push(item['Shake/Trim %']* 100)
+      datasets[2].data.push(item['Popcorn %'] * 100)
     })
     return {
       labels: labels,
@@ -111,7 +111,7 @@ const GroupedBarChart = ({ selBatches }) => {
   },
   };
 
-  return <Bar data={getData()} options={{
+  return <Bar data={getData()} height={height} options={{
     ...toptions
 }}/>;
 };

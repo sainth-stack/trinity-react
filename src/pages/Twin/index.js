@@ -219,6 +219,7 @@ export const Twin = () => {
     useEffect(() => {
         if (excelData) {
             const datanew = groupDataByDay(excelData)
+            console.log(datanew)
             const averages = calculateAverages(datanew);
             const labels = []
             const temp = []
@@ -260,14 +261,14 @@ export const Twin = () => {
                     // },
                     {
                         label: 'CO2',
-                        data: getRandomData(2300, false, 300, 1200),
+                        data: co2,
                         borderColor: '#332288',
                         backgroundColor: '#332288',
                         yAxisID: 'y',
                     },
                     {
                         label: 'LSI',
-                        data: getRandomData(2500, false, 300, 1200),
+                        data: lsi,
                         borderColor: '#999933',
                         backgroundColor: '#999933',
                         yAxisID: 'y',

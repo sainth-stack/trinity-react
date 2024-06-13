@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { LineChart } from "../Twin/LineCHart";
 import GroupedBarChart from './barChart'
 import { harvestdata } from './data';
-const generateRandomData = (length) => {
-    return Array.from({ length }, () => Math.floor(Math.random() * 100) + 1);
+import { data50 } from '../Twin/data'
+const generateRandomData = (length, value) => {
+    return Array.from({ length }, () => Math.floor(Math.random() * 100));
 };
 const generateConstantData = (length, value) => {
     return Array.from({ length }, () => value);
@@ -26,9 +27,12 @@ function getRandomColor() {
 export const NewHarvest = () => {
     const [batches, setBatches] = useState([]);
     const [selectedBatches, setSelectedBatches] = useState([]);
-    const [graphData, setGraphData] = useState([])
+    const [graphData, setGraphData] = useState({
+        labels: []
+    })
     const [selectedValue, setSelectedValue] = useState('sep');
     const [finalHB, setFinalHB] = useState([])
+    const [avg, setAvg] = useState({})
 
     useEffect(() => {
         const data = harvestdata.map((item, index) => {
@@ -39,23 +43,80 @@ export const NewHarvest = () => {
             }
         })
         setFinalHB(data)
+        setAvg(calculateAverages(data50))
     }, [])
+
+    const calculateAverages = (data) => {
+        const total = data.reduce((acc, curr) => {
+            acc.temperature += parseFloat(curr["Ch:1 - Temperature (°C)"]);
+            acc.rh += parseFloat(curr["Ch:2 - RH (%)"]);
+            acc.dewPoint += parseFloat(curr["Dew Point (°C)"]);
+            acc.co2 += curr.CO2;
+            acc.lsi += curr.LSI;
+            return acc;
+        }, { temperature: 0, rh: 0, dewPoint: 0, co2: 0, lsi: 0 });
+
+        const length = data.length;
+
+        return {
+            avgTemp: parseFloat((total.temperature / length)).toFixed(2),
+            avgHum: parseFloat(total.rh / length).toFixed(2),
+            avgDew: parseFloat(total.dewPoint / length).toFixed(2),
+            avgCo2: parseFloat(total.co2 / length).toFixed(2),
+            avgLsi: parseFloat(total.lsi / length).toFixed(2)
+        };
+    };
+
+
+    const calculateAverages2 = (groupedData) => {
+        const averages = {};
+        for (const day in groupedData) {
+            const dayData = groupedData[day];
+            const total = {
+                "Ch:1 - Temperature (°C)": 0,
+                "Ch:2 - RH (%)": 0,
+                "CO2": 0,
+                "LSI": 0,
+                count: 0
+            };
+
+            dayData.forEach(obj => {
+                total["Ch:1 - Temperature (°C)"] += parseFloat(obj["Ch:1 - Temperature (°C)"]);
+                total["Ch:2 - RH (%)"] += parseFloat(obj["Ch:2 - RH (%)"]);
+                total["CO2"] += parseFloat(obj["CO2"]);
+                total["LSI"] += parseFloat(obj["LSI"]);
+                total.count++;
+            });
+
+            averages[day] = {
+                "Average Temperature (°C)": total["Ch:1 - Temperature (°C)"] / total.count,
+                "Average RH (%)": total["Ch:2 - RH (%)"] / total.count,
+                "Average CO2": total["CO2"] / total.count,
+                "Average LSI": total["LSI"] / total.count,
+            };
+        }
+        return averages;
+    };
 
     const handleRadioChange = (event) => {
         setSelectedValue(event.target.value);
     };
-    // const allBatches = [
-    //     { id: 1, hb: 'HB1', b: '13%', p: '23%', t: '25%', yield: 2000, gPlant: 130, gSqft: 250 },
-    //     { id: 2, hb: 'HB2', b: '13%', p: '23%', t: '25%', yield: 2200, gPlant: 200, gSqft: 220 },
-    //     { id: 3, hb: 'HB3', b: '13%', p: '23%', t: '25%', yield: 1000, gPlant: 350, gSqft: 300 },
-    //     { id: 4, hb: 'HB4', b: '13%', p: '23%', t: '25%', yield: 3000, gPlant: 220, gSqft: 400 },
-    //     // { hb: 'HB5', bpt: '9%', yield: 4200, gPlant: 250, gSwift: 500, sqft: 18 },
-    //     // { hb: 'HB6', bpt: '13%', yield: 2000, gPlant: 130, gSwift: 250, sqft: 7 },
-    //     // { hb: 'HB7', bpt: '23%', yield: 2200, gPlant: 200, gSwift: 220, sqft: 9 },
-    //     // { hb: 'HB8', bpt: '43%', yield: 1000, gPlant: 350, gSwift: 300, sqft: 12 },
-    //     // { hb: 'HB9', bpt: '30%', yield: 3000, gPlant: 220, gSwift: 400, sqft: 17 },
-    //     // { hb: 'HB10', bpt: '9%', yield: 4200, gPlant: 250, gSwift: 500, sqft: 18 },
-    // ];
+
+    const groupDataByDay = (data) => {
+        const groupedData = {};
+        data.forEach(obj => {
+            const date = new Date(obj["Date-Time (MST)"]);
+            const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
+            if (!groupedData[day]) {
+                groupedData[day] = [];
+            }
+            groupedData[day].push(obj);
+        });
+        return groupedData;
+    };
+
+
+
     const handleCheckboxChange = (batch) => {
         const isChecked = selectedBatches.filter((item) => item.hb === batch.hb).length > 0;
         let updData = isChecked
@@ -67,32 +128,185 @@ export const NewHarvest = () => {
         setBatches((prevBatches) => [...updData]);
         if (selectedValue == 'sep') {
             const finData = []
-            updData?.map((item) => {
-                finData.push(...[
-                    { label: `${item?.hb} - ecin`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    { label: `${item?.hb} - ecout`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    { label: `${item?.hb} - g/sqft`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    { label: `${item?.hb} - temp`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    { label: `${item?.hb} - humidity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    { label: `${item?.hb} - light intensity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    { label: `${item?.hb} - co2`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                    // { label: `${item?.hb} - g/sqft(avg)`, data: generateConstantData(70,66), borderColor: 'red', borderDash: [4, 2],pointRadius: 0,pointStyle: 'line'}
-                ],)
+            const labels = []
+            const datanew = groupDataByDay(data50)
+            const averages = calculateAverages2(datanew);
+            const temp = []
+            const humidity = []
+            const lsi = []
+            const co2 = []
+            // const vpd=[]
+            Object.keys(averages).map((item) => {
+                const keys = Object.keys(averages[item])
+                labels.push(item);
+                temp.push(averages[item][keys[0]])
+                humidity.push(averages[item][keys[1]])
+                co2.push(averages[item][keys[2]])
+                lsi.push(averages[item][keys[3]])
             })
-            setGraphData({ ...data, datasets: finData })
+            updData?.map((item) => {
+                if (data50) {
+
+                    finData.push(...[
+                        {
+                            label: `${item?.hb} - ecin`,
+                            data: generateRandomData(17),
+                            borderColor: getRandomColor(),
+                            backgroundColor: getRandomColor(),
+                            yAxisID: 'y',
+                            fill: false
+                        },
+                        {
+                            label: `${item?.hb} - ecout`,
+                            data: generateRandomData(17),
+                            borderColor: getRandomColor(),
+                            backgroundColor: getRandomColor(),
+                            yAxisID: 'y',
+                            fill: false
+                        },
+                        {
+                            label: `${item?.hb} - temp`,
+                            data: temp,
+                            borderColor: '#88CCEE',
+                            backgroundColor: '#88CCEE',
+                            yAxisID: 'y',
+                            fill: false
+                        },
+                        {
+                            label: `${item?.hb} - humidity`,
+                            data: humidity,
+                            borderColor: '#44AA99',
+                            backgroundColor: '#44AA99',
+                            yAxisID: 'y',
+                            fill: false
+                        },
+                        {
+                            label: `${item?.hb} - co2`,
+                            data: co2,
+                            borderColor: '#332288',
+                            backgroundColor: '#332288',
+                            yAxisID: 'y1',
+                            fill: false
+                        },
+                        {
+                            label: `${item?.hb} - light intensity`,
+                            data: lsi,
+                            borderColor: '#999933',
+                            backgroundColor: '#999933',
+                            yAxisID: 'y1',
+                            fill: false
+                        },
+                        {
+                            label: `${item?.hb} - g/sqft`,
+                            data: generateConstantData(17, item['g/sqft.']),
+                            borderColor: getRandomColor(),
+                            backgroundColor: getRandomColor(),
+                            yAxisID: 'y1',
+                            fill: false
+                        }
+                    ])
+                }
+                // finData.push(...[
+                //     { label: `${item?.hb} - ecin`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
+                //     { label: `${item?.hb} - ecout`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
+                //     { label: `${item?.hb} - g/sqft`, data: item['g/sqft'], borderColor: getRandomColor(), fill: false },
+                //     { label: `${item?.hb} - temp`, data: generateRandomData(70, avg?.avgTemp), borderColor: getRandomColor(), fill: false },
+                //     { label: `${item?.hb} - humidity`, data: generateRandomData(70, avg?.avgHum), borderColor: getRandomColor(), fill: false },
+                //     { label: `${item?.hb} - light intensity`, data: generateRandomData(70, avg?.avgLsi), borderColor: getRandomColor(), fill: false },
+                //     { label: `${item?.hb} - co2`, data: generateRandomData(70, avg?.avgCo2), borderColor: getRandomColor(), fill: false },
+                //     // { label: `${item?.hb} - g/sqft(avg)`, data: generateConstantData(70,66), borderColor: 'red', borderDash: [4, 2],pointRadius: 0,pointStyle: 'line'}
+                // ],)
+            })
+            setGraphData((prev) => {
+                return {
+                    labels: [...labels],
+                    datasets: [...finData]
+                }
+            })
         } else {
             const finData = []
-            finData.push(...[
-                { label: `ecin`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: `ecout`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: ` g/sqft`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: `temp`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: `humidity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: `light intensity`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: `co2`, data: generateRandomData(70), borderColor: getRandomColor(), fill: false },
-                { label: `avg-g/sqft`, data: generateConstantData(70, 66), borderColor: 'red', borderDash: [4, 2], pointRadius: 0, pointStyle: 'line' }
-            ],)
-            setGraphData({ ...data, datasets: finData })
+            const labels = []
+            const datanew = groupDataByDay(data50)
+            const averages = calculateAverages2(datanew);
+            const temp = []
+            const humidity = []
+            const lsi = []
+            const co2 = []
+            // const vpd=[]
+            Object.keys(averages).map((item) => {
+                const keys = Object.keys(averages[item])
+                labels.push(item);
+                temp.push(averages[item][keys[0]])
+                humidity.push(averages[item][keys[1]])
+                co2.push(averages[item][keys[2]])
+                lsi.push(averages[item][keys[3]])
+            })
+            if (data50) {
+                finData.push(...[
+                    {
+                        label: `ecin`,
+                        data: generateRandomData(17),
+                        borderColor: getRandomColor(),
+                        backgroundColor: getRandomColor(),
+                        yAxisID: 'y',
+                        fill: false
+                    },
+                    {
+                        label: `ecout`,
+                        data: generateRandomData(17),
+                        borderColor: getRandomColor(),
+                        backgroundColor: getRandomColor(),
+                        yAxisID: 'y',
+                        fill: false
+                    },
+                    {
+                        label: `temp`,
+                        data: temp,
+                        borderColor: '#88CCEE',
+                        backgroundColor: '#88CCEE',
+                        yAxisID: 'y',
+                        fill: false
+                    },
+                    {
+                        label: `humidity`,
+                        data: humidity,
+                        borderColor: '#44AA99',
+                        backgroundColor: '#44AA99',
+                        yAxisID: 'y',
+                        fill: false
+                    },
+                    {
+                        label: `co2`,
+                        data: co2,
+                        borderColor: '#332288',
+                        backgroundColor: '#332288',
+                        yAxisID: 'y1',
+                        fill: false
+                    },
+                    {
+                        label: `light intensity`,
+                        data: lsi,
+                        borderColor: '#999933',
+                        backgroundColor: '#999933',
+                        yAxisID: 'y1',
+                        fill: false
+                    },
+                    {
+                        label: `g/sqft`,
+                        data: generateConstantData(17, 80),
+                        borderColor: getRandomColor(),
+                        backgroundColor: getRandomColor(),
+                        yAxisID: 'y1',
+                        fill: false
+                    }
+                ])
+            }
+            setGraphData((prev) => {
+                return {
+                    labels: [...labels],
+                    datasets: [...finData]
+                }
+            })
         }
     };
     useEffect(() => {
@@ -101,18 +315,12 @@ export const NewHarvest = () => {
         }
     }, [selectedValue])
 
-    const optionsl = {
-        // responsive: true,
-        maintainAspectRatio: false, // Allow horizontal scrolling
+    const options2 = {
+        responsive: true,
         plugins: {
             legend: {
                 position: 'top',
-                align: selectedValue == 'sep' ? 'start' : 'start',
-                display: true,
-                labels: {
-                    boxWidth: 30,
-                    padding: 20, // Adjust the padding between legend items
-                },
+                // display: false
             },
             title: {
                 display: false,
@@ -132,21 +340,35 @@ export const NewHarvest = () => {
                     display: false,
                 }
             },
-            y: {
+            y1: {
+                min: 0,
+                position: 'left',
                 title: {
                     display: true,
-                    text: '',
+                    text: 'CO2, LSI, Light Intensity',
                     color: 'black',
                     fontWeight: 700,
                     padding: 5
                 },
-                grid: {
-                    display: false
+                ticks: {
+                    // stepSize: 1000// <----- This prop sets the stepSize
                 }
-            }
-        },
-
+            },
+            y: {
+                min: 0,
+                display: true,
+                position: 'right',
+                title: {
+                    display: true,
+                    text: 'Temp, Humidity, g/sqft, ecin, ecout',
+                    color: 'black',
+                    fontWeight: 700,
+                    padding: 5
+                },
+            },
+        }
     };
+
     return (
         <div className="p-2 mt-4">
             <div className="row">
@@ -178,10 +400,10 @@ export const NewHarvest = () => {
                         <table className="table">
                             <thead className="sticky-top" >
                                 <tr>
-                                    <th>HB</th>
-                                    <th>Bud</th>
-                                    <th>Popcorn</th>
-                                    <th>Shake/Trim</th>
+                                    <th style={{ minWidth: '200px' }}>HB</th>
+                                    <th>Bud(g)</th>
+                                    <th>Popcorn(g)</th>
+                                    <th>Shake/Trim(g)</th>
                                     <th>Yield</th>
                                     <th>g/plant</th>
                                     <th>g/Sqft</th>
@@ -191,12 +413,12 @@ export const NewHarvest = () => {
                                 {batches.map((batch) => (
                                     <tr key={batch.hb}>
                                         <td>{batch.hb}</td>
-                                        <td>{batch.b}</td>
-                                        <td>{batch.p}</td>
-                                        <td>{batch.t}</td>
-                                        <td>{batch.yield}</td>
-                                        <td>{batch.gPlant}</td>
-                                        <td>{batch.gSqft}</td>
+                                        <td>{parseFloat(batch['Bud (g)']).toFixed(2)}</td>
+                                        <td>{parseFloat(batch['Popcorn (g)']).toFixed(2)}</td>
+                                        <td>{parseFloat(batch['Shake/Trim (g):']).toFixed(2)}</td>
+                                        <td>{parseFloat(batch['Wet Weight'])?.toFixed(2) - parseFloat(batch['Waste'])?.toFixed(2)}</td>
+                                        <td>{parseFloat(batch['g/plant']).toFixed(2)}</td>
+                                        <td>{parseFloat(batch['g/sqft.']).toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -220,10 +442,8 @@ export const NewHarvest = () => {
                                 <label for="css">Combined</label>
                             </div>
                         </div>
-                        <div style={{ minWidth: `${70 * 50}px`, minHeight: '50vh' /* Set the desired minimum width based on the number of days */ }}>
-                            <LineChart data={graphData} height={50} options={{
-                                ...optionsl
-                            }} />
+                        <div style={{ minWidth: `${70 * 30}px`, minHeight: '40vh' /* Set the desired minimum width based on the number of days */ }}>
+                            <LineChart data={graphData} height={60} options={options2} />
                         </div>
                     </div>}
                 </div>
@@ -233,8 +453,8 @@ export const NewHarvest = () => {
 
                     {batches.length > 0 && <>
                         <h2 className='heading1'>BPT Detail</h2>
-                        <div className='card' style={{ width: '100%', overflowX: 'auto', maxHeight: '50vh' }}>
-                            <GroupedBarChart selBatches={selectedBatches} />
+                        <div className='card' style={{ minWidth: '800px', overflowX: 'auto', height: 'fit-content' }}>
+                            <GroupedBarChart selBatches={selectedBatches} height={80} />
                         </div>
                     </>}
                 </div>
