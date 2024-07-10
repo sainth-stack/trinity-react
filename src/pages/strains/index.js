@@ -9,6 +9,8 @@ export const Strains = () => {
     const labels1 = ['01-04-2023', '01-05-2023', '01-06-2023', '01-07-2023', '01-08-2023']
     const [toDate, setToDate] = useState(new Date("2023-01-01"));
     const [fromDate, setFromDate] = useState(new Date("2023-01-10"));
+    const [tag, setTag] = useState("Room1")
+    const [facility, setFacility] = useState('Facility 1')
     const data1 = {
         labels: labels1,
         datasets: [
@@ -147,7 +149,7 @@ export const Strains = () => {
         const max = 80;
         const min = 60;
         const randomNumbers = [];
-        for (let i = 0; i <= diff+1; i++) {
+        for (let i = 0; i <= diff + 1; i++) {
             randomNumbers.push(avg ? avg : Math.floor(Math.random() * (max - min + 1)) + min);
         }
         return randomNumbers
@@ -169,18 +171,98 @@ export const Strains = () => {
         setFinalData(true)
     }, [finalData])
 
+    const [plantTags, setPlanttags] = useState([{
+        label: 'Room1', value: "Room1"
+    }, {
+        label: 'Room2', value: "Room2"
+    }
+    ])
+
+    const facilitys = [{
+        label: 'Facility 1', value: "Facility 1"
+    },
+    {
+        label: 'Facility 2', value: "Facility 2"
+    },
+    {
+        label: 'Facility 3', value: "Facility 3"
+    }
+    ]
+
+
+    const onSelect = (e) => {
+        setTag(e.target.value)
+    }
+
+    const onSelectfacility = (e) => {
+        if (e.target.value === 'Facility 1') {
+            setPlanttags([{
+                label: 'Room1', value: "Room1"
+            },
+            {
+                label: 'Room2', value: "Room2"
+            }
+            ])
+        } else if (e.target.value === 'Facility 2') {
+            setPlanttags([{
+                label: 'Room3', value: "Room3"
+            },
+            {
+                label: 'Room4', value: "Room4"
+            }
+            ])
+        }
+        else if (e.target.value === 'Facility 3') {
+            setPlanttags([{
+                label: 'Room5', value: "Room5"
+            },
+            {
+                label: 'Room6', value: "Room6"
+            }
+            ])
+        }
+        setFacility(e.target.value)
+    }
+
     return (
         <div className="p-3">
-            <div className="d-flex mb-2" style={{alignItems:'center'}}>
-                <div className="me-2">
+            <div className="d-flex mb-2" style={{ alignItems: 'center' }}>
+                <label>
+                    <span className="labelHeading" style={{ fontWeight: 500 }}>Facilities:</span>
+                    <select className="select-css2" style={{ minWidth: '300px' }} onChange={(e) => onSelectfacility(e)} value={facility}>
+                        <option>Select</option>
+                        {
+                            facilitys.map((item) => {
+                                return (
+                                    <option>{item.label}</option>
+                                )
+                            })
+                        }
+                    </select>
+                </label>
+                <label>
+                    <span className="labelHeading" style={{ fontWeight: 500 }}>Room:</span>
+                    <select className="select-css2" style={{ minWidth: '300px' }} onChange={(e) => onSelect(e)} value={tag}>
+                        <option>Select</option>
+                        {
+                            plantTags.map((item) => {
+                                return (
+                                    <option>{item.label}</option>
+                                )
+                            })
+                        }
+                    </select>
+                </label>
+                <label style={{display:'flex',flexDirection:'column'}}>
                     <span className="labelHeading">To:</span>
-                    <DatePicker selected={toDate} onChange={date => setToDate(date)} />
-                </div>
-                <div>
+                    <DatePicker selected={toDate} onChange={date => setToDate(date)} className="select-css2"/>
+                </label>
+                <label style={{display:'flex',flexDirection:'column'}}>
                     <span className="labelHeading">From:</span>
-                    <DatePicker selected={fromDate} onChange={date => setFromDate(date)} />
-                </div>
-                <div className="ms-2">
+                    <DatePicker selected={fromDate} onChange={date => setFromDate(date)} className="select-css2"/>
+                </label>
+
+                <div className="ms-2 mt-4">
                     <button className="btn btn-primary" onClick={() => handleFilter()}>submit</button>
                 </div>
             </div>

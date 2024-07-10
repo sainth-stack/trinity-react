@@ -37,7 +37,7 @@ export const options = {
     x: {
       title: {
         display: true,
-        text: 'Day',
+        text: 'Date',
         color: 'black',
         fontWeight: 700,
         padding: 5
@@ -50,84 +50,92 @@ export const options = {
       min: 0,
       position: 'left',
       title: {
+        display: true,
+        text: 'Temperature & Humidity',
+        color: 'black',
+        fontWeight: 700,
+        padding: 5
+      },
+      ticks: {
+        // stepSize: 1000// <----- This prop sets the stepSize
+      }
+    },
+    // y1: {
+    //     min: 0,
+    //     display: true,
+    //     position: 'right',
+    //     title: {
+    //         display: true,
+    //         text: 'Temperature & humidity',
+    //         color: 'black',
+    //         fontWeight: 700,
+    //         padding: 5
+    //     },
+    //   },
+  }
+};
+
+const getOptions = (data) => {
+  const d1 = data?.datasets?.some((dataset) => {
+    return dataset.yAxisID === 'y' && !dataset.hidden
+  })
+  const d2 = data?.datasets?.some((dataset) => dataset.yAxisID === 'y1' && !dataset.hidden)
+  return {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+        display: false
+      },
+      title: {
+        display: false,
+        text: 'Chart.js Line Chart',
+      },
+    },
+    scales: {
+      x: {
+        title: {
           display: true,
-          text: 'Temperature & Humidity',
+          text: 'Date',
           color: 'black',
           fontWeight: 700,
           padding: 5
+        },
+        grid: {
+          display: false,
+        }
       },
-      ticks: {
-          // stepSize: 1000// <----- This prop sets the stepSize
-      }
-  },
-  // y1: {
-  //     min: 0,
-  //     display: true,
-  //     position: 'right',
-  //     title: {
-  //         display: true,
-  //         text: 'Temperature & humidity',
-  //         color: 'black',
-  //         fontWeight: 700,
-  //         padding: 5
-  //     },
-  //   },
-  }
-};
-export const options2 = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-      // display: false
-    },
-    title: {
-      display: false,
-      text: 'Chart.js Line Chart',
-    },
-  },
-  scales: {
-    x: {
-      title: {
-        display: true,
-        text: 'Day',
-        color: 'black',
-        fontWeight: 700,
-        padding: 5
-      },
-      grid: {
-        display: false,
-      }
-    },
-    y: {
-      min: 0,
-      position: 'left',
-      title: {
+      y: {
+        min: 0,
+        position:d2 ? 'right' :'left',
+        title: {
           display: true,
           text: 'CO2 & LSI',
           color: 'black',
           fontWeight: 700,
           padding: 5
+        },
+        display: d1,
       },
-      ticks: {
-          // stepSize: 1000// <----- This prop sets the stepSize
-      }
-  },
-  y1: {
-      min: 0,
-      display: true,
-      position: 'right',
-      title: {
+      y1: {
+        min: 0,
+        // display: true,
+        position: 'left',
+        title: {
           display: true,
           text: 'Temperature & humidity',
           color: 'black',
           fontWeight: 700,
           padding: 5
+        },
+        display: d2,
       },
-    },
-  }
-};
+    }
+  };
+}
+
 
 export function LineChart(props) {
-  return <Line options={props.options===true ? options2 : props.options} data={props.data} height={props.height ? props.height : 80} width={props.width} />;
+
+  return <Line options={props.options === true ? getOptions(props.data) : props.options} data={props.data} height={props.height ? props.height : 80} width={props.width} />;
 }

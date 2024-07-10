@@ -80,5 +80,5 @@
 }
 
 .graphCardHeight{
-	height: 330px !important;
+	height: fit-content !important;
 }

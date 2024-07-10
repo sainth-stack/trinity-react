@@ -25,7 +25,7 @@ const Dashboard = () => {
             x: {
                 title: {
                     display: true,
-                    text: 'Day',
+                    text: 'Date',
                     color: 'black',
                     fontWeight: 700,
                     padding: 5
@@ -307,7 +307,7 @@ const Dashboard = () => {
                             y: {
                                 title: {
                                     display: true,
-                                    text: 'quantity',
+                                    text: 'rating',
                                     color: 'black',
                                     fontWeight: 700,
                                     padding: 5

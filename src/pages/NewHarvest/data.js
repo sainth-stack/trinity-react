@@ -1,4 +1,4 @@
-export const harvestdata=[
+export const harvestdata = [
     {
         "Harvest Batch": "Strawberry Cough45412",
         "Strain": "Strawberry Cough",

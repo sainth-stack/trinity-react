@@ -197,7 +197,7 @@ export const Twin = () => {
                 "LSI": 0,
                 count: 0
             };
-    
+
             dayData.forEach(obj => {
                 total["Ch:1 - Temperature (°C)"] += parseFloat(obj["Ch:1 - Temperature (°C)"]);
                 total["Ch:2 - RH (%)"] += parseFloat(obj["Ch:2 - RH (%)"]);
@@ -205,7 +205,7 @@ export const Twin = () => {
                 total["LSI"] += parseFloat(obj["LSI"]);
                 total.count++;
             });
-    
+
             averages[day] = {
                 "Average Temperature (°C)": total["Ch:1 - Temperature (°C)"] / total.count,
                 "Average RH (%)": total["Ch:2 - RH (%)"] / total.count,
@@ -224,8 +224,8 @@ export const Twin = () => {
             const labels = []
             const temp = []
             const humidity = []
-            const lsi=[]
-            const co2=[]
+            const lsi = []
+            const co2 = []
             // const vpd=[]
             Object.keys(averages).map((item) => {
                 const keys = Object.keys(averages[item])
@@ -239,6 +239,7 @@ export const Twin = () => {
                 labels: labels,
                 datasets: [
                     {
+                        hidden: false,
                         label: "Temperature",
                         data: temp,
                         borderColor: '#88CCEE',
@@ -246,6 +247,7 @@ export const Twin = () => {
                         yAxisID: 'y1',
                     },
                     {
+                        hidden: false,
                         label: "Humidity",
                         data: humidity,
                         borderColor: '#44AA99',
@@ -260,6 +262,7 @@ export const Twin = () => {
                     //     yAxisID: 'y1',
                     // },
                     {
+                        hidden: false,
                         label: 'CO2',
                         data: co2,
                         borderColor: '#332288',
@@ -267,6 +270,7 @@ export const Twin = () => {
                         yAxisID: 'y',
                     },
                     {
+                        hidden: false,
                         label: 'LSI',
                         data: lsi,
                         borderColor: '#999933',
@@ -387,7 +391,7 @@ export const Twin = () => {
             //     });
             //     return result;
             // };
-            
+
             // const jsonData = convertToJSON(data);
             // console.log(jsonData);
             const formattedData = data?.slice(1)?.map(row => ({
@@ -395,8 +399,8 @@ export const Twin = () => {
                 "Ch:2 - RH (%)": row[2],
                 "Date-Time (MST)": new Date(row[0]),
                 "Dew Point (°C)": row[3],
-                "CO2":row[4],
-                'LSI':row[5]
+                "CO2": row[4],
+                'LSI': row[5]
             }));
             console.log(formattedData)
             setExcelData(formattedData);
@@ -413,6 +417,37 @@ export const Twin = () => {
         inputFileRef.current.click();
     }
 
+    const CustomLegend = ({ datasets, toggleDataset }) => {
+        return (
+            <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+                {datasets?.datasets?.map((dataset, index) => (
+                    <label key={index} style={{ cursor: 'pointer', display: 'flex', gap: '4px', alignItems: 'center' }} onClick={() => toggleDataset(index)}>
+                        <div style={{
+                            width: '40px',
+                            height: '15px',
+                            background: dataset?.backgroundColor
+                        }}></div>
+                        <div style={{
+                            fontSize: '12px', textDecoration: dataset.hidden ? 'line-through' : 'none',
+                        }}> {dataset?.label}</div>
+                    </label>
+                ))}
+            </div>
+        );
+    };
+
+    const toggleDataset = (index) => {
+        const updatedDatasets = data2?.datasets?.map((dataset, i) => {
+            if (i === index) {
+                return {
+                    ...dataset,
+                    hidden: !dataset.hidden,
+                };
+            }
+            return dataset;
+        });
+        setData2({ datasets: updatedDatasets, labels: data2.labels });
+    };
 
     return (
         <div className="ms-4 me-4">
@@ -473,7 +508,8 @@ export const Twin = () => {
                 <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: 'fit-content' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
-                    <LineChart data={data2} options={true}/>
+                    <CustomLegend datasets={data2} toggleDataset={toggleDataset} />
+                    <LineChart data={data2} options={true} />
                 </div>
             </div>
         </div>

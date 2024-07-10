@@ -397,14 +397,14 @@ export const NewHarvest = () => {
                 <div className="col-md-9">
                     <h2 className='heading1'>Plants</h2>
                     <div className="table-container" style={{ maxHeight: '300px', overflowY: 'auto', display: 'block' }}>
-                        <table className="table">
+                        {/* <table className="table">
                             <thead className="sticky-top" >
                                 <tr>
-                                    <th style={{ minWidth: '200px' }}>HB</th>
+                                    <th style={{ minWidth: '200px' }}>Harvest Batch</th>
                                     <th>Bud(g)</th>
                                     <th>Popcorn(g)</th>
                                     <th>Shake/Trim(g)</th>
-                                    <th>Yield</th>
+                                    <th>Total Weight (g)</th>
                                     <th>g/plant</th>
                                     <th>g/Sqft</th>
                                 </tr>
@@ -422,33 +422,64 @@ export const NewHarvest = () => {
                                     </tr>
                                 ))}
                             </tbody>
+                        </table> */}
+                        <table className="table">
+                            <thead className="sticky-top">
+                                <tr>
+                                    <th style={{ minWidth: '200px', border: '1px solid black' }}>Harvest Batch</th>
+                                    <th colSpan="2" style={{ border: '1px solid black' }}>Bud</th>
+                                    <th colSpan="2" style={{ border: '1px solid black' }}>Popcorn</th>
+                                    <th colSpan="2" style={{ border: '1px solid black' }}>Shake/Trim</th>
+                                    <th style={{ border: '1px solid black' }}>Total Weight (g)</th>
+                                    <th style={{ border: '1px solid black' }}>g/plant</th>
+                                    <th style={{ border: '1px solid black' }}>g/Sqft</th>
+                                </tr>
+                                <tr>
+                                    <th style={{ border: '1px solid black' }}></th>
+                                    <th style={{ border: '1px solid black' }}>g</th>
+                                    <th style={{ border: '1px solid black' }}>%</th>
+                                    <th style={{ border: '1px solid black' }}>g</th>
+                                    <th style={{ border: '1px solid black' }}>%</th>
+                                    <th style={{ border: '1px solid black' }}>g</th>
+                                    <th style={{ border: '1px solid black' }}>%</th>
+                                    <th style={{ border: '1px solid black' }}></th>
+                                    <th style={{ border: '1px solid black' }}></th>
+                                    <th style={{ border: '1px solid black' }}></th>
+                                </tr>
+                            </thead>
+                            <tbody className="overflow-auto" style={{ maxHeight: '300px' }}>
+                                {batches.map((batch) => {
+                                    const totalWeight = parseFloat(batch['Wet Weight']) - parseFloat(batch['Waste']);
+                                    const budWeight = parseFloat(batch['Bud (g)']);
+                                    const popcornWeight = parseFloat(batch['Popcorn (g)']);
+                                    const shakeTrimWeight = parseFloat(batch['Shake/Trim (g):']);
+                                    const budPercentage = parseFloat(batch['Bud %']) * 100;
+                                    const popcornPercentage = parseFloat(batch['Popcorn %']) * 100;
+                                    const shakeTrimPercentage = parseFloat(batch['Shake/Trim %']) * 100;
+
+                                    return (
+                                        <tr key={batch.hb}>
+                                            <td style={{ border: '1px solid black' }}>{batch.hb}</td>
+                                            <td style={{ border: '1px solid black' }}>{budWeight.toFixed(2)}</td>
+                                            <td style={{ border: '1px solid black' }}>{budPercentage.toFixed(0)}%</td>
+                                            <td style={{ border: '1px solid black' }}>{popcornWeight.toFixed(2)}</td>
+                                            <td style={{ border: '1px solid black' }}>{popcornPercentage.toFixed(0)}%</td>
+                                            <td style={{ border: '1px solid black' }}>{shakeTrimWeight.toFixed(2)}</td>
+                                            <td style={{ border: '1px solid black' }}>{shakeTrimPercentage.toFixed(0)}%</td>
+                                            <td style={{ border: '1px solid black' }}>{totalWeight.toFixed(2)}</td>
+                                            <td style={{ border: '1px solid black' }}>{parseFloat(batch['g/plant']).toFixed(2)}</td>
+                                            <td style={{ border: '1px solid black' }}>{parseFloat(batch['g/sqft.']).toFixed(2)}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
-            <div className="row">
-                <div className="col-md-12 mb-2 mt-2" >
-                    <h2 className='heading1'>Inputs</h2>
-                    {batches.length > 0 && <div className='card' style={{ width: '100%', overflowX: 'auto' }}>
-                        <div class="radio-container">
-                            <div class="radio-option">
-                                <input type="radio" id="html" name="type" value="sep" checked={selectedValue === 'sep'}
-                                    onChange={handleRadioChange} />
-                                <label for="html">Separated</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="css" name="type" value="com" checked={selectedValue === 'com'}
-                                    onChange={handleRadioChange} />
-                                <label for="css">Combined</label>
-                            </div>
-                        </div>
-                        <div style={{ minWidth: `${70 * 30}px`, minHeight: '40vh' /* Set the desired minimum width based on the number of days */ }}>
-                            <LineChart data={graphData} height={60} options={options2} />
-                        </div>
-                    </div>}
-                </div>
-            </div>
-            <div className="row">
+           
+            <div className="row mt-3 mb-2">
                 <div className="col-md-12 mb-2" >
 
                     {batches.length > 0 && <>
