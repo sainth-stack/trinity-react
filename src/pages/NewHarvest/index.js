@@ -478,7 +478,28 @@ export const NewHarvest = () => {
                     </div>
                 </div>
             </div>
-           
+            <div className="row">
+                <div className="col-md-12 mb-2 mt-2" >
+                    <h2 className='heading1'>Inputs</h2>
+                    {batches.length > 0 && <div className='card' style={{ width: '100%', overflowX: 'auto' }}>
+                        <div class="radio-container">
+                            <div class="radio-option">
+                                <input type="radio" id="html" name="type" value="sep" checked={selectedValue === 'sep'}
+                                    onChange={handleRadioChange} />
+                                <label for="html">Separated</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="css" name="type" value="com" checked={selectedValue === 'com'}
+                                    onChange={handleRadioChange} />
+                                <label for="css">Combined</label>
+                            </div>
+                        </div>
+                        <div style={{ minWidth: `${70 * 30}px`, minHeight: '40vh' /* Set the desired minimum width based on the number of days */ }}>
+                            <LineChart data={graphData} height={60} options={options2} />
+                        </div>
+                    </div>}
+                </div>
+            </div>
             <div className="row mt-3 mb-2">
                 <div className="col-md-12 mb-2" >
 
