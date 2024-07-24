@@ -29,7 +29,7 @@ export default function SidebarV2() {
         <SidebarItem to="/rooms" label="Rooms" selected={selectedItem === "/rooms"} />
         {/* <SidebarItem to="/humidity" label="Humidity" selected={selectedItem === "/humidity"} /> */}
         <SidebarItem to="/harvest" label="Harvest" selected={selectedItem === "/harvest"} />
-        <SidebarItem to="/strains" label="Strains" selected={selectedItem === "/strains"} />
+        <SidebarItem to="/strains" label="Photosynthesis" selected={selectedItem === "/strains"} />
       </ul>
     </div>
   );

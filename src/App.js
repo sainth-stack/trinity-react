@@ -11,7 +11,7 @@ import { Twin } from './pages/Twin';
 import { Humidity } from './pages/Humidity'
 import { AdminLayoutV2 } from './layoutV2';
 import { Harvest } from './pages/Harvest';
-import { Strains } from './pages/strains';
+import { Photosynthesis } from './pages/strains';
 import Zwhoosh from './pages/zwhoosh';
 import Dashboard from './pages/dashboard';
 import { NewHarvest } from './pages/NewHarvest';
@@ -30,7 +30,7 @@ function App() {
           <Route path="/humidity" element={<Humidity />} />
           <Route path="/new-harvest" element={<Harvest />} />
           <Route path="/harvest" element={<NewHarvest />} />
-          <Route path="/strains" element={<Strains />} />
+          <Route path="/strains" element={<Photosynthesis />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
         <Route path="/" element={<AdminLayoutV3 />}>

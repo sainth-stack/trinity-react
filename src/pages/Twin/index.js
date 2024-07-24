@@ -7,6 +7,7 @@ import { addDays } from 'date-fns';
 import moment from 'moment';
 import { read, utils } from 'xlsx'
 import { data50 } from './data'
+import { CustomLegend } from "../../components/CustomLegend";
 export const Twin = () => {
     const labels1 = ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05']
     const data1 = {
@@ -226,12 +227,14 @@ export const Twin = () => {
             const humidity = []
             const lsi = []
             const co2 = []
+            const vpd = []
             // const vpd=[]
             Object.keys(averages).map((item) => {
                 const keys = Object.keys(averages[item])
                 labels.push(item);
                 temp.push(averages[item][keys[0]])
                 humidity.push(averages[item][keys[1]])
+                vpd.push(averages[item][keys[1]] / averages[item][keys[0]])
                 co2.push(averages[item][keys[2]])
                 lsi.push(averages[item][keys[3]])
             })
@@ -276,7 +279,15 @@ export const Twin = () => {
                         borderColor: '#999933',
                         backgroundColor: '#999933',
                         yAxisID: 'y',
-                    }
+                    },
+                    {
+                        hidden: true,
+                        label: 'VPD',
+                        data: vpd,
+                        borderColor: '#DDCC77',
+                        backgroundColor: '#DDCC77',
+                        yAxisID: 'y',
+                    },
                 ],
             };
             setData2(data1)
@@ -417,37 +428,44 @@ export const Twin = () => {
         inputFileRef.current.click();
     }
 
-    const CustomLegend = ({ datasets, toggleDataset }) => {
-        return (
-            <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
-                {datasets?.datasets?.map((dataset, index) => (
-                    <label key={index} style={{ cursor: 'pointer', display: 'flex', gap: '4px', alignItems: 'center' }} onClick={() => toggleDataset(index)}>
-                        <div style={{
-                            width: '40px',
-                            height: '15px',
-                            background: dataset?.backgroundColor
-                        }}></div>
-                        <div style={{
-                            fontSize: '12px', textDecoration: dataset.hidden ? 'line-through' : 'none',
-                        }}> {dataset?.label}</div>
-                    </label>
-                ))}
-            </div>
-        );
-    };
+
 
     const toggleDataset = (index) => {
         const updatedDatasets = data2?.datasets?.map((dataset, i) => {
-            if (i === index) {
-                return {
-                    ...dataset,
-                    hidden: !dataset.hidden,
-                };
-            }
-            return dataset;
+          if (i === index) {
+            return {
+              ...dataset,
+              hidden: !dataset.hidden,
+            };
+          }
+          return dataset;
         });
+      
+        // Find the indices of LSI, CO2, and VPD datasets
+        const lsiIndex = updatedDatasets.findIndex(dataset => dataset.label === 'LSI');
+        const co2Index = updatedDatasets.findIndex(dataset => dataset.label === 'CO2');
+        const vpdIndex = updatedDatasets.findIndex(dataset => dataset.label === 'VPD');
+      
+        // Check if either LSI or CO2 is not hidden
+        const lsiHidden = updatedDatasets[lsiIndex]?.hidden;
+        const co2Hidden = updatedDatasets[co2Index]?.hidden;
+      
+        if ((!lsiHidden || !co2Hidden) && vpdIndex !== -1) {
+          updatedDatasets[vpdIndex] = {
+            ...updatedDatasets[vpdIndex],
+            hidden: true, // Ensure VPD is hidden
+          };
+        } else if (lsiHidden && co2Hidden && vpdIndex !== -1) {
+          updatedDatasets[vpdIndex] = {
+            ...updatedDatasets[vpdIndex],
+            hidden: false, // Ensure VPD is enabled if both LSI and CO2 are hidden
+          };
+        }
+      
         setData2({ datasets: updatedDatasets, labels: data2.labels });
-    };
+      };
+      
+
 
     return (
         <div className="ms-4 me-4">

@@ -5,6 +5,8 @@ import { LineChart } from "../Twin/LineCHart";
 import GroupedBarChart from './barChart'
 import { harvestdata } from './data';
 import { data50 } from '../Twin/data'
+import { CustomLegend } from '../../components/CustomLegend';
+import { InputData } from './InputData';
 const generateRandomData = (length, value) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 100));
 };
@@ -173,7 +175,7 @@ export const NewHarvest = () => {
                             fill: false
                         },
                         {
-                            label: `${item?.hb} - humidity`,
+                            label: `${item?.hb} - hum`,
                             data: humidity,
                             borderColor: '#44AA99',
                             backgroundColor: '#44AA99',
@@ -189,7 +191,7 @@ export const NewHarvest = () => {
                             fill: false
                         },
                         {
-                            label: `${item?.hb} - light intensity`,
+                            label: `${item?.hb} - lsi`,
                             data: lsi,
                             borderColor: '#999933',
                             backgroundColor: '#999933',
@@ -268,7 +270,7 @@ export const NewHarvest = () => {
                         fill: false
                     },
                     {
-                        label: `humidity`,
+                        label: `hum`,
                         data: humidity,
                         borderColor: '#44AA99',
                         backgroundColor: '#44AA99',
@@ -284,7 +286,7 @@ export const NewHarvest = () => {
                         fill: false
                     },
                     {
-                        label: `light intensity`,
+                        label: `lsi`,
                         data: lsi,
                         borderColor: '#999933',
                         backgroundColor: '#999933',
@@ -309,65 +311,12 @@ export const NewHarvest = () => {
             })
         }
     };
+
     useEffect(() => {
         if (batches.length > 0) {
             handleCheckboxChange({ hb: null })
         }
     }, [selectedValue])
-
-    const options2 = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-                // display: false
-            },
-            title: {
-                display: false,
-                text: 'Chart.js Line Chart',
-            },
-        },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Day',
-                    color: 'black',
-                    fontWeight: 700,
-                    padding: 5
-                },
-                grid: {
-                    display: false,
-                }
-            },
-            y1: {
-                min: 0,
-                position: 'left',
-                title: {
-                    display: true,
-                    text: 'CO2, LSI, Light Intensity',
-                    color: 'black',
-                    fontWeight: 700,
-                    padding: 5
-                },
-                ticks: {
-                    // stepSize: 1000// <----- This prop sets the stepSize
-                }
-            },
-            y: {
-                min: 0,
-                display: true,
-                position: 'right',
-                title: {
-                    display: true,
-                    text: 'Temp, Humidity, g/sqft, ecin, ecout',
-                    color: 'black',
-                    fontWeight: 700,
-                    padding: 5
-                },
-            },
-        }
-    };
 
     return (
         <div className="p-2 mt-4">
@@ -481,23 +430,7 @@ export const NewHarvest = () => {
             <div className="row">
                 <div className="col-md-12 mb-2 mt-2" >
                     <h2 className='heading1'>Inputs</h2>
-                    {batches.length > 0 && <div className='card' style={{ width: '100%', overflowX: 'auto' }}>
-                        <div class="radio-container">
-                            <div class="radio-option">
-                                <input type="radio" id="html" name="type" value="sep" checked={selectedValue === 'sep'}
-                                    onChange={handleRadioChange} />
-                                <label for="html">Separated</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="css" name="type" value="com" checked={selectedValue === 'com'}
-                                    onChange={handleRadioChange} />
-                                <label for="css">Combined</label>
-                            </div>
-                        </div>
-                        <div style={{ minWidth: `${70 * 30}px`, minHeight: '40vh' /* Set the desired minimum width based on the number of days */ }}>
-                            <LineChart data={graphData} height={60} options={options2} />
-                        </div>
-                    </div>}
+                   {batches?.length>0&& <InputData {...{ batches, handleRadioChange, selectedValue, graphData }} />}
                 </div>
             </div>
             <div className="row mt-3 mb-2">

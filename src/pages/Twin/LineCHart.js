@@ -79,7 +79,8 @@ const getOptions = (data) => {
   const d1 = data?.datasets?.some((dataset) => {
     return dataset.yAxisID === 'y' && !dataset.hidden
   })
-  const d2 = data?.datasets?.some((dataset) => dataset.yAxisID === 'y1' && !dataset.hidden)
+  const d2 = data?.datasets?.some((dataset) => dataset.yAxisID === 'y1' && (!dataset.hidden))
+  const vpd=data?.datasets?.some((dataset) => dataset.label === 'VPD' && (dataset.hidden))
   return {
     responsive: true,
     plugins: {
@@ -107,19 +108,17 @@ const getOptions = (data) => {
       },
       y: {
         min: 0,
-        position:d2 ? 'right' :'left',
+        position: 'right',
         title: {
           display: true,
-          text: 'CO2 & LSI',
+          text: !vpd ? "VPD" : 'CO2 & LSI',
           color: 'black',
           fontWeight: 700,
           padding: 5
         },
-        display: d1,
       },
       y1: {
         min: 0,
-        // display: true,
         position: 'left',
         title: {
           display: true,

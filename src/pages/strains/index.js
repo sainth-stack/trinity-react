@@ -1,301 +1,212 @@
-import { LineChart } from "../Twin/LineCHart";
-import { useEffect, useState } from "react";
-import './index.css'
+import { useState } from "react";
+import './index.css';
 import DatePicker from 'react-datepicker';
-import { addDays } from 'date-fns';
-import moment from 'moment';
+import { Radar } from 'react-chartjs-2';
+import { Chart, RadialLinearScale, ArcElement, Tooltip, Legend } from 'chart.js';
 
-export const Strains = () => {
-    const labels1 = ['01-04-2023', '01-05-2023', '01-06-2023', '01-07-2023', '01-08-2023']
+Chart.register(RadialLinearScale, ArcElement, Tooltip, Legend);
+
+export const Photosynthesis = () => {
     const [toDate, setToDate] = useState(new Date("2023-01-01"));
     const [fromDate, setFromDate] = useState(new Date("2023-01-10"));
-    const [tag, setTag] = useState("Room1")
-    const [facility, setFacility] = useState('Facility 1')
-    const data1 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'reading1',
-                data: [71, 71.6, 70.3, 70.5, 71.2],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            }
-        ],
-    };
-    const data2 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'reading1',
-                data: [65, 70, 73, 63, 69],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            }
-        ],
-    };
-    const data3 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'reading1',
-                data: [73, 65, 70, 69, 71],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            }
-        ],
-    };
-    const data4 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'reading1',
-                data: [64, 70, 75, 63, 70],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            }
-        ],
-    };
-    const data5 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'reading1',
-                data: [60, 65, 75, 70, 64],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            }
-        ],
-    };
-    const data6 = {
-        labels: labels1,
-        datasets: [
-            {
-                label: 'reading1',
-                data: [72, 70, 75, 63, 60],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            }
-        ],
-    };
-    const [data, setData] = useState(data1)
-    const [finalData, setFinalData] = useState(true)
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Chart.js Line Chart',
-            },
+    const [tag, setTag] = useState("All");
+    const [strain, setStrain] = useState("All");
+    const [facility, setFacility] = useState('All');
+    const defaultData = [
+        {
+            facility: "Facility 1", rooms: [
+                {
+                    room: "Room 1", strains: [
+                        { strain: "Strain 1", data: [100, 50, 100, 50] }
+                    ]
+                },
+                {
+                    room: "Room 2", strains: [
+                        { strain: "Strain 2", data: [80, 50, 90, 30] }
+                    ]
+                }
+            ]
         },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Day',
-                    color: 'black',
-                    fontWeight: 700,
-                    padding: 5
+        {
+            facility: "Facility 2", rooms: [
+                {
+                    room: "Room 3", strains: [
+                        { strain: "Strain 3", data: [60, 50, 90, 50] }
+                    ]
                 },
-                grid: {
-                    display: false,
+                {
+                    room: "Room 4", strains: [
+                        { strain: "Strain 4", data: [20, 50, 0, 50] }
+                    ]
                 }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Temperature',
-                    color: 'black',
-                    fontWeight: 700,
-                    padding: 5
-                },
-                grid: {
-                    display: false
-                }
-            }
+            ]
         }
-    };
+    ]
+    const [data, setData] = useState(defaultData);
+
+    const [plantTags, setPlanttags] = useState([
+        { label: 'Room1', value: "Room1" },
+        { label: 'Room2', value: "Room2" }
+    ]);
+
+    const facilities = [
+        { label: 'Facility 1', value: "Facility 1" },
+        { label: 'Facility 2', value: "Facility 2" },
+        { label: 'Facility 3', value: "Facility 3" }
+    ];
+
+    const strains = [
+        { label: 'Strain 1', value: "Strain 1" },
+        { label: 'Strain 2', value: "Strain 2" },
+        { label: 'Strain 3', value: "Strain 3" }
+    ];
 
     const handleFilter = () => {
-        console.log(finalData)
-        if (finalData) {
-            const differenceInTime = fromDate.getTime() - toDate.getTime();
-            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-            const labels1 = getLabels(toDate, differenceInDays)
-            const data1 = {
-                labels: labels1,
-                datasets: getDataSets(differenceInDays, 'Blue Dream'),
-            };
-            return data1
+        let filtered = defaultData;
+
+        // Filter by facility
+        if (facility !== "All") {
+            filtered = filtered.filter(d => d.facility === facility);
         }
-    }
 
-    const getLabels = (toDate, diff) => {
-        const constantsArray = [];
-        function addConstant(value) {
-            constantsArray.push(value);
+        // Filter by room
+        if (tag !== "All") {
+            filtered = filtered.map(facilityData => ({
+                ...facilityData,
+                rooms: facilityData.rooms.filter(room => room.room === tag)
+            }));
         }
-        for (let i = 0; i <= diff + 1; i++) {
-            addConstant(`${moment(addDays(toDate, i)).format("YYYY-MM-DD")}`);
+
+        // Filter by strain
+        if (strain !== "All") {
+            filtered = filtered.map(facilityData => ({
+                ...facilityData,
+                rooms: facilityData.rooms.map(room => ({
+                    ...room,
+                    strains: room.strains.filter(strainObj => strainObj.strain === strain)
+                }))
+            }));
         }
-        console.log(constantsArray)
-        return constantsArray
-    }
 
-    const getRandomData = (diff, avg) => {
-        const max = 80;
-        const min = 60;
-        const randomNumbers = [];
-        for (let i = 0; i <= diff + 1; i++) {
-            randomNumbers.push(avg ? avg : Math.floor(Math.random() * (max - min + 1)) + min);
-        }
-        return randomNumbers
-    }
-
-    const getDataSets = (diff, strain) => {
-        const dataSets = [
-            {
-                label: strain,
-                data: getRandomData(diff),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-        ]
-        return dataSets
-    }
-
-    useEffect(() => {
-        setFinalData(true)
-    }, [finalData])
-
-    const [plantTags, setPlanttags] = useState([{
-        label: 'Room1', value: "Room1"
-    }, {
-        label: 'Room2', value: "Room2"
-    }
-    ])
-
-    const facilitys = [{
-        label: 'Facility 1', value: "Facility 1"
-    },
-    {
-        label: 'Facility 2', value: "Facility 2"
-    },
-    {
-        label: 'Facility 3', value: "Facility 3"
-    }
-    ]
+        // Update the data with the filtered results
+        setData(filtered);
+    };
 
 
     const onSelect = (e) => {
-        setTag(e.target.value)
-    }
+        setTag(e.target.value);
+    };
 
-    const onSelectfacility = (e) => {
-        if (e.target.value === 'Facility 1') {
-            setPlanttags([{
-                label: 'Room1', value: "Room1"
-            },
-            {
-                label: 'Room2', value: "Room2"
+    const onSelectFacility = (e) => {
+        const selectedFacility = e.target.value;
+        const facilityRooms = data.find(d => d.facility === selectedFacility)?.rooms || [];
+
+        setPlanttags(facilityRooms.map(room => ({ label: room.room, value: room.room })));
+        setFacility(selectedFacility);
+    };
+
+    const getRadarData = (roomData) => {
+        return {
+            labels: ['PPFD', 'Temp', 'PPM', 'Hum'], // Adjust labels as needed
+            datasets: [
+                {
+                    label: `${roomData.room}, ${facility}`,
+                    data: normalizeData(roomData.strains[0].data), // Ensure data is normalized
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                },
+            ],
+        };
+    };
+
+    const normalizeData = (data) => {
+        const maxValue = Math.max(...data);
+        return data.map(value => (value / maxValue) * 100);
+    };
+
+    const radarOptions = () => {
+        return {
+            scales: {
+                r: {
+                    angleLines: {
+                        display: true
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 100, // Ensure the radar chart scales up to 100
+                    ticks: {
+                        stepSize: 20, // Adjust step size for readability
+                        callback: (value, index, values) => index === values.length - 1 ? value : '' // Show only the maximum label
+                    }
+                }
             }
-            ])
-        } else if (e.target.value === 'Facility 2') {
-            setPlanttags([{
-                label: 'Room3', value: "Room3"
-            },
-            {
-                label: 'Room4', value: "Room4"
-            }
-            ])
-        }
-        else if (e.target.value === 'Facility 3') {
-            setPlanttags([{
-                label: 'Room5', value: "Room5"
-            },
-            {
-                label: 'Room6', value: "Room6"
-            }
-            ])
-        }
-        setFacility(e.target.value)
-    }
+        };
+    };
+
+    const groupedByFacility = data.reduce((acc, facilityData) => {
+        acc[facilityData.facility] = facilityData.rooms;
+        return acc;
+    }, {});
 
     return (
         <div className="p-3">
             <div className="d-flex mb-2" style={{ alignItems: 'center' }}>
                 <label>
                     <span className="labelHeading" style={{ fontWeight: 500 }}>Facilities:</span>
-                    <select className="select-css2" style={{ minWidth: '300px' }} onChange={(e) => onSelectfacility(e)} value={facility}>
-                        <option>Select</option>
-                        {
-                            facilitys.map((item) => {
-                                return (
-                                    <option>{item.label}</option>
-                                )
-                            })
-                        }
+                    <select className="select-css2" style={{ minWidth: '200px' }} onChange={onSelectFacility} value={facility}>
+                        <option>All</option>
+                        {facilities.map((item) => (
+                            <option key={item.value} value={item.value}>{item.label}</option>
+                        ))}
                     </select>
                 </label>
                 <label>
                     <span className="labelHeading" style={{ fontWeight: 500 }}>Room:</span>
-                    <select className="select-css2" style={{ minWidth: '300px' }} onChange={(e) => onSelect(e)} value={tag}>
-                        <option>Select</option>
-                        {
-                            plantTags.map((item) => {
-                                return (
-                                    <option>{item.label}</option>
-                                )
-                            })
-                        }
+                    <select className="select-css2" style={{ minWidth: '200px' }} onChange={onSelect} value={tag}>
+                        <option value="ntg">All</option>
+                        {plantTags.map((item) => (
+                            <option key={item.value} value={item.value}>{item.label}</option>
+                        ))}
                     </select>
                 </label>
-                <label style={{display:'flex',flexDirection:'column'}}>
+                <label>
+                    <span className="labelHeading" style={{ fontWeight: 500 }}>Strain:</span>
+                    <select className="select-css2" style={{ minWidth: '200px' }} onChange={(e) => setStrain(e.target.value)} value={strain}>
+                        <option>All</option>
+                        {strains.map((item) => (
+                            <option key={item.value} value={item.value}>{item.label}</option>
+                        ))}
+                    </select>
+                </label>
+                <label style={{ display: 'flex', flexDirection: 'column' }}>
                     <span className="labelHeading">To:</span>
-                    <DatePicker selected={toDate} onChange={date => setToDate(date)} className="select-css2"/>
+                    <DatePicker selected={toDate} onChange={date => setToDate(date)} className="select-css2" />
                 </label>
-                <label style={{display:'flex',flexDirection:'column'}}>
+                <label style={{ display: 'flex', flexDirection: 'column' }}>
                     <span className="labelHeading">From:</span>
-                    <DatePicker selected={fromDate} onChange={date => setFromDate(date)} className="select-css2"/>
+                    <DatePicker selected={fromDate} onChange={date => setFromDate(date)} className="select-css2" />
                 </label>
-
                 <div className="ms-2 mt-4">
-                    <button className="btn btn-primary" onClick={() => handleFilter()}>submit</button>
+                    <button className="btn btn-primary" onClick={handleFilter}>Submit</button>
                 </div>
             </div>
-            <div className="row">
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`} >
-                    <h5 className="mt-2 mb-4">Blue Dream Temperature {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
-                    <LineChart height={120} data={handleFilter()} options={options} />
-                </div>
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}>
-                    <h5 className="mt-2 mb-4">Sour Diesel Temperature {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
-                    <LineChart height={120} data={handleFilter()} options={options} />
-                </div>
-            </div>
-            <div className="row">
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}>
-                    <h5 className="mt-2 mb-4">Golden Goat Temperature {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
-                    <LineChart height={120} data={handleFilter()} options={options} />
-                </div>
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}>
-                    <h5 className="mt-2 mb-4">MAC Temperature {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
-                    <LineChart height={120} data={handleFilter()} options={options} />
-                </div>
-            </div>
-            <div className="row">
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}>
-                    <h5 className="mt-2 mb-4">Double Tahoe Temperature {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
-                    <LineChart height={120} data={handleFilter()} options={options} />
-                </div>
-                <div className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}>
-                    <h5 className="mt-2 mb-4">Space Queen Temperature {moment(toDate).format("DD/MM/YYYY")} - {moment(fromDate).format("DD/MM/YYYY")}</h5>
-                    <LineChart height={120} data={handleFilter()} options={options} />
-                </div>
+            <div className="facility-section">
+                {Object.entries(groupedByFacility).map(([facilityName, rooms]) => (
+                    <div key={facilityName} className="facility-box">
+                        <h3>{facilityName}</h3>
+                        <div className="rooms-section">
+                            {rooms.map(room => (
+                                <div key={room.room} className="room-box">
+                                    <h4>{room.room}</h4>
+                                    <div className="radar-chart-container" style={{ width: '400px', height: '400px' }}>
+                                        <Radar data={getRadarData(room)} options={radarOptions()} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
-    )
-}
+    );
+};
