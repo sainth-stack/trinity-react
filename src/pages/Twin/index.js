@@ -8,6 +8,7 @@ import moment from 'moment';
 import { read, utils } from 'xlsx'
 import { data50 } from './data'
 import { CustomLegend } from "../../components/CustomLegend";
+import { FormatData } from "./format";
 export const Twin = () => {
     const labels1 = ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05']
     const data1 = {
@@ -432,39 +433,39 @@ export const Twin = () => {
 
     const toggleDataset = (index) => {
         const updatedDatasets = data2?.datasets?.map((dataset, i) => {
-          if (i === index) {
-            return {
-              ...dataset,
-              hidden: !dataset.hidden,
-            };
-          }
-          return dataset;
+            if (i === index) {
+                return {
+                    ...dataset,
+                    hidden: !dataset.hidden,
+                };
+            }
+            return dataset;
         });
-      
+
         // Find the indices of LSI, CO2, and VPD datasets
         const lsiIndex = updatedDatasets.findIndex(dataset => dataset.label === 'LSI');
         const co2Index = updatedDatasets.findIndex(dataset => dataset.label === 'CO2');
         const vpdIndex = updatedDatasets.findIndex(dataset => dataset.label === 'VPD');
-      
+
         // Check if either LSI or CO2 is not hidden
         const lsiHidden = updatedDatasets[lsiIndex]?.hidden;
         const co2Hidden = updatedDatasets[co2Index]?.hidden;
-      
+
         if ((!lsiHidden || !co2Hidden) && vpdIndex !== -1) {
-          updatedDatasets[vpdIndex] = {
-            ...updatedDatasets[vpdIndex],
-            hidden: true, // Ensure VPD is hidden
-          };
+            updatedDatasets[vpdIndex] = {
+                ...updatedDatasets[vpdIndex],
+                hidden: true, // Ensure VPD is hidden
+            };
         } else if (lsiHidden && co2Hidden && vpdIndex !== -1) {
-          updatedDatasets[vpdIndex] = {
-            ...updatedDatasets[vpdIndex],
-            hidden: false, // Ensure VPD is enabled if both LSI and CO2 are hidden
-          };
+            updatedDatasets[vpdIndex] = {
+                ...updatedDatasets[vpdIndex],
+                hidden: false, // Ensure VPD is enabled if both LSI and CO2 are hidden
+            };
         }
-      
+
         setData2({ datasets: updatedDatasets, labels: data2.labels });
-      };
-      
+    };
+
 
 
     return (

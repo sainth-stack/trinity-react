@@ -3,6 +3,7 @@ import './index.css';
 import DatePicker from 'react-datepicker';
 import { Radar } from 'react-chartjs-2';
 import { Chart, RadialLinearScale, ArcElement, Tooltip, Legend } from 'chart.js';
+import FourAxisChart from "./fouraxis";
 
 Chart.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
@@ -17,12 +18,26 @@ export const Photosynthesis = () => {
             facility: "Facility 1", rooms: [
                 {
                     room: "Room 1", strains: [
-                        { strain: "Strain 1", data: [100, 50, 100, 50] }
+                        {
+                            strain: "Strain 1", data: {
+                                PPFD: { value: 2000, min: 0, max: 2000 },
+                                Temp: { value: 50, min: 0, max: 100 },
+                                PPM: { value: 2000, min: 0, max: 2000 },
+                                Hum: { value: 50, min: 0, max: 100 },
+                            }
+                        }
                     ]
                 },
                 {
                     room: "Room 2", strains: [
-                        { strain: "Strain 2", data: [80, 50, 90, 30] }
+                        {
+                            strain: "Strain 2", data: {
+                                PPFD: { value: 1500, min: 0, max: 2000 },
+                                Temp: { value: 50, min: 0, max: 100 },
+                                PPM: { value: 1300, min: 0, max: 2000 },
+                                Hum: { value: 40, min: 0, max: 100 },
+                            }
+                        }
                     ]
                 }
             ]
@@ -30,13 +45,23 @@ export const Photosynthesis = () => {
         {
             facility: "Facility 2", rooms: [
                 {
-                    room: "Room 3", strains: [
-                        { strain: "Strain 3", data: [60, 50, 90, 50] }
+                    room: "Room 1", strains: [
+                        { strain: "Strain 3", data: {
+                            PPFD: { value: 1800, min: 0, max: 2000 },
+                            Temp: { value: 80, min: 0, max: 100 },
+                            PPM: { value: 2000, min: 0, max: 2000 },
+                            Hum: { value: 60, min: 0, max: 100 },
+                        } }
                     ]
                 },
                 {
-                    room: "Room 4", strains: [
-                        { strain: "Strain 4", data: [20, 50, 0, 50] }
+                    room: "Room 2", strains: [
+                        { strain: "Strain 4", data: {
+                            PPFD: { value: 2000, min: 0, max: 2000 },
+                            Temp: { value: 50, min: 0, max: 100 },
+                            PPM: { value: 2000, min: 0, max: 2000 },
+                            Hum: { value: 50, min: 0, max: 100 },
+                        } }
                     ]
                 }
             ]
@@ -45,8 +70,8 @@ export const Photosynthesis = () => {
     const [data, setData] = useState(defaultData);
 
     const [plantTags, setPlanttags] = useState([
-        { label: 'Room1', value: "Room1" },
-        { label: 'Room2', value: "Room2" }
+        { label: 'Room 1', value: "Room 1" },
+        { label: 'Room 2', value: "Room 2" }
     ]);
 
     const facilities = [
@@ -63,20 +88,29 @@ export const Photosynthesis = () => {
 
     const handleFilter = () => {
         let filtered = defaultData;
-
+    
+        // Log initial state
+        console.log('Initial data:', filtered);
+    
         // Filter by facility
         if (facility !== "All") {
             filtered = filtered.filter(d => d.facility === facility);
         }
-
+    
+        // Log after facility filter
+        console.log('After facility filter:', filtered);
+    
         // Filter by room
         if (tag !== "All") {
             filtered = filtered.map(facilityData => ({
                 ...facilityData,
                 rooms: facilityData.rooms.filter(room => room.room === tag)
-            }));
+            })).filter(facilityData => facilityData.rooms.length > 0); // Remove facilities with no matching rooms
         }
-
+    
+        // Log after room filter
+        console.log('After room filter:', filtered);
+    
         // Filter by strain
         if (strain !== "All") {
             filtered = filtered.map(facilityData => ({
@@ -84,13 +118,20 @@ export const Photosynthesis = () => {
                 rooms: facilityData.rooms.map(room => ({
                     ...room,
                     strains: room.strains.filter(strainObj => strainObj.strain === strain)
-                }))
-            }));
+                })).filter(room => room.strains.length > 0) // Remove rooms with no matching strains
+            })).filter(facilityData => facilityData.rooms.length > 0); // Remove facilities with no matching rooms
         }
-
+    
+        // Log after strain filter
+        console.log('After strain filter:', filtered);
+    
         // Update the data with the filtered results
         setData(filtered);
     };
+    
+    
+
+    console.log(data)
 
 
     const onSelect = (e) => {
@@ -99,49 +140,92 @@ export const Photosynthesis = () => {
 
     const onSelectFacility = (e) => {
         const selectedFacility = e.target.value;
-        const facilityRooms = data.find(d => d.facility === selectedFacility)?.rooms || [];
+        // const facilityRooms = data.find(d => d.facility === selectedFacility)?.rooms || [];
 
-        setPlanttags(facilityRooms.map(room => ({ label: room.room, value: room.room })));
+        // setPlanttags(facilityRooms.map(room => ({ label: room.room, value: room.room })));
         setFacility(selectedFacility);
     };
+    const normalize = (value, min, max) => ((value - min) / (max - min)) * 100;
 
     const getRadarData = (roomData) => {
+        console.log(roomData?.strains[0])
         return {
-            labels: ['PPFD', 'Temp', 'PPM', 'Hum'], // Adjust labels as needed
+            labels: ['PPFD', 'Temp', 'PPM', 'Hum'],
             datasets: [
                 {
-                    label: `${roomData.room}, ${facility}`,
-                    data: normalizeData(roomData.strains[0].data), // Ensure data is normalized
+                    label: 'Room 1, All',
+                    data: [
+                        normalize(roomData?.strains[0]?.data?.PPFD.value, roomData?.strains[0]?.data?.PPFD.min, roomData?.strains[0]?.data?.PPFD.max),
+                        normalize(roomData?.strains[0]?.data?.Temp.value, roomData?.strains[0]?.data?.Temp.min, roomData?.strains[0]?.data?.Temp.max),
+                        normalize(roomData?.strains[0]?.data?.PPM.value, roomData?.strains[0]?.data?.PPM.min, roomData?.strains[0]?.data?.PPM.max),
+                        normalize(roomData?.strains[0]?.data?.Hum.value, roomData?.strains[0]?.data?.Hum.min, roomData?.strains[0]?.data?.Hum.max),
+                    ],
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1,
+                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+                    pointStyle: 'rectRot', // Diamond shape
                 },
             ],
         };
     };
 
-    const normalizeData = (data) => {
-        const maxValue = Math.max(...data);
-        return data.map(value => (value / maxValue) * 100);
-    };
 
-    const radarOptions = () => {
-        return {
+    const getOptions = (originalData) => {
+        const options = {
             scales: {
                 r: {
-                    angleLines: {
-                        display: true
-                    },
-                    suggestedMin: 0,
-                    suggestedMax: 100, // Ensure the radar chart scales up to 100
+                    min: 0,
+                    max: 100,
                     ticks: {
-                        stepSize: 20, // Adjust step size for readability
-                        callback: (value, index, values) => index === values.length - 1 ? value : '' // Show only the maximum label
-                    }
-                }
-            }
+                        beginAtZero: true,
+                        callback: function (value) {
+                            // Custom tick labels for specific ranges
+                            if (value === 0) return '0';
+                            if (value === 25) return '500';
+                            if (value === 50) return '1000';
+                            if (value === 75) return '1500';
+                            if (value === 100) return '2000';
+                            return value;
+                        },
+                        stepSize: 25, // Adjust the step size to match your intervals
+                    },
+                    pointLabels: {
+                        fontSize: 14,
+                        callback: function (value) {
+                            const axisMin = originalData[value].min;
+                            const axisMax = originalData[value].max;
+                            return `${value} (${axisMin}-${axisMax})`;
+                        },
+                    },
+                    angleLines: {
+                        display: true,
+                    },
+                    grid: {
+                        display: true,
+                    },
+                },
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const datasetLabel = context.dataset.label || '';
+                            const value = context.raw;
+                            const originalValue = Object.values(originalData)[context.dataIndex].value;
+                            return `${datasetLabel}: ${originalValue} (${value.toFixed(2)})`;
+                        },
+                    },
+                },
+            },
         };
-    };
+        return options
+    }
+
+
 
     const groupedByFacility = data.reduce((acc, facilityData) => {
         acc[facilityData.facility] = facilityData.rooms;
@@ -199,7 +283,7 @@ export const Photosynthesis = () => {
                                 <div key={room.room} className="room-box">
                                     <h4>{room.room}</h4>
                                     <div className="radar-chart-container" style={{ width: '400px', height: '400px' }}>
-                                        <Radar data={getRadarData(room)} options={radarOptions()} />
+                                        <Radar data={getRadarData(room)} options={getOptions(room?.strains[0]?.data)} />
                                     </div>
                                 </div>
                             ))}

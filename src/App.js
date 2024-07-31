@@ -20,6 +20,7 @@ import { Accounts } from './pages/Settings';
 import { Layout } from './pages/Settings/Layout';
 import { Hardware } from './pages/Settings/Hardware';
 import { Software } from './pages/Settings/Software';
+import DataSource from './pages/Settings/dataSource';
 function App() {
   return (
     <BrowserRouter>
@@ -39,6 +40,7 @@ function App() {
           <Route path="/hardware" element={<Hardware />} />
           <Route path="/software" element={<Software />} />
           <Route path="/updates" element={<Software />} />
+          <Route path="/data-source" element={<DataSource />} />
         </Route>
         <Route path="/zwhoosh" element={<Zwhoosh />} />
         <Route path="/login" element={<Login />} />
