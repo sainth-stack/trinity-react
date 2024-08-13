@@ -6,9 +6,7 @@ import './index.css'
 import { addDays } from 'date-fns';
 import moment from 'moment';
 import { read, utils } from 'xlsx'
-import { data50 } from './data'
 import { CustomLegend } from "../../components/CustomLegend";
-import { FormatData } from "./format";
 export const Twin = () => {
     const labels1 = ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05']
     const data1 = {
@@ -54,9 +52,9 @@ export const Twin = () => {
     };
     const [data, setData] = useState(data1)
     const [data2, setData2] = useState(data1)
-    const [excelData, setExcelData] = useState(data50);
-    const [toDate, setToDate] = useState(new Date("2024-01-31"));
-    const [fromDate, setFromDate] = useState(new Date("2024-02-27"));
+    const [excelData, setExcelData] = useState([]);
+    const [toDate, setToDate] = useState(new Date("2024-04-01"));
+    const [fromDate, setFromDate] = useState(new Date("2024-04-30"));
     const [tag, setTag] = useState("Room1")
     const [facility, setFacility] = useState('Facility 1')
     function Heading(props) {
@@ -112,12 +110,12 @@ export const Twin = () => {
     const facilitys = [{
         label: 'Facility 1', value: "Facility 1"
     },
-    {
-        label: 'Facility 2', value: "Facility 2"
-    },
-    {
-        label: 'Facility 3', value: "Facility 3"
-    }
+        // {
+        //     label: 'Facility 2', value: "Facility 2"
+        // },
+        // {
+        //     label: 'Facility 3', value: "Facility 3"
+        // }
     ]
 
     const onSelect = (e) => {
@@ -175,18 +173,33 @@ export const Twin = () => {
         return randomNumbers
     }
 
+    const parseDateTime = (date, time) => {
+        try {
+            // Assuming the date is in MM/DD/YYYY format and time is in HH.mm format
+            const [month, day, year] = date.split('/');
+            const [hours, minutes] = time.split('.').map(Number);
+            return new Date(year, month - 1, day, hours, minutes);
+        } catch (error) {
+            console.error("Error parsing date and time:", error);
+            return null;
+        }
+    };
+
     const groupDataByDay = (data) => {
         const groupedData = {};
         data.forEach(obj => {
-            const date = new Date(obj["Date-Time (MST)"]);
-            const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
-            if (!groupedData[day]) {
-                groupedData[day] = [];
+            const date = parseDateTime(obj["Date"], obj["Time"]);
+            if (date) {
+                const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
+                if (!groupedData[day]) {
+                    groupedData[day] = [];
+                }
+                groupedData[day].push(obj);
             }
-            groupedData[day].push(obj);
         });
         return groupedData;
     };
+
 
     const calculateAverages = (groupedData) => {
         const averages = {};
@@ -196,7 +209,7 @@ export const Twin = () => {
                 "Ch:1 - Temperature (°C)": 0,
                 "Ch:2 - RH (%)": 0,
                 "CO2": 0,
-                "LSI": 0,
+                "LSI (Red)": 0,
                 count: 0
             };
 
@@ -204,7 +217,7 @@ export const Twin = () => {
                 total["Ch:1 - Temperature (°C)"] += parseFloat(obj["Ch:1 - Temperature (°C)"]);
                 total["Ch:2 - RH (%)"] += parseFloat(obj["Ch:2 - RH (%)"]);
                 total["CO2"] += parseFloat(obj["CO2"]);
-                total["LSI"] += parseFloat(obj["LSI"]);
+                total["LSI (Red)"] += parseFloat(obj["LSI (Red)"]);
                 total.count++;
             });
 
@@ -212,7 +225,7 @@ export const Twin = () => {
                 "Average Temperature (°C)": total["Ch:1 - Temperature (°C)"] / total.count,
                 "Average RH (%)": total["Ch:2 - RH (%)"] / total.count,
                 "Average CO2": total["CO2"] / total.count,
-                "Average LSI": total["LSI"] / total.count,
+                "Average LSI (Red)": total["LSI (Red)"] / total.count,
             };
         }
         return averages;
@@ -220,25 +233,38 @@ export const Twin = () => {
 
     useEffect(() => {
         if (excelData) {
-            const datanew = groupDataByDay(excelData)
+            console.log(excelData)
+            const formattedData = excelData?.slice(1)?.map(row => ({
+                "Facility": row[0],
+                "Room": row[1],
+                "Date": row[2],
+                "Time": row[3],
+                "Ch:1 - Temperature (°C)": row[4],
+                "Ch:2 - RH (%)": row[5],
+                "Dew Point (°C)": row[6],
+                "CO2": row[7],
+                "LSI (Red)": row[8]
+            }));
+            const datanew = groupDataByDay(formattedData);
             console.log(datanew)
             const averages = calculateAverages(datanew);
-            const labels = []
-            const temp = []
-            const humidity = []
-            const lsi = []
-            const co2 = []
-            const vpd = []
-            // const vpd=[]
+            const labels = [];
+            const temp = [];
+            const humidity = [];
+            const lsi = [];
+            const co2 = [];
+            const vpd = [];
+
             Object.keys(averages).map((item) => {
-                const keys = Object.keys(averages[item])
+                const keys = Object.keys(averages[item]);
                 labels.push(item);
-                temp.push(averages[item][keys[0]])
-                humidity.push(averages[item][keys[1]])
-                vpd.push(averages[item][keys[1]] / averages[item][keys[0]])
-                co2.push(averages[item][keys[2]])
-                lsi.push(averages[item][keys[3]])
-            })
+                temp.push(averages[item][keys[0]]);
+                humidity.push(averages[item][keys[1]]);
+                vpd.push(averages[item][keys[1]] / averages[item][keys[0]]);
+                co2.push(averages[item][keys[2]]);
+                lsi.push(averages[item][keys[3]]);
+            });
+
             const data1 = {
                 labels: labels,
                 datasets: [
@@ -258,13 +284,6 @@ export const Twin = () => {
                         backgroundColor: '#44AA99',
                         yAxisID: 'y1',
                     },
-                    // {
-                    //     label: "VPD",
-                    //     data: getRandomData(30, false, 35, 45),
-                    //     borderColor: '#DDCC77',
-                    //     backgroundColor: '#DDCC77',
-                    //     yAxisID: 'y1',
-                    // },
                     {
                         hidden: false,
                         label: 'CO2',
@@ -275,7 +294,7 @@ export const Twin = () => {
                     },
                     {
                         hidden: false,
-                        label: 'LSI',
+                        label: 'LSI (Red)',
                         data: lsi,
                         borderColor: '#999933',
                         backgroundColor: '#999933',
@@ -291,18 +310,13 @@ export const Twin = () => {
                     },
                 ],
             };
-            setData2(data1)
+            setData2(data1);
         }
     }, [excelData]);
 
+
     const getDataSets = (diff, strain) => {
         const dataSets = [
-            // {
-            //     label: 'strain',
-            //     data: getRandomData(diff),
-            //     borderColor: 'rgb(255, 99, 132)',
-            //     backgroundColor: 'rgba(108, 97, 91, 0.8)',
-            // },
             {
                 label: "Temperature",
                 data: getRandomData(diff),
@@ -379,55 +393,44 @@ export const Twin = () => {
 
     useEffect(() => {
         handleFilter()
+        const data = JSON.parse(localStorage.getItem('room'))
+        setExcelData(data)
     }, [])
 
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
 
-        reader.onload = (evt) => {
-            const binaryString = evt.target.result;
-            const workbook = read(binaryString, { type: 'binary' });
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-            const data = utils.sheet_to_json(sheet, { header: 1 });
-            // const convertToJSON = (data) => {
-            //     const headers = data[0];
-            //     const rows = data.slice(1);
-            //     const result = rows.map(row => {
-            //         let obj = {};
-            //         row.forEach((value, index) => {
-            //             obj[headers[index]] = value;
-            //         });
-            //         return obj;
-            //     });
-            //     return result;
-            // };
+    // const handleFileUpload = (e) => {
+    //     const file = e.target.files[0];
+    //     const reader = new FileReader();
 
-            // const jsonData = convertToJSON(data);
-            // console.log(jsonData);
-            const formattedData = data?.slice(1)?.map(row => ({
-                "Ch:1 - Temperature (°C)": row[1],
-                "Ch:2 - RH (%)": row[2],
-                "Date-Time (MST)": new Date(row[0]),
-                "Dew Point (°C)": row[3],
-                "CO2": row[4],
-                'LSI': row[5]
-            }));
-            console.log(formattedData)
-            setExcelData(formattedData);
+    //     reader.onload = (evt) => {
+    //         const binaryString = evt.target.result;
+    //         const workbook = read(binaryString, { type: 'binary' });
+    //         const sheetName = workbook.SheetNames[0];
+    //         const sheet = workbook.Sheets[sheetName];
+    //         const data = utils.sheet_to_json(sheet, { header: 1 });
+    //         const formattedData = data?.slice(1)?.map(row => ({
+    //             "Facility": row[0],
+    //             "Room": row[1],
+    //             "Date": row[2],
+    //             "Time": row[3],
+    //             "Ch:1 - Temperature (°C)": row[4],
+    //             "Ch:2 - RH (%)": row[5],
+    //             "Dew Point (°C)": row[6],
+    //             "CO2": row[7],
+    //             "LSI (Red)": row[8]
+    //         }));
+    //         setExcelData(formattedData);
+    //     };
 
-        };
+    //     reader.readAsBinaryString(file);
+    // };
 
-        reader.readAsBinaryString(file);
-    };
+    // const inputFileRef = useRef(null);
 
-    const inputFileRef = useRef(null);
-
-    const onBtnClick = () => {
-        /*Collecting node-element and performing click*/
-        inputFileRef.current.click();
-    }
+    // const onBtnClick = () => {
+    //     /*Collecting node-element and performing click*/
+    //     inputFileRef.current.click();
+    // }
 
 
 
@@ -443,7 +446,7 @@ export const Twin = () => {
         });
 
         // Find the indices of LSI, CO2, and VPD datasets
-        const lsiIndex = updatedDatasets.findIndex(dataset => dataset.label === 'LSI');
+        const lsiIndex = updatedDatasets.findIndex(dataset => dataset.label === 'LSI (Red)');
         const co2Index = updatedDatasets.findIndex(dataset => dataset.label === 'CO2');
         const vpdIndex = updatedDatasets.findIndex(dataset => dataset.label === 'VPD');
 
@@ -451,15 +454,16 @@ export const Twin = () => {
         const lsiHidden = updatedDatasets[lsiIndex]?.hidden;
         const co2Hidden = updatedDatasets[co2Index]?.hidden;
 
-        if ((!lsiHidden || !co2Hidden) && vpdIndex !== -1) {
+        // Ensure VPD visibility is correctly toggled when LSI and CO2 are both hidden
+        if (lsiHidden && co2Hidden && vpdIndex !== -1) {
             updatedDatasets[vpdIndex] = {
                 ...updatedDatasets[vpdIndex],
-                hidden: true, // Ensure VPD is hidden
+                hidden: !updatedDatasets[vpdIndex].hidden, // Toggle VPD visibility
             };
-        } else if (lsiHidden && co2Hidden && vpdIndex !== -1) {
+        } else if (vpdIndex !== -1) {
             updatedDatasets[vpdIndex] = {
                 ...updatedDatasets[vpdIndex],
-                hidden: false, // Ensure VPD is enabled if both LSI and CO2 are hidden
+                hidden: true, // Ensure VPD is hidden when either LSI or CO2 is visible
             };
         }
 
@@ -510,12 +514,12 @@ export const Twin = () => {
                         <div className="ms-2 mt-4">
                             <button className="btn btn-primary" style={{ alignContent: 'center', alignItems: 'center', height: '40px' }} onClick={() => handleFilter()}>submit</button>
                         </div>
-                        <div className="ms-2 mt-4">
+                        {/* <div className="ms-2 mt-4">
                             <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} ref={inputFileRef} />
                             <button className="btn btn-primary" style={{ alignContent: 'center', alignItems: 'center', height: '40px' }} onClick={onBtnClick}>
                                 upload
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {/* <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
@@ -524,12 +528,14 @@ export const Twin = () => {
                     <LineChart data={data} options={true} />
                 </div> */}
 
-                <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: 'fit-content' }}>
+                {excelData?.length > 0 ? <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: 'fit-content' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
                     <hr />
                     <CustomLegend datasets={data2} toggleDataset={toggleDataset} />
                     <LineChart data={data2} options={true} />
-                </div>
+                </div> : <div style={{
+                    display: "flex", justifyContent: "center", fontWeight: 400, fontSize: '20px'
+                }}>No Data Found</div>}
             </div>
         </div>
     )

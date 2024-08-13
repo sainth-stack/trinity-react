@@ -15,8 +15,8 @@ export default function SidebarV2() {
   return (
     <div className="shadow sidebar-scroll sticky-top zindex99 bg-white" style={{ overflow: 'auto', width: '220px', height: '100vh' }}>
       <div style={{
-        marginTop:'5px',
-        marginBottom:'50px'
+        marginTop: '5px',
+        marginBottom: '50px'
       }}>
         {/* <img
           src={Logo}
@@ -24,8 +24,9 @@ export default function SidebarV2() {
           id="logo_RL"
         /> */}
       </div>
-      <ul className="sidebar-list-items" id="menu" style={{marginLeft:'10px'}}>
-      <SidebarItem to="/dashboard" label="Dashboard" selected={selectedItem === "/dashboard"} />
+      <ul className="sidebar-list-items" id="menu" style={{ marginLeft: '10px' }}>
+        <SidebarItem to="/data-source" label="Data Source" selected={selectedItem === "/data-source"} />
+        <SidebarItem to="/dashboard" label="Dashboard" selected={selectedItem === "/dashboard"} />
         <SidebarItem to="/rooms" label="Rooms" selected={selectedItem === "/rooms"} />
         {/* <SidebarItem to="/humidity" label="Humidity" selected={selectedItem === "/humidity"} /> */}
         <SidebarItem to="/harvest" label="Harvest" selected={selectedItem === "/harvest"} />
@@ -39,9 +40,9 @@ export default function SidebarV2() {
 function SidebarItem({ to, label, selected }) {
   const navigate = useNavigate();
   return (
-    <li className={`sidebar-list-item py-2 cursor-pointer ${selected ? 'selected' : ''}`} style={{cursor:'pointer'}} onClick={()=>navigate(to)}>
-      <Link to={to} className={`nav-link align-middle px-2 nav-item`} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-        <span className="ms-1 d-none d-sm-inline px-1" style={{color:selected?'white':'black'}}>{label}</span>
+    <li className={`sidebar-list-item py-2 cursor-pointer ${selected ? 'selected' : ''}`} style={{ cursor: 'pointer' }} onClick={() => navigate(to)}>
+      <Link to={to} className={`nav-link align-middle px-2 nav-item`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <span className="ms-1 d-none d-sm-inline px-1" style={{ color: selected ? 'white' : 'black' }}>{label}</span>
       </Link>
     </li>
   );

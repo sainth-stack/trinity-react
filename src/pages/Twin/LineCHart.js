@@ -80,7 +80,10 @@ const getOptions = (data) => {
     return dataset.yAxisID === 'y' && !dataset.hidden
   })
   const d2 = data?.datasets?.some((dataset) => dataset.yAxisID === 'y1' && (!dataset.hidden))
-  const vpd=data?.datasets?.some((dataset) => dataset.label === 'VPD' && (dataset.hidden))
+  const vpd=data?.datasets?.some((dataset) => {
+    return dataset.label === 'VPD' && (dataset.hidden)
+  })
+  console.log(vpd)
   return {
     responsive: true,
     plugins: {

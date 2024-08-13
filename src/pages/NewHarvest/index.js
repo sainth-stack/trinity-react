@@ -1,12 +1,9 @@
 import './index.css'
 
-import React, { useEffect, useState } from 'react';
-import { LineChart } from "../Twin/LineCHart";
+import React, { useEffect, useRef, useState } from 'react';
 import GroupedBarChart from './barChart'
-import { harvestdata } from './data';
-import { data50 } from '../Twin/data'
-import { CustomLegend } from '../../components/CustomLegend';
 import { InputData } from './InputData';
+
 const generateRandomData = (length, value) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 100));
 };
@@ -14,10 +11,6 @@ const generateConstantData = (length, value) => {
     return Array.from({ length }, () => value);
 };
 
-const data = {
-    labels: Array.from({ length: 70 }, (_, i) => `${i + 1}`),
-    datasets: []
-};
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -29,24 +22,75 @@ function getRandomColor() {
 export const NewHarvest = () => {
     const [batches, setBatches] = useState([]);
     const [selectedBatches, setSelectedBatches] = useState([]);
+    const [roomData, setRoomData] = useState([])
+    const [harvestData, setHarvestData] = useState([])
     const [graphData, setGraphData] = useState({
         labels: []
     })
     const [selectedValue, setSelectedValue] = useState('sep');
     const [finalHB, setFinalHB] = useState([])
     const [avg, setAvg] = useState({})
-
+    console.log(selectedBatches)
     useEffect(() => {
-        const data = harvestdata.map((item, index) => {
+        const room = JSON.parse(localStorage.getItem('room'));
+        const formattedRoomData = room?.slice(1)?.map(row => ({
+            "Facility": row[0],
+            "Room": row[1],
+            "Date": row[2],
+            "Time": row[3],
+            "Ch:1 - Temperature (°C)": row[4],
+            "Ch:2 - RH (%)": row[5],
+            "Dew Point (°C)": row[6],
+            "CO2": row[7],
+            "LSI (Red)": row[8]
+        }));
+        setRoomData(formattedRoomData);
+
+        const harvest = JSON.parse(localStorage.getItem('harvest'));
+
+        const formattedHarvestData = harvest?.slice(1)?.map(row => ({
+            "Harvest Batch": row[0],
+            "Strain": row[1],
+            "Location": row[2],
+            "Patient": row[3],
+            "Plants": row[4],
+            "Sqft.": row[5],
+            "Wet Weight": row[6],
+            "Waste": row[7],
+            "Total Weight Packaged": row[8],
+            "Bud %": row[9],
+            "Bud (g)": row[10],
+            "Popcorn %": row[11],
+            "Popcorn (g)": row[12],
+            "Shake/Trim %": row[13],
+            "Shake/Trim (g)": row[14],
+            "Package Count": row[15],
+            "Moisture Loss": row[16],
+            "Restored": row[17],
+            "Lab Testing": row[18],
+            "Administrative Hold": row[19],
+            "Date": row[20],
+            "Finished": row[21],
+            "Discontinued": row[22],
+            "Excel Lines in Data Sheet": row[23],
+            "g/plant": row[26],
+            "g/sqft.": row[27]
+        }));
+        const data = formattedHarvestData?.map((item, index) => {
             return {
                 ...item,
                 hb: item["Harvest Batch"],
                 id: index + 1
-            }
-        })
-        setFinalHB(data)
-        setAvg(calculateAverages(data50))
-    }, [])
+            };
+        });
+        setFinalHB(data);
+        setAvg(calculateAverages(roomData));
+        setHarvestData(formattedHarvestData);
+    }, []);
+
+
+    console.log(roomData)
+    console.log(harvestData)
 
     const calculateAverages = (data) => {
         const total = data.reduce((acc, curr) => {
@@ -104,19 +148,32 @@ export const NewHarvest = () => {
         setSelectedValue(event.target.value);
     };
 
+    const parseDateTime = (date, time) => {
+        try {
+            // Assuming the date is in MM/DD/YYYY format and time is in HH.mm format
+            const [month, day, year] = date.split('/');
+            const [hours, minutes] = time.split('.').map(Number);
+            return new Date(year, month - 1, day, hours, minutes);
+        } catch (error) {
+            console.error("Error parsing date and time:", error);
+            return null;
+        }
+    };
+
     const groupDataByDay = (data) => {
         const groupedData = {};
         data.forEach(obj => {
-            const date = new Date(obj["Date-Time (MST)"]);
-            const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
-            if (!groupedData[day]) {
-                groupedData[day] = [];
+            const date = parseDateTime(obj["Date"], obj["Time"]);
+            if (date) {
+                const day = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
+                if (!groupedData[day]) {
+                    groupedData[day] = [];
+                }
+                groupedData[day].push(obj);
             }
-            groupedData[day].push(obj);
         });
         return groupedData;
     };
-
 
 
     const handleCheckboxChange = (batch) => {
@@ -131,7 +188,7 @@ export const NewHarvest = () => {
         if (selectedValue == 'sep') {
             const finData = []
             const labels = []
-            const datanew = groupDataByDay(data50)
+            const datanew = groupDataByDay(roomData)
             const averages = calculateAverages2(datanew);
             const temp = []
             const humidity = []
@@ -147,7 +204,7 @@ export const NewHarvest = () => {
                 lsi.push(averages[item][keys[3]])
             })
             updData?.map((item) => {
-                if (data50) {
+                if (roomData) {
 
                     finData.push(...[
                         {
@@ -228,7 +285,7 @@ export const NewHarvest = () => {
         } else {
             const finData = []
             const labels = []
-            const datanew = groupDataByDay(data50)
+            const datanew = groupDataByDay(roomData)
             const averages = calculateAverages2(datanew);
             const temp = []
             const humidity = []
@@ -243,7 +300,7 @@ export const NewHarvest = () => {
                 co2.push(averages[item][keys[2]])
                 lsi.push(averages[item][keys[3]])
             })
-            if (data50) {
+            if (roomData) {
                 finData.push(...[
                     {
                         label: `ecin`,
@@ -318,35 +375,70 @@ export const NewHarvest = () => {
         }
     }, [selectedValue])
 
-    return (
-        <div className="p-2 mt-4">
-            <div className="row">
-                <div className="col-md-3" >
-                    <h2 className='heading1'>Harvest Batches</h2>
-                    <ul className="list-group overflow-auto" style={{ maxHeight: '300px' }}>
-                        {finalHB.map((batch) => (
-                            <li key={batch.id} className="list-group-item">
-                                <div className="form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id={`batch-${batch.hb}`}
-                                        checked={selectedBatches.filter((item) => item.hb === batch.hb).length > 0}
-                                        onChange={() => handleCheckboxChange(batch)}
-                                    />
-                                    <label className="form-check-label" htmlFor={`batch-${batch.id}`}>
-                                        {batch.hb}
-                                    </label>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+    // const handleFileUpload = (e) => {
+    //     const file = e.target.files[0];
+    //     const reader = new FileReader();
 
-                <div className="col-md-9">
-                    <h2 className='heading1'>Plants</h2>
-                    <div className="table-container" style={{ maxHeight: '300px', overflowY: 'auto', display: 'block' }}>
-                        {/* <table className="table">
+    //     reader.onload = (evt) => {
+    //         const binaryString = evt.target.result;
+    //         const workbook = read(binaryString, { type: 'binary' });
+    //         const sheetName = workbook.SheetNames[0];
+    //         const sheet = workbook.Sheets[sheetName];
+    //         const data = utils.sheet_to_json(sheet, { header: 1 });
+    //         const formattedData = data?.slice(1)?.map(row => ({
+    //             "Facility": row[0],
+    //             "Room": row[1],
+    //             "Date": row[2],
+    //             "Time": row[3],
+    //             "Ch:1 - Temperature (°C)": row[4],
+    //             "Ch:2 - RH (%)": row[5],
+    //             "Dew Point (°C)": row[6],
+    //             "CO2": row[7],
+    //             "LSI (Red)": row[8]
+    //         }));
+    //         console.log(formattedData)
+    //         setExcelData(formattedData);
+    //     };
+
+    //     reader.readAsBinaryString(file);
+    // };
+
+    // const inputFileRef = useRef(null);
+    // const onBtnClick = () => {
+    //     /*Collecting node-element and performing click*/
+    //     inputFileRef.current.click();
+    // }
+
+    return (
+        <div>
+            {(harvestData && roomData) ? <div className="p-2 mt-1">
+                <div className="row">
+                    <div className="col-md-3" >
+                        <h2 className='heading1'>Harvest Batches</h2>
+                        <ul className="list-group overflow-auto" style={{ maxHeight: '300px' }}>
+                            {finalHB?.map((batch) => (
+                                <li key={batch.id} className="list-group-item">
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id={`batch-${batch.hb}`}
+                                            checked={selectedBatches.filter((item) => item.hb === batch.hb).length > 0}
+                                            onChange={() => handleCheckboxChange(batch)}
+                                        />
+                                        <label className="form-check-label" htmlFor={`batch-${batch.id}`}>
+                                            {batch.hb}
+                                        </label>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="col-md-9">
+                        <h2 className='heading1'>Plants</h2>
+                        <div className="table-container" style={{ maxHeight: '300px', overflowY: 'auto', display: 'block' }}>
+                            {/* <table className="table">
                             <thead className="sticky-top" >
                                 <tr>
                                     <th style={{ minWidth: '200px' }}>Harvest Batch</th>
@@ -372,78 +464,81 @@ export const NewHarvest = () => {
                                 ))}
                             </tbody>
                         </table> */}
-                        <table className="table">
-                            <thead className="sticky-top">
-                                <tr>
-                                    <th style={{ minWidth: '200px', border: '1px solid black' }}>Harvest Batch</th>
-                                    <th colSpan="2" style={{ border: '1px solid black' }}>Bud</th>
-                                    <th colSpan="2" style={{ border: '1px solid black' }}>Popcorn</th>
-                                    <th colSpan="2" style={{ border: '1px solid black' }}>Shake/Trim</th>
-                                    <th style={{ border: '1px solid black' }}>Total Weight (g)</th>
-                                    <th style={{ border: '1px solid black' }}>g/plant</th>
-                                    <th style={{ border: '1px solid black' }}>g/Sqft</th>
-                                </tr>
-                                <tr>
-                                    <th style={{ border: '1px solid black' }}></th>
-                                    <th style={{ border: '1px solid black' }}>g</th>
-                                    <th style={{ border: '1px solid black' }}>%</th>
-                                    <th style={{ border: '1px solid black' }}>g</th>
-                                    <th style={{ border: '1px solid black' }}>%</th>
-                                    <th style={{ border: '1px solid black' }}>g</th>
-                                    <th style={{ border: '1px solid black' }}>%</th>
-                                    <th style={{ border: '1px solid black' }}></th>
-                                    <th style={{ border: '1px solid black' }}></th>
-                                    <th style={{ border: '1px solid black' }}></th>
-                                </tr>
-                            </thead>
-                            <tbody className="overflow-auto" style={{ maxHeight: '300px' }}>
-                                {batches.map((batch) => {
-                                    const totalWeight = parseFloat(batch['Wet Weight']) - parseFloat(batch['Waste']);
-                                    const budWeight = parseFloat(batch['Bud (g)']);
-                                    const popcornWeight = parseFloat(batch['Popcorn (g)']);
-                                    const shakeTrimWeight = parseFloat(batch['Shake/Trim (g):']);
-                                    const budPercentage = parseFloat(batch['Bud %']) * 100;
-                                    const popcornPercentage = parseFloat(batch['Popcorn %']) * 100;
-                                    const shakeTrimPercentage = parseFloat(batch['Shake/Trim %']) * 100;
+                            <table className="table">
+                                <thead className="sticky-top">
+                                    <tr>
+                                        <th style={{ minWidth: '200px', border: '1px solid black' }}>Harvest Batch</th>
+                                        <th colSpan="2" style={{ border: '1px solid black' }}>Bud</th>
+                                        <th colSpan="2" style={{ border: '1px solid black' }}>Popcorn</th>
+                                        <th colSpan="2" style={{ border: '1px solid black' }}>Shake/Trim</th>
+                                        <th style={{ border: '1px solid black' }}>Total Weight (g)</th>
+                                        <th style={{ border: '1px solid black' }}>g/plant</th>
+                                        <th style={{ border: '1px solid black' }}>g/Sqft</th>
+                                    </tr>
+                                    <tr>
+                                        <th style={{ border: '1px solid black' }}></th>
+                                        <th style={{ border: '1px solid black' }}>g</th>
+                                        <th style={{ border: '1px solid black' }}>%</th>
+                                        <th style={{ border: '1px solid black' }}>g</th>
+                                        <th style={{ border: '1px solid black' }}>%</th>
+                                        <th style={{ border: '1px solid black' }}>g</th>
+                                        <th style={{ border: '1px solid black' }}>%</th>
+                                        <th style={{ border: '1px solid black' }}></th>
+                                        <th style={{ border: '1px solid black' }}></th>
+                                        <th style={{ border: '1px solid black' }}></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="overflow-auto" style={{ maxHeight: '300px' }}>
+                                    {batches.map((batch) => {
+                                        const totalWeight = parseFloat(batch['Wet Weight']) - parseFloat(batch['Waste']);
+                                        const budWeight = parseFloat(batch['Bud (g)']);
+                                        const popcornWeight = parseFloat(batch['Popcorn (g)']);
+                                        const shakeTrimWeight = parseFloat(batch['Shake/Trim (g)']);
+                                        const budPercentage = parseFloat(batch['Bud %']) * 100;
+                                        const popcornPercentage = parseFloat(batch['Popcorn %']) * 100;
+                                        const shakeTrimPercentage = parseFloat(batch['Shake/Trim %']) * 100;
 
-                                    return (
-                                        <tr key={batch.hb}>
-                                            <td style={{ border: '1px solid black' }}>{batch.hb}</td>
-                                            <td style={{ border: '1px solid black' }}>{budWeight.toFixed(2)}</td>
-                                            <td style={{ border: '1px solid black' }}>{budPercentage.toFixed(0)}%</td>
-                                            <td style={{ border: '1px solid black' }}>{popcornWeight.toFixed(2)}</td>
-                                            <td style={{ border: '1px solid black' }}>{popcornPercentage.toFixed(0)}%</td>
-                                            <td style={{ border: '1px solid black' }}>{shakeTrimWeight.toFixed(2)}</td>
-                                            <td style={{ border: '1px solid black' }}>{shakeTrimPercentage.toFixed(0)}%</td>
-                                            <td style={{ border: '1px solid black' }}>{totalWeight.toFixed(2)}</td>
-                                            <td style={{ border: '1px solid black' }}>{parseFloat(batch['g/plant']).toFixed(2)}</td>
-                                            <td style={{ border: '1px solid black' }}>{parseFloat(batch['g/sqft.']).toFixed(2)}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                        return (
+                                            <tr key={batch.hb}>
+                                                <td style={{ border: '1px solid black' }}>{batch.hb}</td>
+                                                <td style={{ border: '1px solid black' }}>{budWeight.toFixed(2)}</td>
+                                                <td style={{ border: '1px solid black' }}>{budPercentage.toFixed(0)}%</td>
+                                                <td style={{ border: '1px solid black' }}>{popcornWeight.toFixed(2)}</td>
+                                                <td style={{ border: '1px solid black' }}>{popcornPercentage.toFixed(0)}%</td>
+                                                <td style={{ border: '1px solid black' }}>{shakeTrimWeight.toFixed(2)}</td>
+                                                <td style={{ border: '1px solid black' }}>{shakeTrimPercentage.toFixed(0)}%</td>
+                                                <td style={{ border: '1px solid black' }}>{totalWeight.toFixed(2)}</td>
+                                                <td style={{ border: '1px solid black' }}>{parseFloat(batch['g/plant']).toFixed(2)}</td>
+                                                <td style={{ border: '1px solid black' }}>{parseFloat(batch['g/sqft.']).toFixed(2)}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
 
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col-md-12 mb-2 mt-2" >
-                    <h2 className='heading1'>Inputs</h2>
-                   {batches?.length>0&& <InputData {...{ batches, handleRadioChange, selectedValue, graphData }} />}
+                <div className="row">
+                    <div className="col-md-12 mb-2 mt-2" >
+                        <h2 className='heading1'>Inputs</h2>
+                        {batches?.length > 0 && <InputData {...{ batches, handleRadioChange, selectedValue, graphData }} />}
+                    </div>
                 </div>
-            </div>
-            <div className="row mt-3 mb-2">
-                <div className="col-md-12 mb-2" >
+                <div className="row mt-3 mb-2">
+                    <div className="col-md-12 mb-2" >
 
-                    {batches.length > 0 && <>
-                        <h2 className='heading1'>BPT Detail</h2>
-                        <div className='card' style={{ minWidth: '800px', overflowX: 'auto', height: 'fit-content' }}>
-                            <GroupedBarChart selBatches={selectedBatches} height={80} />
-                        </div>
-                    </>}
+                        {batches.length > 0 && <>
+                            <h2 className='heading1'>BPT Detail</h2>
+                            <div className='card' style={{ minWidth: '800px', overflowX: 'auto', height: 'fit-content' }}>
+                                <GroupedBarChart selBatches={selectedBatches} height={80} />
+                            </div>
+                        </>}
+                    </div>
                 </div>
-            </div>
+            </div> : <div style={{
+                display: "flex", justifyContent: "center", fontWeight: 400, fontSize: '20px'
+            }}>Upload Rooms and Harvest data</div>}
         </div>
     );
 };

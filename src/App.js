@@ -26,7 +26,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AdminLayoutV2 />}>
-        <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/data-source" element={<DataSource />} />
           <Route path="/rooms" element={<Twin />} />
           <Route path="/humidity" element={<Humidity />} />
           <Route path="/new-harvest" element={<Harvest />} />
@@ -40,7 +41,7 @@ function App() {
           <Route path="/hardware" element={<Hardware />} />
           <Route path="/software" element={<Software />} />
           <Route path="/updates" element={<Software />} />
-          <Route path="/data-source" element={<DataSource />} />
+          {/* <Route path="/data-source" element={<DataSource />} /> */}
         </Route>
         <Route path="/zwhoosh" element={<Zwhoosh />} />
         <Route path="/login" element={<Login />} />
