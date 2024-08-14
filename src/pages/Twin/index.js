@@ -7,6 +7,7 @@ import { addDays } from 'date-fns';
 import moment from 'moment';
 import { read, utils } from 'xlsx'
 import { CustomLegend } from "../../components/CustomLegend";
+import axios from "axios";
 export const Twin = () => {
     const labels1 = ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05']
     const data1 = {
@@ -55,8 +56,8 @@ export const Twin = () => {
     const [excelData, setExcelData] = useState([]);
     const [toDate, setToDate] = useState(new Date("2024-04-01"));
     const [fromDate, setFromDate] = useState(new Date("2024-04-30"));
-    const [tag, setTag] = useState("Room1")
-    const [facility, setFacility] = useState('Facility 1')
+    const [tag, setTag] = useState("room1")
+    const [facility, setFacility] = useState('facility1')
     function Heading(props) {
         return (
             <div className="d-flex justify-content-between align-items-center p-2">
@@ -101,14 +102,12 @@ export const Twin = () => {
     }
 
     const [plantTags, setPlanttags] = useState([{
-        label: 'Room1', value: "Room1"
-    }, {
-        label: 'Room2', value: "Room2"
+        label: 'Room1', value: "room1"
     }
     ])
 
     const facilitys = [{
-        label: 'Facility 1', value: "Facility 1"
+        label: 'Facility 1', value: "facility1"
     },
         // {
         //     label: 'Facility 2', value: "Facility 2"
@@ -125,30 +124,11 @@ export const Twin = () => {
     const onSelectfacility = (e) => {
         if (e.target.value === 'Facility 1') {
             setPlanttags([{
-                label: 'Room1', value: "Room1"
-            },
-            {
-                label: 'Room2', value: "Room2"
-            }
-            ])
-        } else if (e.target.value === 'Facility 2') {
-            setPlanttags([{
-                label: 'Room3', value: "Room3"
-            },
-            {
-                label: 'Room4', value: "Room4"
+                label: 'Room1', value: "room1"
             }
             ])
         }
-        else if (e.target.value === 'Facility 3') {
-            setPlanttags([{
-                label: 'Room5', value: "Room5"
-            },
-            {
-                label: 'Room6', value: "Room6"
-            }
-            ])
-        }
+
         setFacility(e.target.value)
     }
 
@@ -394,8 +374,44 @@ export const Twin = () => {
     useEffect(() => {
         handleFilter()
         const data = JSON.parse(localStorage.getItem('room'))
-        setExcelData(data)
+        if (data) {
+            setExcelData(data)
+        } else {
+            uploadHarvestFile()
+        }
+
     }, [])
+
+    const getDate = (newDate) => {
+        const date = new Date(newDate);
+
+        // Extract the month, day, and year
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+        const day = String(date.getDate()).padStart(2, '0');
+        const year = date.getFullYear();
+
+        // Format the date as MM/DD/YYYY
+        const formattedDate = `${month}/${day}/${year}`;
+        return formattedDate
+
+    }
+    const uploadHarvestFile = async () => {
+        const formData = new FormData();
+        console.log(toDate, fromDate)
+        formData.append('facility', facility);
+        formData.append('room', tag);
+        formData.append('to_date', getDate(toDate));
+        formData.append('from_date', getDate(fromDate));
+
+        try {
+            const res = await axios.post('https://cannatwin.com/api/getroomsdata/', formData);
+            console.log(res)
+            // alert('Harvest file uploaded successfully!');
+        } catch (error) {
+            console.error('Error uploading harvest file:', error);
+            // alert('Error uploading harvest file');
+        }
+    };
 
 
     // const handleFileUpload = (e) => {

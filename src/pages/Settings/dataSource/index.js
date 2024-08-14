@@ -37,9 +37,9 @@ const DataSource = () => {
         const formData = new FormData();
         formData.append('file', roomFile);
         try {
-            // await axios.post('http://18.143.175.41:5000/api/fileupload/room', formData);
-            alert('Room file uploaded successfully!');
+            const res = await axios.post('https://cannatwin.com/api/fileupload/', formData);
             handleFileUpload(roomFile, 'room')
+            alert('Room file uploaded successfully!');
             setRoomFile(null)
         } catch (error) {
             console.error('Error uploading room file:', error);
