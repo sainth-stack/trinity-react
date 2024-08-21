@@ -26,11 +26,12 @@ export default function SidebarV2() {
       </div>
       <ul className="sidebar-list-items" id="menu" style={{ marginLeft: '10px' }}>
         <SidebarItem to="/data-source" label="Data Source" selected={selectedItem === "/data-source"} />
-        <SidebarItem to="/dashboard" label="Dashboard" selected={selectedItem === "/dashboard"} />
+        <SidebarItem to="/dashboard" label="Stains" selected={selectedItem === "/dashboard"} />
         <SidebarItem to="/rooms" label="Rooms" selected={selectedItem === "/rooms"} />
         {/* <SidebarItem to="/humidity" label="Humidity" selected={selectedItem === "/humidity"} /> */}
         <SidebarItem to="/harvest" label="Harvest" selected={selectedItem === "/harvest"} />
         <SidebarItem to="/strains" label="Photosynthesis" selected={selectedItem === "/strains"} />
+        <SidebarItem to="/cure-rooms" label="Cure Rooms" selected={selectedItem === "/cure-rooms"} />
       </ul>
     </div>
   );

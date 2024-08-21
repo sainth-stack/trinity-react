@@ -6,6 +6,7 @@ import { read, utils } from 'xlsx';
 const DataSource = () => {
     const [roomFile, setRoomFile] = useState(null);
     const [harvestFile, setHarvestFile] = useState(null);
+    const [flowerFile, setFlowerFile] = useState(null);
 
     const handleRoomFileChange = (e) => {
         setRoomFile(e.target.files[0]);
@@ -13,6 +14,10 @@ const DataSource = () => {
 
     const handleHarvestFileChange = (e) => {
         setHarvestFile(e.target.files[0]);
+    };
+
+    const handleFlowerFileChange = (e) => {
+        setFlowerFile(e.target.files[0]);
     };
 
     const handleFileUpload = (file, type) => {
@@ -24,9 +29,8 @@ const DataSource = () => {
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const data = utils.sheet_to_json(sheet, { header: 1 });
-            // return data
 
-            localStorage.setItem(type === 'room' ? 'room' : 'harvest', JSON.stringify(data))
+            localStorage.setItem(type, JSON.stringify(data));
         };
 
         reader.readAsBinaryString(file);
@@ -39,8 +43,8 @@ const DataSource = () => {
         try {
             // await axios.post('http://18.143.175.41:5000/api/fileupload/room', formData);
             alert('Room file uploaded successfully!');
-            handleFileUpload(roomFile, 'room')
-            setRoomFile(null)
+            handleFileUpload(roomFile, 'room');
+            setRoomFile(null);
         } catch (error) {
             console.error('Error uploading room file:', error);
             alert('Error uploading room file');
@@ -55,11 +59,27 @@ const DataSource = () => {
         try {
             // await axios.post('http://18.143.175.41:5000/api/fileupload/harvest', formData);
             alert('Harvest file uploaded successfully!');
-            handleFileUpload(harvestFile, 'harvest')
-            setHarvestFile(null)
+            handleFileUpload(harvestFile, 'harvest');
+            setHarvestFile(null);
         } catch (error) {
             console.error('Error uploading harvest file:', error);
             alert('Error uploading harvest file');
+        }
+    };
+
+    const uploadFlowerFile = async () => {
+        if (!flowerFile) return;
+        const formData = new FormData();
+        formData.append('file', flowerFile);
+
+        try {
+            // await axios.post('http://18.143.175.41:5000/api/fileupload/flower', formData);
+            alert('Flower file uploaded successfully!');
+            handleFileUpload(flowerFile, 'flower');
+            setFlowerFile(null);
+        } catch (error) {
+            console.error('Error uploading flower file:', error);
+            alert('Error uploading flower file');
         }
     };
 
@@ -86,6 +106,18 @@ const DataSource = () => {
                 />
                 <button onClick={uploadHarvestFile} disabled={!harvestFile}>
                     Upload Harvest Data
+                </button>
+            </div>
+
+            <div className="upload-section">
+                <h2>Upload Flower Data</h2>
+                <input
+                    type="file"
+                    accept=".csv,.xlsx,.xls" // Adjust accepted file types as needed
+                    onChange={handleFlowerFileChange}
+                />
+                <button onClick={uploadFlowerFile} disabled={!flowerFile}>
+                    Upload Flower Data
                 </button>
             </div>
         </div>

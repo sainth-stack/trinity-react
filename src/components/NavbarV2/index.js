@@ -31,7 +31,9 @@ function NavbarV2() {
     } else if (location.pathname == '/strains') {
       setName("Strains")
     } else if (location.pathname == '/dashboard') {
-      setName("Dashboard")
+      setName("Stains")
+    } else if (location.pathname == '/cure-rooms') {
+      setName("Cure Rooms")
     }
   }, [location.pathname])
   return (

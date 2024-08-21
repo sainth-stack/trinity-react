@@ -21,6 +21,7 @@ import { Layout } from './pages/Settings/Layout';
 import { Hardware } from './pages/Settings/Hardware';
 import { Software } from './pages/Settings/Software';
 import DataSource from './pages/Settings/dataSource';
+import { CureRooms } from './pages/cure';
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +34,7 @@ function App() {
           <Route path="/new-harvest" element={<Harvest />} />
           <Route path="/harvest" element={<NewHarvest />} />
           <Route path="/strains" element={<Photosynthesis />} />
+          <Route path="/cure-rooms" element={<CureRooms />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
         <Route path="/" element={<AdminLayoutV3 />}>
