@@ -23,13 +23,17 @@ function NavbarV2() {
       setName("Humidity")
     } else if (location.pathname == '/harvest') {
       setName("Harvest")
+    } else if (location.pathname == '/data-source') {
+      setName("Data Source")
     }
     else if (location.pathname == '/new-harvest') {
       setName("Harvest")
     } else if (location.pathname == '/strains') {
       setName("Strains")
     } else if (location.pathname == '/dashboard') {
-      setName("Dashboard")
+      setName("Stains")
+    } else if (location.pathname == '/cure-rooms') {
+      setName("Cure Rooms")
     }
   }, [location.pathname])
   return (
@@ -78,8 +82,8 @@ function NavbarV2() {
             <i class="bi bi-caret-down-fill"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style={{ position: "absolute", left: "-30px", top: "35px" }}>
-            <span class="dropdown-item cursor-pointer" style={{cursor:'pointer'}} onClick={()=>navigate('/accounts')}>Settings</span>
-            <span class="dropdown-item cursor-pointer" style={{cursor:'pointer'}} onClick={() => handleLogout()}>Logout</span>
+            <span class="dropdown-item cursor-pointer" style={{ cursor: 'pointer' }} onClick={() => navigate('/accounts')}>Settings</span>
+            <span class="dropdown-item cursor-pointer" style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>Logout</span>
           </div>
         </div>
       </nav>
