@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function SidebarV2() {
   const location = useLocation();
-  const [selectedItem, setSelectedItem] = useState('');
+  const [selectedItem, setSelectedItem] = useState("");
 
   // Update selected item when location changes
   useEffect(() => {
@@ -13,25 +13,58 @@ export default function SidebarV2() {
   }, [location]);
 
   return (
-    <div className="shadow sidebar-scroll sticky-top zindex99 bg-white" style={{ overflow: 'auto', width: '220px', height: '100vh' }}>
-      <div style={{
-        marginTop: '5px',
-        marginBottom: '50px'
-      }}>
+    <div
+      className="shadow sidebar-scroll sticky-top zindex99 bg-white"
+      style={{ overflow: "auto", width: "220px", height: "100vh" }}
+    >
+      <div
+        style={{
+          marginTop: "5px",
+          marginBottom: "50px",
+        }}
+      >
         {/* <img
           src={Logo}
           style={{ width: '160px' }}
           id="logo_RL"
         /> */}
       </div>
-      <ul className="sidebar-list-items" id="menu" style={{ marginLeft: '10px' }}>
-        <SidebarItem to="/data-source" label="Data Source" selected={selectedItem === "/data-source"} />
-        <SidebarItem to="/dashboard" label="Stains" selected={selectedItem === "/dashboard"} />
-        <SidebarItem to="/rooms" label="Rooms" selected={selectedItem === "/rooms"} />
+      <ul
+        className="sidebar-list-items"
+        id="menu"
+        style={{ marginLeft: "10px" }}
+      >
+        <SidebarItem
+          to="/data-source"
+          label="Data Source"
+          selected={selectedItem === "/data-source"}
+        />
+        <SidebarItem
+          to="/dashboard"
+          label="Stains"
+          selected={selectedItem === "/dashboard"}
+        />
+        <SidebarItem
+          to="/rooms"
+          label="Rooms"
+          selected={selectedItem === "/rooms"}
+        />
         {/* <SidebarItem to="/humidity" label="Humidity" selected={selectedItem === "/humidity"} /> */}
-        <SidebarItem to="/harvest" label="Harvest" selected={selectedItem === "/harvest"} />
-        <SidebarItem to="/strains" label="Photosynthesis" selected={selectedItem === "/strains"} />
-        <SidebarItem to="/cure-rooms" label="Cure Rooms" selected={selectedItem === "/cure-rooms"} />
+        <SidebarItem
+          to="/harvest"
+          label="Harvest"
+          selected={selectedItem === "/harvest"}
+        />
+        <SidebarItem
+          to="/strains"
+          label="Photosynthesis"
+          selected={selectedItem === "/strains"}
+        />
+        <SidebarItem
+          to="/cure-rooms"
+          label="Cure Rooms"
+          selected={selectedItem === "/cure-rooms"}
+        />
       </ul>
     </div>
   );
@@ -41,9 +74,28 @@ export default function SidebarV2() {
 function SidebarItem({ to, label, selected }) {
   const navigate = useNavigate();
   return (
-    <li className={`sidebar-list-item py-2 cursor-pointer ${selected ? 'selected' : ''}`} style={{ cursor: 'pointer' }} onClick={() => navigate(to)}>
-      <Link to={to} className={`nav-link align-middle px-2 nav-item`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <span className="ms-1 d-none d-sm-inline px-1" style={{ color: selected ? 'white' : 'black' }}>{label}</span>
+    <li
+      className={`sidebar-list-item py-2 cursor-pointer ${
+        selected ? "selected" : ""
+      }`}
+      style={{ cursor: "pointer" }}
+      onClick={() => navigate(to)}
+    >
+      <Link
+        to={to}
+        className={`nav-link align-middle px-2 nav-item`}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <span
+          className="ms-1 d-none d-sm-inline px-1"
+          style={{ color: selected ? "white" : "black" }}
+        >
+          {label}
+        </span>
       </Link>
     </li>
   );

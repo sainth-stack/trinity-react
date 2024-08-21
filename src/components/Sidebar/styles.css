@@ -81,3 +81,84 @@
   color: black !important;
   font-family: Poppins;
 }
+
+/* styles.css */
+
+/* Hide sidebar by default on mobile devices */
+.sidebar-closed {
+  display: none;
+}
+
+/* Show sidebar when the state is open */
+.sidebar-open {
+  display: block;
+}
+
+/* Ensure sidebar is visible on larger screens */
+@media (min-width: 768px) {
+  .sidebar-closed {
+    display: block !important;
+  }
+  .btn-primary {
+    display: none;
+  }
+}
+
+/* Style the sidebar toggle button */
+.btn-primary {
+  z-index: 1050;
+  border-radius: 50%;
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+/* Sidebar styles */
+.sidebar-scroll {
+  transition: transform 0.3s ease;
+}
+
+/* Sidebar for large screens */
+.d-md-block {
+  display: block;
+}
+
+/* Styles for sidebar when open or closed on mobile */
+.sidebar-open {
+  transform: translateX(0);
+  width: 220px; /* Adjust if needed */
+}
+
+.sidebar-closed {
+  transform: translateX(-220px); /* Hides the sidebar */
+}
+
+/* Mobile styles */
+@media (max-width: 844px) {
+  .sidebar-open {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 220px;
+    z-index: 999; /* Ensure it is above other content */
+  }
+
+  .sidebar-closed {
+    display: none; /* Hide when closed */
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .sidebar-open {
+    position: relative;
+    transform: none; /* Reset transform for large screens */
+  }
+
+  .sidebar-closed {
+    display: block; /* Show sidebar in default state */
+    transform: none; /* Reset transform for large screens */
+  }
+}

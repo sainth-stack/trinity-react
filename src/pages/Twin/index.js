@@ -512,41 +512,51 @@ export const Twin = () => {
 
   return (
     <div className="ms-4 me-4">
-      <div className="row mt-3">
-        <div style={{ display: "flex", gap: "20px", marginBottom: "10px" }}>
-          <label>
-            <span className="labelHeading" style={{ fontWeight: 500 }}>
-              Facilities:
-            </span>
-            <select
-              className="select-css2"
-              style={{ minWidth: "300px" }}
-              onChange={(e) => onSelectfacility(e)}
-              value={facility}
-            >
-              <option>Select</option>
-              {facilitys.map((item) => {
-                return <option>{item.label}</option>;
-              })}
-            </select>
-          </label>
-          <label>
-            <span className="labelHeading" style={{ fontWeight: 500 }}>
-              Room:
-            </span>
-            <select
-              className="select-css2"
-              style={{ minWidth: "300px" }}
-              onChange={(e) => onSelect(e)}
-              value={tag}
-            >
-              <option>Select</option>
-              {plantTags.map((item) => {
-                return <option>{item.label}</option>;
-              })}
-            </select>
-          </label>
-          <div className="d-flex" style={{ alignItems: "center" }}>
+      <div className="row mt-3 ">
+        <div
+          style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+          className="select_container"
+        >
+          <div>
+            <label>
+              <span className="labelHeading" style={{ fontWeight: 500 }}>
+                Facilities:
+              </span>
+              <select
+                className="select-css2"
+                style={{ minWidth: "250px" }}
+                onChange={(e) => onSelectfacility(e)}
+                value={facility}
+              >
+                <option>Select</option>
+                {facilitys.map((item) => {
+                  return <option>{item.label}</option>;
+                })}
+              </select>
+            </label>
+          </div>
+          <div>
+            <label>
+              <span className="labelHeading" style={{ fontWeight: 500 }}>
+                Room:
+              </span>
+              <select
+                className="select-css2"
+                style={{ minWidth: "250px" }}
+                onChange={(e) => onSelect(e)}
+                value={tag}
+              >
+                <option>Select</option>
+                {plantTags.map((item) => {
+                  return <option>{item.label}</option>;
+                })}
+              </select>
+            </label>
+          </div>
+          <div
+            className="d-flex date_container"
+            style={{ alignItems: "center" }}
+          >
             <div className="me-2">
               <span
                 style={{ display: "block", fontWeight: 500 }}
@@ -573,38 +583,39 @@ export const Twin = () => {
                 className="select-css2"
               />
             </div>
-            <div className="ms-2 mt-4">
-              <button
-                className="btn btn-primary"
-                style={{
-                  alignContent: "center",
-                  alignItems: "center",
-                  height: "40px",
-                }}
-                onClick={() => handleFilter()}
-              >
-                submit
-              </button>
-            </div>
-            <div className="ms-2 mt-4">
-              <input
-                type="file"
-                onChange={handleFileUpload}
-                style={{ display: "none" }}
-                ref={inputFileRef}
-              />
-              <button
-                className="btn btn-primary"
-                style={{
-                  alignContent: "center",
-                  alignItems: "center",
-                  height: "40px",
-                }}
-                onClick={onBtnClick}
-              >
-                upload
-              </button>
-            </div>
+          </div>
+
+          <div className="ms-2 mt-4 ">
+            <button
+              className="btn btn-primary  text-center"
+              style={{
+                alignContent: "center",
+                alignItems: "center",
+                height: "40px",
+              }}
+              onClick={() => handleFilter()}
+            >
+              submit
+            </button>
+          </div>
+          <div className="ms-2 mt-4 ">
+            <input
+              type="file"
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+              ref={inputFileRef}
+            />
+            <button
+              className="btn btn-primary text-center"
+              style={{
+                alignContent: "center",
+                alignItems: "center",
+                height: "40px",
+              }}
+              onClick={onBtnClick}
+            >
+              upload
+            </button>
           </div>
         </div>
         {/* <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
@@ -614,7 +625,7 @@ export const Twin = () => {
                 </div> */}
 
         <div
-          className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
+          className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
           style={{ height: "fit-content" }}
         >
           <Heading title="Overall Cultivation" data={[]} employees={[]} />
@@ -623,8 +634,9 @@ export const Twin = () => {
           <LineChart data={data2} options={true} />
         </div>
       </div>
-
-      <button onClick={checkApi}>click for test </button>
+      <div className="click_btn">
+        <button onClick={checkApi}>click for test </button>
+      </div>
     </div>
   );
 };

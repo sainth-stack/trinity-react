@@ -96,16 +96,15 @@
   font-size: 14px;
 }
 
-
 .sidebar-list-item:hover {
   background-color: #f0f0f0; /* Update with your preferred hover color */
-  border-radius: 6px 0px 0px 6px;/* Update with your preferred color */
+  border-radius: 6px 0px 0px 6px; /* Update with your preferred color */
 }
 
 .sidebar-list-item.selected {
-  background-color: rgb(0, 123, 255) !important; 
+  background-color: rgb(0, 123, 255) !important;
   color: white !important;
-  border-radius: 6px 0px 0px 6px;/* Update with your preferred color */
+  border-radius: 6px 0px 0px 6px; /* Update with your preferred color */
 }
 
 .sidebar-list-item .link-text {
