@@ -73,23 +73,25 @@ const FilterBar = ({
           ))}
         </select>
       </label>
-      <label style={{ display: "flex", flexDirection: "column" }}>
-        <span className="labelHeading">To:</span>
-        <DatePicker
-          selected={toDate}
-          onChange={(date) => setToDate(date)}
-          className="select-css2"
-        />
-      </label>
+      <div className="date d-flex">
+        <label style={{ display: "flex", flexDirection: "column" }}>
+          <span className="labelHeading">To:</span>
+          <DatePicker
+            selected={toDate}
+            onChange={(date) => setToDate(date)}
+            className="select-css2"
+          />
+        </label>
 
-      <label style={{ display: "flex", flexDirection: "column" }}>
-        <span className="labelHeading">From:</span>
-        <DatePicker
-          selected={fromDate}
-          onChange={(date) => setFromDate(date)}
-          className="select-css2"
-        />
-      </label>
+        <label style={{ display: "flex", flexDirection: "column" }}>
+          <span className="labelHeading">From:</span>
+          <DatePicker
+            selected={fromDate}
+            onChange={(date) => setFromDate(date)}
+            className="select-css2"
+          />
+        </label>
+      </div>
     </div>
     <div className="submit_btn">
       <button className="btn btn-primary " onClick={handleFilter}>
