@@ -11,7 +11,10 @@ import { CustomLegend } from "../../components/CustomLegend";
 import { FormatData } from "./format";
 import axios from "axios";
 import { baseURL } from "../../environments/urls";
+import { useMediaQuery } from "@mui/material";
 export const Twin = () => {
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+
   const labels1 = [
     "2023-10-01",
     "2023-10-02",
@@ -102,9 +105,9 @@ export const Twin = () => {
           <button
             className="text-left justify-content-start bg-green text-light"
             style={{ borderRadius: "4px", textTransform: "uppercase" }}
-            // onClick={() => {
-            //     props.setOrderModalShow3(true)
-            // }}
+          // onClick={() => {
+          //     props.setOrderModalShow3(true)
+          // }}
           >
             Add OKR
           </button>
@@ -126,9 +129,9 @@ export const Twin = () => {
           >
             <button
               className="dropdown-item text-capitalize text-left justify-content-start"
-              // onClick={() => {
-              //     downloadSheet2()
-              // }}
+            // onClick={() => {
+            //     downloadSheet2()
+            // }}
             >
               Export as Excel
             </button>
@@ -512,7 +515,7 @@ export const Twin = () => {
 
   return (
     <div className="ms-4 me-4">
-      <div className="row mt-3 ">
+      <div className="row mt-3" style={{ width: '100%' }}>
         <div
           style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
           className="select_container"
@@ -624,12 +627,14 @@ export const Twin = () => {
 
         <div
           className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
-          style={{ height: "fit-content" }}
+          style={{ height: "fit-content", width: '100%', overflowX: 'auto' }}
         >
           <Heading title="Overall Cultivation" data={[]} employees={[]} />
           <hr />
           <CustomLegend datasets={data2} toggleDataset={toggleDataset} />
-          <LineChart data={data2} options={true} />
+          <div style={{ minWidth: isSmallScreen ? `${70 * 20}px` : '100%', }}>
+            <LineChart data={data2} options={true} width={isSmallScreen ? "" : null} />
+          </div>
         </div>
       </div>
       {/* <div className="click_btn">
