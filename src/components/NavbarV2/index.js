@@ -5,14 +5,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import avatar from "../../assets/svg/avatar.svg";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useMediaQuery } from "@mui/material";
 
-function NavbarV2() {
+function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
   const navigate = useNavigate();
   const [name, setName] = useState("Dashboard");
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   let location = useLocation();
@@ -42,10 +49,13 @@ function NavbarV2() {
         style={{
           position: "fixed",
           top: 0,
-          left: 250,
+          left:isSmallScreen? 0: 250,
           right: 0,
+          width: '100%',
+          background:'white'
         }}
       >
+
         <div
           class="collapse navbar-collapse"
           style={{ marginLeft: "0px" }}
@@ -67,6 +77,15 @@ function NavbarV2() {
           >
             {name}
           </div>
+        </div>
+        <div className="menu-icon-container d-block d-lg-none" >
+          <button className="btn btn-light" onClick={toggleSidebar}>
+            {isSidebarOpen ? (
+              <FaTimes style={{ fontSize: "1.5rem" }} />
+            ) : (
+              <FaBars style={{ fontSize: "1.5rem" }} />
+            )}
+          </button>
         </div>
         <div
           class="nav-item dropdown d-flex align-items-center mr-2 pr-5"

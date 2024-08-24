@@ -1,50 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa"; // Import the hamburger and close icons from react-icons
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useMediaQuery } from "@mui/material";
 import "./styles.css";
 
-export default function SidebarV2() {
+export default function SidebarV2({ isSidebarOpen, setIsSidebarOpen }) {
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
   const location = useLocation();
   const [selectedItem, setSelectedItem] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setSelectedItem(location.pathname);
   }, [location]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
-    <div className="zindex99">
-      {/* Menu button for small screens */}
-      <div className="menu-icon-container d-block d-lg-none">
-        <button className="btn btn-light" onClick={toggleSidebar}>
-          {isSidebarOpen ? (
-            <FaTimes style={{ fontSize: "1.5rem" }} />
-          ) : (
-            <FaBars style={{ fontSize: "1.5rem" }} />
-          )}
+    <div className={`zindex99 ${isSmallScreen ? "mobile-sidebar-container" : ""}`}>
+      {isSmallScreen && !isSidebarOpen && (
+        <button
+          className="sidebar-toggle"
+          onClick={() => setIsSidebarOpen(true)}
+        >
+          <FaBars />
         </button>
-      </div>
+      )}
 
-      {/* Sidebar */}
       <div
-        className={`sidebar shadow sidebar-scroll sticky-top bg-white ${
-          isSidebarOpen ? "open" : ""
-        }`}
-        style={{ height: "100vh" }}
+        className={`sidebar shadow sidebar-scroll sticky-top bg-white ${isSidebarOpen ? "open" : ""}`}
+        style={{ height: "100vh", position: isSmallScreen ? "absolute" : "fixed" }}
       >
+        {isSmallScreen && isSidebarOpen && (
+          <button
+            className="sidebar-close"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <FaTimes />
+          </button>
+        )}
+
         <div style={{ marginTop: "5px", marginBottom: "50px" }}>
           {/* <img src={Logo} style={{ width: '160px' }} id="logo_RL" /> */}
         </div>
-        <ul
-          className="sidebar-list-items"
-          id="menu"
-          style={{ marginLeft: "10px" }}
-        >
+
+        <ul className="sidebar-list-items" style={{ marginLeft: "10px" }}>
           <SidebarItem
             to="/data-source"
             label="Data Source"
@@ -85,23 +82,12 @@ function SidebarItem({ to, label, selected }) {
   const navigate = useNavigate();
   return (
     <li
-      className={`sidebar-list-item  item py-2 cursor-pointer ${
-        selected ? "selected" : ""
-      }`}
-      style={{ cursor: "pointer" }}
+      className={`sidebar-list-item py-2 cursor-pointer ${selected ? "selected" : ""}`}
       onClick={() => navigate(to)}
     >
-      <Link
-        to={to}
-        className={`nav-link align-middle px-2 nav-item`}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <Link to={to} className="nav-link align-middle px-2 nav-item">
         <span
-          className="ms-1 d-none d-sm-inline px-1"
+          className="ms-1 px-1"
           style={{ color: selected ? "white" : "black" }}
         >
           {label}

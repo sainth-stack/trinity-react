@@ -522,9 +522,9 @@ export const NewHarvest = () => {
           )}
         </div>
       </div>
-      <div className="check_btn">
+      {/* <div className="check_btn">
         <button onClick={checkApi}>check harvert api </button>
-      </div>
+      </div> */}
     </div>
   );
 };

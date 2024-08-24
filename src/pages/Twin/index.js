@@ -632,9 +632,9 @@ export const Twin = () => {
           <LineChart data={data2} options={true} />
         </div>
       </div>
-      <div className="click_btn">
+      {/* <div className="click_btn">
         <button onClick={checkApi}>click for test </button>
-      </div>
+      </div> */}
     </div>
   );
 };
