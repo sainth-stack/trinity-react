@@ -14,7 +14,9 @@ export default function SidebarV2({ isSidebarOpen, setIsSidebarOpen }) {
   }, [location]);
 
   return (
-    <div className={`zindex99 ${isSmallScreen ? "mobile-sidebar-container" : ""}`}>
+    <div
+      className={`zindex99 ${isSmallScreen ? "mobile-sidebar-container" : ""}`}
+    >
       {isSmallScreen && !isSidebarOpen && (
         <button
           className="sidebar-toggle"
@@ -25,8 +27,13 @@ export default function SidebarV2({ isSidebarOpen, setIsSidebarOpen }) {
       )}
 
       <div
-        className={`sidebar shadow sidebar-scroll sticky-top bg-white ${isSidebarOpen ? "open" : ""}`}
-        style={{ height: "100vh", position: isSmallScreen ? "absolute" : "fixed" }}
+        className={`sidebar shadow sidebar-scroll sticky-top bg-white ${
+          isSidebarOpen ? "open" : ""
+        }`}
+        style={{
+          height: "100vh",
+          position: isSmallScreen ? "" : "fixed",
+        }}
       >
         {isSmallScreen && isSidebarOpen && (
           <button
@@ -36,10 +43,6 @@ export default function SidebarV2({ isSidebarOpen, setIsSidebarOpen }) {
             <FaTimes />
           </button>
         )}
-
-        <div style={{ marginTop: "5px", marginBottom: "50px" }}>
-          {/* <img src={Logo} style={{ width: '160px' }} id="logo_RL" /> */}
-        </div>
 
         <ul className="sidebar-list-items" style={{ marginLeft: "10px" }}>
           <SidebarItem
@@ -82,7 +85,9 @@ function SidebarItem({ to, label, selected }) {
   const navigate = useNavigate();
   return (
     <li
-      className={`sidebar-list-item py-2 cursor-pointer ${selected ? "selected" : ""}`}
+      className={`sidebar-list-item py-2 cursor-pointer ${
+        selected ? "selected" : ""
+      }`}
       onClick={() => navigate(to)}
     >
       <Link to={to} className="nav-link align-middle px-2 nav-item">

@@ -116,3 +116,47 @@
 }
 
 /* Add other styles as needed */
+/* Sidebar styling */
+.sidebar-open {
+  transform: translateX(0);
+}
+
+.sidebar-closed {
+  transform: translateX(-100%);
+}
+
+/* Toggle button styling */
+.menu-icon-container_v3 {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 100;
+}
+
+/* Styling for selected sidebar item */
+.sidebar-list-item.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Sidebar item hover effect */
+.sidebar-list-item:hover {
+  background-color: #f0f0f0;
+}
+.nav-item {
+  color: black !important; /* Ensure text color is always black */
+}
+
+/* Media query for small screens */
+@media (max-width: 844px) {
+  .icon {
+    position: absolute;
+    top: 5.2rem;
+  }
+  .navbar {
+    background: #000 !important;
+  }
+  .sidebar {
+    width: 75%;
+  }
+}

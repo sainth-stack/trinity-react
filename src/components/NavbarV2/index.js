@@ -49,13 +49,12 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
         style={{
           position: "fixed",
           top: 0,
-          left:isSmallScreen? 0: 250,
+          left: isSmallScreen ? 0 : 250,
           right: 0,
-          width: '100%',
-          background:'white'
+          width: "100%",
+          background: "white",
         }}
       >
-
         <div
           class="collapse navbar-collapse"
           style={{ marginLeft: "0px" }}
@@ -78,7 +77,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
             {name}
           </div>
         </div>
-        <div className="menu-icon-container d-block d-lg-none" >
+        <div className="menu-icon-container d-block d-lg-none">
           <button className="btn btn-light" onClick={toggleSidebar}>
             {isSidebarOpen ? (
               <FaTimes style={{ fontSize: "1.5rem" }} />

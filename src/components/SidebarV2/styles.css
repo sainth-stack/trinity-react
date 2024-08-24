@@ -79,7 +79,7 @@
 }
 
 /* Mobile-specific adjustments */
-@media (max-width: 600px) {
+@media (max-width: 844px) {
   .sidebar {
     width: 200px;
     transform: translateX(-100%);

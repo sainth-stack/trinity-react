@@ -257,13 +257,13 @@ const Dashboard = () => {
       <div className="row">
         <div
           className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}
-          style={{ width: '100%', overflow: 'auto' }}
+          style={{ width: "100%", overflow: "auto" }}
         >
           <h5 className="mt-2 mb-4">
             Plants {moment(toDate).format("DD/MM/YYYY")} -{" "}
             {moment(fromDate).format("DD/MM/YYYY")}
           </h5>
-          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : '100%', }}>
+          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
               data={plantsData()}
               height={120}
@@ -290,13 +290,13 @@ const Dashboard = () => {
         </div>
         <div
           className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}
-          style={{ width: '100%', overflow: 'auto' }}
+          style={{ width: "100%", overflow: "auto" }}
         >
           <h5 className="mt-2 mb-4">
             g/plants {moment(toDate).format("DD/MM/YYYY")} -{" "}
             {moment(fromDate).format("DD/MM/YYYY")}
           </h5>
-          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : '100%', }}>
+          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
               data={getGramsPerPlantData()}
               height={120}
@@ -322,16 +322,19 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="row" >
+      <div className="row">
         <div
           className={`col graph_card gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}
-          style={{ width: '100%', overflow: 'auto' }}
+          style={{ width: "100%", overflow: "auto" }}
         >
           <h5 className="mt-2 mb-4">
             Yield (g) {moment(toDate).format("DD/MM/YYYY")} -{" "}
             {moment(fromDate).format("DD/MM/YYYY")}
           </h5>
-          <div className="chart_data" style={{ minWidth: isSmallScreen ? `${40 * 20}px` : '100%', }}          >
+          <div
+            className="chart_data"
+            style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}
+          >
             <LineChart
               data={getGramsData()}
               height={120}
@@ -358,13 +361,13 @@ const Dashboard = () => {
         </div>
         <div
           className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}
-          style={{ width: '100%', overflow: 'auto' }}
+          style={{ width: "100%", overflow: "auto" }}
         >
           <h5 className="mt-2 mb-4">
             Quality {moment(toDate).format("DD/MM/YYYY")} -{" "}
             {moment(fromDate).format("DD/MM/YYYY")}
           </h5>
-          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : '100%', }}>
+          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
               data={getQualityData()}
               height={120}
