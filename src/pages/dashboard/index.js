@@ -231,7 +231,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-3">
-      <div className="d-flex mb-2">
+      <div className="d-flex mb-2 date_container">
         <div className="me-2">
           <span className="labelHeading">To:</span>
           <DatePicker selected={toDate} onChange={(date) => setToDate(date)} />
@@ -243,7 +243,7 @@ const Dashboard = () => {
             onChange={(date) => setFromDate(date)}
           />
         </div>
-        <div className="ms-2">
+        <div className="ms-2 ">
           <button
             onClick={() => handleFilter()}
             className="btn btn-primary mt-1"

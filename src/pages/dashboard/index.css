@@ -92,7 +92,11 @@
     flex-direction: column;
     justify-content: space-around;
   }
-  /* .graph_card {
+
+  .date_container .btn {
+    margin-left: -0.2rem;
+  }
+  /* .graph_card {das
     display: flex;
   }
   .chart_data {

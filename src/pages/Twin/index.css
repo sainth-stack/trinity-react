@@ -97,6 +97,17 @@
     position: relative;
     top: 2rem;
   }
+  .select_inputs {
+    display: flex;
+  }
+
+  .select_inputs {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .select_inputs select {
+    min-width: 20px !important;
+  }
   .click_btn {
     display: grid;
     justify-content: center;

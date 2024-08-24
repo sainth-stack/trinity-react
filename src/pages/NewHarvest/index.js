@@ -408,7 +408,7 @@ export const NewHarvest = () => {
                             </tbody>
                         </table> */}
             <table className="table">
-              <thead className="sticky-top">
+              <thead className="sticky">
                 <tr>
                   <th style={{ minWidth: "200px", border: "1px solid black" }}>
                     Harvest Batch

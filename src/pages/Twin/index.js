@@ -517,8 +517,8 @@ export const Twin = () => {
           style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
           className="select_container"
         >
-          <div>
-            <label>
+          <div className="select_inputs d-flex ">
+            <div className="mx-2">
               <span className="labelHeading" style={{ fontWeight: 500 }}>
                 Facilities:
               </span>
@@ -533,10 +533,8 @@ export const Twin = () => {
                   return <option>{item.label}</option>;
                 })}
               </select>
-            </label>
-          </div>
-          <div>
-            <label>
+            </div>
+            <div>
               <span className="labelHeading" style={{ fontWeight: 500 }}>
                 Room:
               </span>
@@ -551,7 +549,7 @@ export const Twin = () => {
                   return <option>{item.label}</option>;
                 })}
               </select>
-            </label>
+            </div>
           </div>
           <div
             className="d-flex date_container"
