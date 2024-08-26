@@ -1,60 +1,60 @@
 .container {
-    max-width: 800px !important;
-    margin: 0 auto;
-    padding: 20px;
-    padding-top: 10px !important;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+  margin-right: 15rem !important;
+  max-width: 800px !important;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 10px !important;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
 
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 label {
-    display: block;
-    font-weight: bold;
+  display: block;
+  font-weight: bold;
 }
 
 input[type="text"],
 input[type="password"],
 textarea {
-    width: 100%;
-    padding: 10px;
-    padding-top: 8px !important;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    resize: vertical; /* Allow vertical resizing of the textarea */
+  width: 100%;
+  padding: 10px;
+  padding-top: 8px !important;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: vertical; /* Allow vertical resizing of the textarea */
 }
 
 input[type="checkbox"] {
-    /* width: 100%; */
-    width: 15px;
-    margin-left: 4px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    cursor: pointer;
-    resize: vertical; /* Allow vertical resizing of the textarea */
+  /* width: 100%; */
+  width: 15px;
+  margin-left: 4px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  resize: vertical; /* Allow vertical resizing of the textarea */
 }
 
 button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
-
 input[type="checkbox"] {
-    margin-right: 10px; /* Add margin to create space between checkbox and label */
+  margin-right: 10px; /* Add margin to create space between checkbox and label */
 }

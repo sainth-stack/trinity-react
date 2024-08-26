@@ -5,11 +5,15 @@ const app = express();
 app.use(express.static(path.join(__dirname, "build")));
 
 app.post("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
+// Define a GET route for all other paths
 app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(process.env.PORT || 3000);
+// Start the server on port 4000
+app.listen(4000, () => {
+  console.log("Server is running port 4000");
+});
