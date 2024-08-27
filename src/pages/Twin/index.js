@@ -64,8 +64,8 @@ export const Twin = () => {
     ],
   };
   const [data, setData] = useState(data1);
-  const [data2, setData2] = useState(data1);
-  const [excelData, setExcelData] = useState(data50);
+  const [data2, setData2] = useState([]);
+  const [excelData, setExcelData] = useState([]);
   const [toDate, setToDate] = useState(new Date("2024-01-31"));
   const [fromDate, setFromDate] = useState(new Date("2024-02-27"));
   const [tag, setTag] = useState("Room1");
@@ -76,26 +76,21 @@ export const Twin = () => {
   const checkApi = async () => {
     console.log("get rooms api called");
     try {
-      /*    const response = await axios.post(` ${baseURL}getroomsdata/`); */
-
-      const response = await axios.post(
-        `https://cannatwin.com/api/getroomsdata/`,
+      const response = await axios.get(
+        `https://cannatwin.com/api/getroomsdata/?email=kingrevi@gmail.com`,
         fromDate,
-        toDate
+        toDate,
       );
-
-      alert("Room file uploaded successfully!");
-      console.log("Response rooms:", response);
+      setExcelData(response?.data[0])
     } catch (error) {
       console.error("Error uploading room file:", error);
       alert("Error uploading room file", error);
     }
   };
 
-  /*   useEffect(() => {
-    getRooms();
+  useEffect(() => {
+    checkApi();
   }, []);
- */
 
   function Heading(props) {
     return (
@@ -235,7 +230,7 @@ export const Twin = () => {
   const groupDataByDay = (data) => {
     const groupedData = {};
     data.forEach((obj) => {
-      const date = new Date(obj["Date-Time (MST)"]);
+      const date = new Date(obj["Date"]);
       const day = date.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
       if (!groupedData[day]) {
         groupedData[day] = [];
@@ -256,23 +251,23 @@ export const Twin = () => {
         LSI: 0,
         count: 0,
       };
-
       dayData.forEach((obj) => {
+        console.log(obj)
+        console.log(obj["Ch:2 - RH   (%)"])
         total["Ch:1 - Temperature (°C)"] += parseFloat(
-          obj["Ch:1 - Temperature (°C)"]
-        );
-        total["Ch:2 - RH (%)"] += parseFloat(obj["Ch:2 - RH (%)"]);
-        total["CO2"] += parseFloat(obj["CO2"]);
-        total["LSI"] += parseFloat(obj["LSI"]);
-        total.count++;
+          obj["Ch:1 - Temperature   (°C)"]
+        ) || 0;
+        total["Ch:2 - RH (%)"] = total["Ch:2 - RH (%)"] + (parseFloat(obj["Ch:2 - RH   (%)"]));
+        total["CO2"] = total["CO2"] + parseFloat(obj["CO2"]);
+        total["LSI"] = total["LSI"] + parseFloat(obj["LSI (Red)"] || 0);
+        total['count'] = total['count'] + 1;
       });
-
       averages[day] = {
         "Average Temperature (°C)":
-          total["Ch:1 - Temperature (°C)"] / total.count,
-        "Average RH (%)": total["Ch:2 - RH (%)"] / total.count,
-        "Average CO2": total["CO2"] / total.count,
-        "Average LSI": total["LSI"] / total.count,
+          parseFloat(total["Ch:1 - Temperature (°C)"]) / total.count,
+        "Average RH (%)": parseFloat(total["Ch:2 - RH (%)"]) / total.count,
+        "Average CO2": parseFloat(total["CO2"]) / total.count,
+        "Average LSI": parseFloat(total["LSI"]) / total.count,
       };
     }
     return averages;
@@ -281,8 +276,8 @@ export const Twin = () => {
   useEffect(() => {
     if (excelData) {
       const datanew = groupDataByDay(excelData);
-      console.log(datanew);
       const averages = calculateAverages(datanew);
+      console.log(averages)
       const labels = [];
       const temp = [];
       const humidity = [];
@@ -625,7 +620,7 @@ export const Twin = () => {
                     <LineChart data={data} options={true} />
                 </div> */}
 
-        <div
+        {excelData?.length > 0 && <div
           className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
           style={{ height: "fit-content", width: '100%', overflowX: 'auto' }}
         >
@@ -635,7 +630,7 @@ export const Twin = () => {
           <div style={{ minWidth: isSmallScreen ? `${70 * 20}px` : '100%', }}>
             <LineChart data={data2} options={true} width={isSmallScreen ? "" : null} />
           </div>
-        </div>
+        </div>}
       </div>
       {/* <div className="click_btn">
         <button onClick={checkApi}>click for test </button>
