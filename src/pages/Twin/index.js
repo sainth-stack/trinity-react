@@ -409,20 +409,20 @@ export const Twin = () => {
     // Convert dates from ISO strings to moment objects, then to timestamps
     const fromDateTimestamp = moment(fromDate);
     const toDateTimestamp = moment(toDate);
-    const data = await checkApi()
-    const filteredData = data.filter((item) => {
-      const itemDateTimestamp = moment(item.Date);
-      console.log(itemDateTimestamp , fromDateTimestamp , itemDateTimestamp , toDateTimestamp)
-      const matchesRoom = item.Room === tag;
-      const matchesFacility = item.Facility === facility;
-      const withinDateRange = itemDateTimestamp >= fromDateTimestamp && itemDateTimestamp <= toDateTimestamp;
+    // const data = await checkApi()
+    // const filteredData = data.filter((item) => {
+    //   const itemDateTimestamp = moment(item.Date);
+    //   console.log(itemDateTimestamp , fromDateTimestamp , itemDateTimestamp , toDateTimestamp)
+    //   const matchesRoom = item.Room === tag;
+    //   const matchesFacility = item.Facility === facility;
+    //   const withinDateRange = itemDateTimestamp >= fromDateTimestamp && itemDateTimestamp <= toDateTimestamp;
 
-      return matchesRoom && matchesFacility && withinDateRange;
-    });
+    //   return matchesRoom && matchesFacility && withinDateRange;
+    // });
 
-    console.log('Filtered Data:', filteredData);
+    // console.log('Filtered Data:', filteredData);
 
-    setExcelData(filteredData);
+    // setExcelData(filteredData);
   };
 
   useEffect(() => {
