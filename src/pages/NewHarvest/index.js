@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import GroupedBarChart from './barChart'
 import { InputData } from './InputData';
 import axios from 'axios';
+import PrepLoader from '../../components/prep-loader/loader';
 
 const generateRandomData = (length, value) => {
   return Array.from({ length }, () => Math.floor(Math.random() * 100));
@@ -28,28 +29,36 @@ export const NewHarvest = () => {
   const [graphData, setGraphData] = useState({
     labels: []
   })
+  const [loadingR, setLoadingR] = useState(false)
+  const [loadingH, setLoadingH] = useState(false)
   const [selectedValue, setSelectedValue] = useState('sep');
   const [finalHB, setFinalHB] = useState([])
   const [avg, setAvg] = useState({})
   const getRoomsData = async () => {
     console.log("get rooms api called");
     try {
+      setLoadingR(true)
       const response = await axios.get(
         `https://cannatwin.com/api/getroomsdata/?email=kingrevi@gmail.com`,
       );
+      setLoadingR(false)
       return response?.data[0]
     } catch (error) {
+      setLoadingR(false)
       console.error("Error uploading room file:", error);
       alert("Error uploading room file", error);
     }
   };
   const getHarvestData = async () => {
     try {
+      setLoadingH(true)
       const response = await axios.get(
         `https://cannatwin.com/api/getharvestdata/?email=kingrevi@gmail.com`,
       );
+      setLoadingH(false)
       return response?.data[0]
     } catch (error) {
+      setLoadingH(false)
       alert("Error uploading room file", error);
     }
   };
@@ -432,7 +441,7 @@ export const NewHarvest = () => {
 
   return (
     <div>
-      {(harvestData?.length>0 && roomData?.length>0) ? <div className="p-2 mt-1">
+      {(harvestData?.length > 0 && roomData?.length > 0) ? <div className="p-2 mt-1">
         <div className="row">
           <div className="col-md-3" >
             <h2 className='heading1'>Harvest Batches</h2>
@@ -556,9 +565,10 @@ export const NewHarvest = () => {
             </>}
           </div>
         </div>
-      </div> : <div style={{
+      </div> : <PrepLoader />}
+      {(!loadingH && !loadingR) && <div style={{
         display: "flex", justifyContent: "center", fontWeight: 400, fontSize: '20px'
-      }}>Upload Rooms and Harvest data</div>}
+      }}>{(harvestData?.length === 0 && roomData?.length === 0) &&"Upload Rooms and Harvest data"}</div>}
     </div>
   );
 };
