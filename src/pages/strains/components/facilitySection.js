@@ -11,7 +11,7 @@ const FacilitySection = ({ groupedByFacility }) => {
           <div className="rooms-section">
             {rooms.map((room) => (
               <div key={room.room} className="room-box">
-                <h4>{room.room}</h4>
+                <h4>{room?.room !=="undefined" ? room?.room  : "Room1"}</h4>
                 <div
                   className="radar-chart-container"
                   style={{ width: "400px", height: "400px" }}

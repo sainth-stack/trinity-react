@@ -8,44 +8,27 @@ export const CureRooms = () => {
       rooms: [
         {
           room: "Room 1",
+          currentTemp: 61,
+          avgTemp: 60,
+          currentHum: 60,
+          avgHum: 61,
           locations: [
             {
               location: "Location 1",
-              currentTemp: 60,
-              avgTemp: 59,
-              currentHum: 60,
-              avgHum: 61,
+              temperature: 62,
+              humidity: 58,
               strains: [
-                { strain: "JB 80g Bud" },
-                { strain: "GG 120g Shake" },
-                { strain: "GT4 100g Trim" },
-                { strain: "BS 150g Bud" },
+                { strain: "JB", weight: 30, type: "bud" },
+                { strain: "GTH", weight: 80, type: "shake" },
               ],
             },
             {
               location: "Location 2",
-              currentTemp: 61,
-              avgTemp: 60,
-              currentHum: 61,
-              avgHum: 62,
+              temperature: 61,
+              humidity: 52,
               strains: [
-                { strain: "JB 90g Bud" },
-                { strain: "DS 110g Shake" },
-                { strain: "GT4 120g Trim" },
-                { strain: "BS 140g Bud" },
-              ],
-            },
-            {
-              location: "Location 3",
-              currentTemp: 62,
-              avgTemp: 61,
-              currentHum: 62,
-              avgHum: 63,
-              strains: [
-                { strain: "JB 85g Bud" },
-                { strain: "GG 125g Shake" },
-                { strain: "GT4 105g Trim" },
-                { strain: "BS 160g Bud" },
+                { strain: "CT", weight: 25, type: "bud" },
+                { strain: "BTH", weight: 50, type: "shake" },
               ],
             },
           ],
@@ -57,139 +40,27 @@ export const CureRooms = () => {
       rooms: [
         {
           room: "Room 2",
+          currentTemp: 63,
+          avgTemp: 62,
+          currentHum: 64,
+          avgHum: 63,
           locations: [
             {
               location: "Location 1",
-              currentTemp: 63,
-              avgTemp: 62,
-              currentHum: 64,
-              avgHum: 63,
+              temperature: 65,
+              humidity: 54,
               strains: [
-                { strain: "GT4 90g Trim" },
-                { strain: "JB 95g Bud" },
-                { strain: "GG 135g Shake" },
-                { strain: "BS 155g Bud" },
+                { strain: "JB", weight: 30, type: "bud" },
+                { strain: "GTH", weight: 80, type: "shake" },
               ],
             },
             {
               location: "Location 2",
-              currentTemp: 65,
-              avgTemp: 64,
-              currentHum: 66,
-              avgHum: 65,
+              temperature: 62,
+              humidity: 53,
               strains: [
-                { strain: "GT4 100g Trim" },
-                { strain: "JB 100g Bud" },
-                { strain: "GG 140g Shake" },
-                { strain: "BS 150g Bud" },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      facility: "2029 Gypsy",
-      rooms: [
-        {
-          room: "Room 3",
-          locations: [
-            {
-              location: "Location 1",
-              currentTemp: 58,
-              avgTemp: 59,
-              currentHum: 57,
-              avgHum: 58,
-              strains: [
-                { strain: "XY 120g Bud" },
-                { strain: "AB 90g Shake" },
-                { strain: "LM 110g Trim" },
-                { strain: "NO 80g Bud" },
-              ],
-            },
-            {
-              location: "Location 2",
-              currentTemp: 60,
-              avgTemp: 61,
-              currentHum: 59,
-              avgHum: 60,
-              strains: [
-                { strain: "XY 130g Bud" },
-                { strain: "AB 100g Shake" },
-                { strain: "LM 115g Trim" },
-                { strain: "NO 85g Bud" },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      facility: "742 Evergreen Terrace",
-      rooms: [
-        {
-          room: "Room 4",
-          locations: [
-            {
-              location: "Location 1",
-              currentTemp: 64,
-              avgTemp: 65,
-              currentHum: 66,
-              avgHum: 64,
-              strains: [
-                { strain: "EF 80g Trim" },
-                { strain: "GH 70g Bud" },
-                { strain: "IJ 100g Shake" },
-                { strain: "KL 95g Bud" },
-              ],
-            },
-            {
-              location: "Location 2",
-              currentTemp: 65,
-              avgTemp: 66,
-              currentHum: 67,
-              avgHum: 65,
-              strains: [
-                { strain: "EF 85g Trim" },
-                { strain: "GH 75g Bud" },
-                { strain: "IJ 105g Shake" },
-                { strain: "KL 100g Bud" },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      facility: "1313 Mockingbird Lane",
-      rooms: [
-        {
-          room: "Room 5",
-          locations: [
-            {
-              location: "Location 1",
-              currentTemp: 62,
-              avgTemp: 63,
-              currentHum: 61,
-              avgHum: 62,
-              strains: [
-                { strain: "MN 95g Trim" },
-                { strain: "OP 85g Bud" },
-                { strain: "QR 125g Shake" },
-                { strain: "ST 110g Bud" },
-              ],
-            },
-            {
-              location: "Location 2",
-              currentTemp: 63,
-              avgTemp: 64,
-              currentHum: 62,
-              avgHum: 63,
-              strains: [
-                { strain: "MN 100g Trim" },
-                { strain: "OP 90g Bud" },
-                { strain: "QR 130g Shake" },
-                { strain: "ST 115g Bud" },
+                { strain: "CT", weight: 25, type: "bud" },
+                { strain: "BTH", weight: 50, type: "shake" },
               ],
             },
           ],
@@ -429,18 +300,18 @@ export const CureRooms = () => {
                   >
                     <div>
                       <p style={{ marginBottom: "5px", fontSize: "16px" }}>
-                        Current Temp: {room.locations[0].currentTemp}°F
+                        Current Temp: {room.currentTemp}°F
                       </p>
                       <p style={{ marginBottom: "5px", fontSize: "16px" }}>
-                        Current Hum: {room.locations[0].currentHum}%
+                        Current Hum: {room.currentHum}%
                       </p>
                     </div>
                     <div>
                       <p style={{ marginBottom: "5px", fontSize: "16px" }}>
-                        Avg Temp: {room.locations[0].avgTemp}°F
+                        Avg Temp: {room.avgTemp}°F
                       </p>
                       <p style={{ marginBottom: "5px", fontSize: "16px" }}>
-                        Avg Hum: {room.locations[0].avgHum}%
+                        Avg Hum: {room.avgHum}%
                       </p>
                     </div>
                   </div>
@@ -475,15 +346,55 @@ export const CureRooms = () => {
                         >
                           {location.location}
                         </h5>
+                        <div
+                          style={{
+                            marginBottom: "10px",
+                            fontSize: "14px",
+                            color: "#6c757d",
+                          }}
+                        >
+                          <p style={{ display: 'flex', margin: 0, padding: 0 }}><p style={{ width: '100px' }}>Temperature:</p> {location.temperature}°C</p>
+                          <p style={{ display: 'flex', margin: 0, padding: 0 }}><p style={{ width: '100px' }}>Humidity:</p> {location.humidity}%</p>
+                        </div>
                         <div style={{ fontSize: "16px" }}>
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr 1fr",
+                              gap: "10px",
+                              fontWeight: 600,
+                              borderBottom: "2px solid #ddd",
+                              paddingBottom: "5px",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <div>Strain</div>
+                            <div>Q</div>
+                            <div>Type</div>
+                          </div>
                           {location.strains.map((strain, index) => (
-                            <p key={index}>{strain.strain}</p>
+                            <div
+                              key={index}
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr 1fr",
+                                gap: "10px",
+                                marginBottom: "5px",
+                              }}
+                            >
+                              <span>{strain.strain}</span>
+                              <span>{strain.weight}g</span>
+                              <span>{strain.type}</span>
+                            </div>
                           ))}
                         </div>
+
                       </div>
                     ))}
                   </div>
                 </div>
+
+
               </div>
             ))}
           </div>

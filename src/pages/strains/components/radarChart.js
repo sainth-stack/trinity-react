@@ -41,10 +41,10 @@ const getRadarData = (roomData) => {
             {
                 label: 'Real Data',
                 data: [
-                    normalize(roomData.strains[0].data.PPFD.value, 0, 2000),
-                    normalize(roomData.strains[0].data.Temp.value, 0, 100),
-                    normalize(roomData.strains[0].data.PPM.value, 0, 2000),
-                    normalize(roomData.strains[0].data.Hum.value, 0, 100),
+                    normalize(roomData.data.PPFD.value, 0, 2000),
+                    normalize(roomData.data.Temp.value, 0, 100),
+                    normalize(roomData.data.PPM.value, 0, 2000),
+                    normalize(roomData.data.Hum.value, 0, 100),
                 ],
                 backgroundColor: 'rgba(0, 0, 0, 0.1)',
                 borderColor: 'rgba(0, 0, 0, 1)',
