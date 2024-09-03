@@ -1,5 +1,5 @@
-import Logo from "../../assets/images/Logo2.png";
-import loginbg from "../../assets/svg/loginbg.svg";
+import Logo from "../../assets/images/Logo2.jpg";
+import loginbg from "../../assets/images/right_side_image.jpg";
 import eye from "../../assets/svg/eye-fill.svg";
 import eye2 from "../../assets/svg/eye-slash.svg";
 import { useState } from "react";
@@ -9,13 +9,13 @@ import { GoogleLogin } from "@react-oauth/google";
 import "./styles.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const baseURL = "http://cannatwin.com/api/login";
+const baseURL = "https://cannatwin.com/api/login/";
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
   const [toggle2, setToggle2] = useState(false);
   const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -26,12 +26,12 @@ export const Login = () => {
 
     await axios
       .post(baseURL, {
-        username: email,
+        username: username,
         password: password,
       })
       .then((response) => {
         setLoading(false);
-        navigate("/timesheet");
+        navigate("/");
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("username", response.data.username);
       })
@@ -73,22 +73,36 @@ export const Login = () => {
       style={{ background: "#808080" }}
     >
       <div className="col-md-6 p-0 m-0 bg-biscuit text-center pt-4 pb-4 d-none d-lg-block">
-        <h5 className="text-green font-weight-bold mt-2">
-          WELCOME TO KEYPULSE
+        <h5 className="text-green font-weight-bold mt-2 text-uppercase">
+          WELCOME TO cannatwin
         </h5>
-        <h3 className="mt-3">
-          Your Digital Growth Partner <br /> For Manufacturing
-        </h3>
+
         <div className="d-flex justify-content-center">
-          <div className="col-md-10">
-            <img className="img-fluid p-3" src={loginbg} alt="Background" />
+          <div className="mx-5">
+            <img
+              className="img-fluid p-3"
+              src={loginbg}
+              alt="Background"
+              style={{
+                width: "100%",
+                height: "80%",
+              }}
+            />
           </div>
         </div>
       </div>
 
-      <div className="col-md-6 col-xs-12 col-sm-12 text-center pt-lg-2 mt-lg-2 left_side">
+      <div
+        className="col-md-6 col-xs-12 col-sm-12 text-center  left_side"
+        style={{ background: "#fff" }}
+      >
         <div>
-          <img className="logo1 mb-3" src={Logo} alt="Logo" width={300} />
+          <img
+            className="logo1 mb-2 mt-2"
+            src={Logo}
+            alt="Logo"
+            style={{ width: "160px" }}
+          />
         </div>
 
         <div
@@ -101,10 +115,7 @@ export const Login = () => {
           }}
         >
           <div className="col-md-9 col-lg-9 col-sm-12 col-xs-12 mx-auto">
-            <div
-              style={{ width: "100% !important" }}
-              className="d-flex justify-content-center"
-            >
+            <div className="d-flex justify-content-center google-login-wrapper">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleFailure}
@@ -132,14 +143,14 @@ export const Login = () => {
                 <label className="label2 fs13 ">{"username"}*</label>
                 <input
                   style={{ borderRadius: "40px" }}
-                  type="email"
+                  //type="email"
                   className="form-control border"
-                  id="email"
+                  id="username"
                   name="username"
                   autoComplete="off"
-                  value={email}
+                  value={username}
                   required
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
 

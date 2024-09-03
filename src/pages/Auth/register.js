@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Logo from "../../assets/images/Logo2.png";
-import loginbg from "../../assets/svg/loginbg.svg";
+import Logo from "../../assets/images/Logo2.jpg";
+import loginbg from "../../assets/images/right_side_image.jpg";
 import eye from "../../assets/svg/eye-fill.svg";
 import eye2 from "../../assets/svg/eye-slash.svg";
 import { LoadingIndicator } from "../../components/loader";
 import "./styles.css";
 
-const baseURL = "http://cannatwin.com/api/register/";
+const baseURL = "https://cannatwin.com/api/register/";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -33,9 +33,26 @@ const Register = () => {
     setLoading(true);
     setErrorMessage("");
 
+    // Map frontend field names to backend field names
+    const fieldMapping = {
+      username: "username",
+      first_name: "password1", // Map first_name to password1
+      last_name: "password2", // Map last_name to password2
+      email: "email",
+      password: "password", // Assume password is mapped to password
+    };
+
+    // Create FormData object
+    const formDataObj = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (fieldMapping[key]) {
+        formDataObj.append(fieldMapping[key], formData[key]);
+      }
+    });
+
     try {
-      const response = await axios.post(baseURL, formData, {
-        headers: { "Content-Type": "application/json" },
+      const response = await axios.post(baseURL, formDataObj, {
+        headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
 
@@ -58,10 +75,18 @@ const Register = () => {
 
   return (
     <div className="container-fluid row m-0 p-0 vh-100">
-      <div className="col-md-6 col-xs-12 col-sm-12 text-center  left_side ">
-        <img className="logo1" src={Logo} alt="Logo" width={300} />
+      <div
+        className="col-md-6 col-xs-12 col-sm-12 text-center left_side"
+        style={{ background: "#fff" }}
+      >
+        <img
+          className="logo1 mt-2"
+          src={Logo}
+          alt="Logo"
+          style={{ width: "160px" }}
+        />
         <div className="row mt-3">
-          <div className="col-md-9 col-lg-9 col-sm-12 col-xs-12 mx-auto ">
+          <div className="col-md-9 col-lg-9 col-sm-12 col-xs-12 mx-auto">
             <h2 className="mb-2">Register</h2>
             {errorMessage && (
               <div className="alert alert-danger">{errorMessage}</div>
@@ -139,15 +164,21 @@ const Register = () => {
       </div>
 
       <div className="col-md-6 p-0 m-0 bg-biscuit text-center pt-4 pb-4 d-none d-lg-block">
-        <h5 className="text-green font-weight-bold mt-2">
-          WELCOME TO KEYPULSE
+        <h5 className="text-green font-weight-bold mt-2 text-uppercase">
+          WELCOME TO cannatwin
         </h5>
-        <h3 className="mt-3">
-          Your Digital Growth Partner <br /> For Manufacturing
-        </h3>
+
         <div className="d-flex justify-content-center">
           <div className="col-md-10">
-            <img className="img-fluid p-3" src={loginbg} alt="Background" />
+            <img
+              className="img-fluid p-3"
+              src={loginbg}
+              alt="Background"
+              style={{
+                width: "100%",
+                height: "90%",
+              }}
+            />
           </div>
         </div>
       </div>
