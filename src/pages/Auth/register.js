@@ -18,8 +18,8 @@ const Register = () => {
     email: "",
     password1: "Test@123",
     password2: "Test@123",
-    address:'',
-    mobile:""
+    address: "",
+    mobile: "",
   });
   const [loading, setLoading] = useState(false);
   const [togglePassword, setTogglePassword] = useState(false);
@@ -36,16 +36,14 @@ const Register = () => {
     setLoading(true);
     setErrorMessage("");
 
-    // Create FormData object
     const formDataObj = new FormData();
-    Object.keys(formData).forEach(key => {
+    Object.keys(formData).forEach((key) => {
       formDataObj.append(key, formData[key]);
     });
 
     try {
       const response = await axios.post(baseURL, formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
-        // withCredentials: true,
       });
 
       if (response.status === 200) {
@@ -66,7 +64,7 @@ const Register = () => {
   };
 
   return (
-    <div className="container-fluid row m-0 p-0 vh-100">
+    <div className="container-fluid row m-0 p-0 vh-100 d-flex flex-row-reverse">
       <div
         className="col-md-6 col-xs-12 col-sm-12 text-center left_side"
         style={{ background: "#fff" }}
