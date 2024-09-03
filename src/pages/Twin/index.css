@@ -94,7 +94,7 @@
   .overall_card {
     display: flex;
     justify-content: center;
-    position: relative;
+
     top: 2rem;
   }
   .select_inputs {

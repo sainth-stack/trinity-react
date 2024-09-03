@@ -160,3 +160,69 @@
     width: 75%;
   }
 }
+
+@media (max-width: 844px) {
+  .sidebar {
+    display: none;
+  }
+
+  .sidebar.open {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: auto; /* Adjust height for dropdown */
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(
+      -100%
+    ); /* Initially hide the sidebar above the viewport */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    transform: translateY(0); /* Slide the sidebar down into view */
+  }
+
+  .menu-icon-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: px;
+    margin-left: -40px;
+    margin-top: 10px;
+  }
+
+  .menu-icon-container .btn {
+    border: none;
+    background-color: transparent;
+  }
+
+  .sidebar-open {
+    background-color: #f8f9fa; /* Light background for visibility */
+    border-right: 1px solid #ddd; /* Add a border for better separation */
+  }
+
+  .sidebar-closed {
+    background-color: #f8f9fa; /* Match open state background */
+  }
+
+  .sidebar-list-item {
+    font-size: 16px;
+    color: #333; /* Text color for visibility */
+  }
+
+  .sidebar-list-item.selected {
+    background-color: #007bff; /* Highlight selected item */
+    color: white; /* Ensure selected text is visible */
+  }
+
+  .nav_link {
+    color: inherit; /* Ensure link text uses parent's color */
+  }
+}
+
+/* Hide menu icon on larger screens */
+@media (min-width: 845px) {
+  .menu-icon-container {
+    display: none;
+  }
+}

@@ -44,7 +44,6 @@ function App() {
           <Route path="/hardware" element={<Hardware />} />
           <Route path="/software" element={<Software />} />
           <Route path="/updates" element={<Software />} />
-          {/* <Route path="/data-source" element={<DataSource />} /> */}
         </Route>
         <Route path="/zwhoosh" element={<Zwhoosh />} />
       </Routes>

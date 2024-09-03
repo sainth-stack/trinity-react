@@ -23,8 +23,7 @@ export default function SidebarV2() {
   return (
     <div className="">
       {/* Toggle button visible on small screens */}
-
-      <div className="menu-icon-container_v3 d-block d-lg-none ">
+      <div className="menu-icon-container_v3 d-block d-lg-none">
         <button
           className="btn btn-light mx-3 icon bg-light"
           onClick={toggleSidebar}
@@ -63,7 +62,7 @@ export default function SidebarV2() {
         <ul
           className="sidebar-list-items"
           id="menu"
-          style={{ marginLeft: "10px" }}
+          style={{ paddingLeft: "10px", listStyle: "none", padding: 0 }}
         >
           <SidebarItem
             to="/accounts"
@@ -110,13 +109,19 @@ function SidebarItem({ to, label, selected }) {
         className="nav-link align-middle px-2 nav-item"
         style={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "flex-start", // Adjusted for better visibility
           alignItems: "center",
+          textDecoration: "none", // Ensure links are visible
+          color: selected ? "white" : "black", // Adjust color based on selection
+          padding: "8px 12px", // Add some padding for better appearance
         }}
       >
         <span
-          className="ms-1 d-none d-sm-inline px-1 nav_link"
-          style={{ color: selected ? "white" : "black" }}
+          className="ms-1 d-sm-inline px-1 nav_link"
+          style={{
+            color: selected ? "white" : "black",
+            whiteSpace: "nowrap", // Prevents text from wrapping in small spaces
+          }}
         >
           {label}
         </span>

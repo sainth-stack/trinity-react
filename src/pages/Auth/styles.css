@@ -1,18 +1,43 @@
-.text-green{
-    color: green;
+.text-green {
+  color: green;
 }
-.bg-biscuit{
-    background-color: #FFFEE1;
+#eye-dropper-overlay {
+  overflow: hidden;
 }
-.relative{
-    position: relative;
+a {
+  text-decoration: none !important;
 }
-.eye3{
-    position: absolute;
-    top: -27px;
-    right:15px;
-    cursor: pointer;
+.bg-biscuit {
+  background-color: #fffee1;
+}
+.relative {
+  position: relative;
+}
+.eye3 {
+  position: absolute;
+  top: -27px;
+  right: 15px;
+  cursor: pointer;
 }
 input:focus {
-    outline: none !important;
+  outline: none !important;
+}
+
+@media (max-width: 844px) {
+  body {
+    height: 100vh;
+  }
+  .left_side {
+    height: 100vh !important;
+    background: #1d5391 !important;
+  }
+  label {
+    color: #fffee1 !important;
+  }
+  button {
+    background: #b0aeae !important;
+  }
+  button:hover {
+    background: #1d5391 !important;
+  }
 }
