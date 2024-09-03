@@ -16,7 +16,10 @@ const Register = () => {
     first_name: "",
     last_name: "",
     email: "",
-    password: "",
+    password1: "Test@123",
+    password2: "Test@123",
+    address:'',
+    mobile:""
   });
   const [loading, setLoading] = useState(false);
   const [togglePassword, setTogglePassword] = useState(false);
@@ -33,27 +36,16 @@ const Register = () => {
     setLoading(true);
     setErrorMessage("");
 
-    // Map frontend field names to backend field names
-    const fieldMapping = {
-      username: "username",
-      first_name: "password1", // Map first_name to password1
-      last_name: "password2", // Map last_name to password2
-      email: "email",
-      password: "password", // Assume password is mapped to password
-    };
-
     // Create FormData object
     const formDataObj = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (fieldMapping[key]) {
-        formDataObj.append(fieldMapping[key], formData[key]);
-      }
+    Object.keys(formData).forEach(key => {
+      formDataObj.append(key, formData[key]);
     });
 
     try {
       const response = await axios.post(baseURL, formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
+        // withCredentials: true,
       });
 
       if (response.status === 200) {
