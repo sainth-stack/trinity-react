@@ -51,7 +51,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
           top: 0,
           left: isSmallScreen ? 0 : 250,
           right: 0,
-          width: "100%",
+          width: isSmallScreen ? '100%':"85%",
           background: "white",
         }}
       >

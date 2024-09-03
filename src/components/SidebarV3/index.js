@@ -38,9 +38,8 @@ export default function SidebarV2() {
 
       {/* Sidebar container */}
       <div
-        className={`shadow sidebar-scroll sticky-top zindex99 bg-white ${
-          isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-        }`}
+        className={`shadow sidebar-scroll sticky-top zindex99 bg-white ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+          }`}
         style={{
           overflow: "auto",
           width: isSmallScreen ? "50%" : "220px",
@@ -99,29 +98,13 @@ function SidebarItem({ to, label, selected }) {
   const navigate = useNavigate();
   return (
     <li
-      className={`sidebar-list-item py-2 cursor-pointer ${
-        selected ? "selected" : ""
-      }`}
+      className={`sidebar-list-item py-2 cursor-pointer ${selected ? "selected" : ""}`}
       onClick={() => navigate(to)}
     >
-      <Link
-        to={to}
-        className="nav-link align-middle px-2 nav-item"
-        style={{
-          display: "flex",
-          justifyContent: "flex-start", // Adjusted for better visibility
-          alignItems: "center",
-          textDecoration: "none", // Ensure links are visible
-          color: selected ? "white" : "black", // Adjust color based on selection
-          padding: "8px 12px", // Add some padding for better appearance
-        }}
-      >
+      <Link to={to} className="nav-link align-middle px-2 nav-item">
         <span
-          className="ms-1 d-sm-inline px-1 nav_link"
-          style={{
-            color: selected ? "white" : "black",
-            whiteSpace: "nowrap", // Prevents text from wrapping in small spaces
-          }}
+          className="ms-1 px-1"
+          style={{ color: selected ? "white" : "black" }}
         >
           {label}
         </span>

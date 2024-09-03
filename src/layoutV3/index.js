@@ -24,7 +24,8 @@ export function AdminLayoutV3(props) {
             <div className="p-0 m-0 w-100 main-content2">
               <NavbarV3 />
               <div style={{
-                marginTop:'90px'
+                marginTop:'90px',
+                height:'100vh'
               }}>
                 <Outlet />
               </div>

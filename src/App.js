@@ -37,6 +37,7 @@ function App() {
           <Route path="/strains" element={<Photosynthesis />} />
           <Route path="/cure-rooms" element={<CureRooms />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/data-source" element={<DataSource />} />
         </Route>
         <Route path="/" element={<AdminLayoutV3 />}>
           <Route path="/accounts" element={<Accounts />} />

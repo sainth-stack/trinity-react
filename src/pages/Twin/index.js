@@ -12,6 +12,7 @@ import { FormatData } from "./format";
 import axios from "axios";
 import { baseURL } from "../../environments/urls";
 import { useMediaQuery } from "@mui/material";
+import PrepLoader from "../../components/prep-loader/loader";
 export const Twin = () => {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
@@ -64,38 +65,36 @@ export const Twin = () => {
     ],
   };
   const [data, setData] = useState(data1);
-  const [data2, setData2] = useState(data1);
-  const [excelData, setExcelData] = useState(data50);
-  const [toDate, setToDate] = useState(new Date());
-  const [fromDate, setFromDate] = useState(new Date());
+  const [data2, setData2] = useState([]);
+  const [excelData, setExcelData] = useState([]);
+  const [toDate, setToDate] = useState(new Date("2024-04-1"));
+  const [fromDate, setFromDate] = useState(new Date("2024-04-30"));
   const [tag, setTag] = useState("Room1");
-  const [facility, setFacility] = useState("Facility 1");
-
+  const [facility, setFacility] = useState("Facility1");
+  const [loading, setLoading] = useState(false)
   /* get rooms */
-
+  console.log(excelData)
   const checkApi = async () => {
-    console.log("get rooms api called");
     try {
-      /*    const response = await axios.post(` ${baseURL}getroomsdata/`); */
-
-      const response = await axios.post(
-        `https://cannatwin.com/api/getroomsdata/`,
+      setLoading(true)
+      const response = await axios.get(
+        `https://cannatwin.com/api/getroomsdata/?email=kingrevi@gmail.com`,
         fromDate,
-        toDate
+        toDate,
       );
-
-      alert("Room file uploaded successfully!");
-      console.log("Response rooms:", response);
+      setLoading(false)
+      setExcelData(response?.data[0])
+      return response?.data[0]
     } catch (error) {
+      setLoading(false)
       console.error("Error uploading room file:", error);
       alert("Error uploading room file", error);
     }
   };
 
-  /*   useEffect(() => {
-    getRooms();
+  useEffect(() => {
+    checkApi();
   }, []);
- */
 
   function Heading(props) {
     return (
@@ -154,16 +153,16 @@ export const Twin = () => {
 
   const facilitys = [
     {
-      label: "Facility 1",
-      value: "Facility 1",
+      label: "Facility1",
+      value: "Facility1",
     },
     {
-      label: "Facility 2",
-      value: "Facility 2",
+      label: "Facility2",
+      value: "Facility2",
     },
     {
-      label: "Facility 3",
-      value: "Facility 3",
+      label: "Facility3",
+      value: "Facility3",
     },
   ];
 
@@ -172,7 +171,7 @@ export const Twin = () => {
   };
 
   const onSelectfacility = (e) => {
-    if (e.target.value === "Facility 1") {
+    if (e.target.value === "Facility1") {
       setPlanttags([
         {
           label: "Room1",
@@ -183,7 +182,7 @@ export const Twin = () => {
           value: "Room2",
         },
       ]);
-    } else if (e.target.value === "Facility 2") {
+    } else if (e.target.value === "Facility2") {
       setPlanttags([
         {
           label: "Room3",
@@ -233,10 +232,11 @@ export const Twin = () => {
   };
 
   const groupDataByDay = (data) => {
+    console.log(data)
     const groupedData = {};
-    data.forEach((obj) => {
-      const date = new Date(obj["Date-Time (MST)"]);
-      const day = date.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
+    data?.forEach((obj) => {
+      const date = new Date(obj["Date"]);
+      const day = date?.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
       if (!groupedData[day]) {
         groupedData[day] = [];
       }
@@ -256,23 +256,21 @@ export const Twin = () => {
         LSI: 0,
         count: 0,
       };
-
       dayData.forEach((obj) => {
         total["Ch:1 - Temperature (°C)"] += parseFloat(
-          obj["Ch:1 - Temperature (°C)"]
-        );
-        total["Ch:2 - RH (%)"] += parseFloat(obj["Ch:2 - RH (%)"]);
-        total["CO2"] += parseFloat(obj["CO2"]);
-        total["LSI"] += parseFloat(obj["LSI"]);
-        total.count++;
+          obj["Ch:1 - Temperature   (°C)"]
+        ) || 0;
+        total["Ch:2 - RH (%)"] = total["Ch:2 - RH (%)"] + (parseFloat(obj["Ch:2 - RH   (%)"]));
+        total["CO2"] = total["CO2"] + parseFloat(obj["CO2"]);
+        total["LSI"] = total["LSI"] + parseFloat(obj["LSI (Red)"] || 0);
+        total['count'] = total['count'] + 1;
       });
-
       averages[day] = {
         "Average Temperature (°C)":
-          total["Ch:1 - Temperature (°C)"] / total.count,
-        "Average RH (%)": total["Ch:2 - RH (%)"] / total.count,
-        "Average CO2": total["CO2"] / total.count,
-        "Average LSI": total["LSI"] / total.count,
+          parseFloat(total["Ch:1 - Temperature (°C)"]) / total.count,
+        "Average RH (%)": parseFloat(total["Ch:2 - RH (%)"]) / total.count,
+        "Average CO2": parseFloat(total["CO2"]) / total.count,
+        "Average LSI": parseFloat(total["LSI"]) / total.count,
       };
     }
     return averages;
@@ -281,7 +279,6 @@ export const Twin = () => {
   useEffect(() => {
     if (excelData) {
       const datanew = groupDataByDay(excelData);
-      console.log(datanew);
       const averages = calculateAverages(datanew);
       const labels = [];
       const temp = [];
@@ -408,36 +405,32 @@ export const Twin = () => {
     return dataSets;
   };
 
-  const handleFilter = () => {
-    const differenceInTime = fromDate.getTime() - toDate.getTime();
-    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-    if (tag == "1A4000312A000F2B0000012395") {
-      const labels1 = getLabels(toDate, differenceInDays);
-      const data1 = {
-        labels: labels1,
-        datasets: getDataSets(differenceInDays, "Blue Dream"),
-      };
-      setData(data1);
-    } else if (tag == "1A4000312A000F2B0000012396") {
-      const labels1 = getLabels(toDate, differenceInDays);
-      const data1 = {
-        labels: labels1,
-        datasets: getDataSets(differenceInDays, "Soure Diesel"),
-      };
-      setData(data1);
-    } else {
-      const labels1 = getLabels(toDate, differenceInDays);
-      const data1 = {
-        labels: labels1,
-        datasets: getDataSets(differenceInDays, "Blue Dream"),
-      };
-      setData(data1);
-    }
+  const handleFilter = async () => {
+    // Convert dates from ISO strings to moment objects, then to timestamps
+    const fromDateTimestamp = moment(fromDate);
+    const toDateTimestamp = moment(toDate);
+    // const data = await checkApi()
+    // const filteredData = data.filter((item) => {
+    //   const itemDateTimestamp = moment(item.Date);
+    //   console.log(itemDateTimestamp , fromDateTimestamp , itemDateTimestamp , toDateTimestamp)
+    //   const matchesRoom = item.Room === tag;
+    //   const matchesFacility = item.Facility === facility;
+    //   const withinDateRange = itemDateTimestamp >= fromDateTimestamp && itemDateTimestamp <= toDateTimestamp;
+
+    //   return matchesRoom && matchesFacility && withinDateRange;
+    // });
+
+    // console.log('Filtered Data:', filteredData);
+
+    // setExcelData(filteredData);
   };
 
   useEffect(() => {
     handleFilter();
   }, []);
+
+
+
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -458,7 +451,6 @@ export const Twin = () => {
         CO2: row[4],
         LSI: row[5],
       }));
-      console.log(formattedData);
       setExcelData(formattedData);
     };
 
@@ -599,7 +591,7 @@ export const Twin = () => {
               submit
             </button>
           </div>
-          <div className="ms-2 mt-4 ">
+          {/* <div className="ms-2 mt-4 ">
             <input
               type="file"
               onChange={handleFileUpload}
@@ -617,7 +609,7 @@ export const Twin = () => {
             >
               upload
             </button>
-          </div>
+          </div> */}
         </div>
         {/* <div className={`col-12 gradient-color card shadow rounded m-1 p-1 border-0 me-3`} style={{ height: '450px' }}>
                     <Heading title="Overall Cultivation" data={[]} employees={[]} />
@@ -625,7 +617,7 @@ export const Twin = () => {
                     <LineChart data={data} options={true} />
                 </div> */}
 
-        <div
+        {(excelData?.length > 0 && !loading) && <div
           className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
           style={{ height: "fit-content", width: "100%", overflowX: "auto" }}
         >
@@ -639,7 +631,8 @@ export const Twin = () => {
               width={isSmallScreen ? "" : null}
             />
           </div>
-        </div>
+        </div>}
+        {(excelData?.length == 0 && !loading) ? <div>No Data Found!</div> : <>{loading && <PrepLoader />}</>}
       </div>
       {/* <div className="click_btn">
         <button onClick={checkApi}>click for test </button>
