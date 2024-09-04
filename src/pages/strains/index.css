@@ -157,10 +157,11 @@
 @media (max-width: 844px) {
   .filterbar {
     display: flex;
+    justify-content: space-evenly;
     flex-wrap: wrap;
   }
   .filterbar select {
-    min-width: 50px !important;
+    min-width: 60px !important;
   }
   .date {
     display: flex;

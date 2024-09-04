@@ -26,6 +26,7 @@ export const NewHarvest = () => {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [roomData, setRoomData] = useState([]);
   const [harvestData, setHarvestData] = useState([]);
+  const [email, setEmail] = useState("");
   const [graphData, setGraphData] = useState({
     labels: [],
   });
@@ -36,11 +37,13 @@ export const NewHarvest = () => {
   const [avg, setAvg] = useState({});
 
   const getRoomsData = async () => {
+    const baseUrl = "https://cannatwin.com/api/getroomsdata/?email=";
+
     console.log("get rooms api called");
     try {
       setLoadingR(true);
       const response = await axios.get(
-        `https://cannatwin.com/api/getroomsdata/?email=kingrevi@gmail.com`
+        `${baseUrl}${localStorage.getItem("username")}`
       );
       setLoadingR(false);
       return response?.data[0];
@@ -51,10 +54,12 @@ export const NewHarvest = () => {
     }
   };
   const getHarvestData = async () => {
+    const baseUrl = "https://cannatwin.com/api/getroomsdata/?email=";
+
     try {
       setLoadingH(true);
       const response = await axios.get(
-        `https://cannatwin.com/api/getharvestdata/?email=kingrevi@gmail.com`
+        `${baseUrl}${localStorage.getItem("username")}`
       );
       setLoadingH(false);
       return response?.data[0];
@@ -64,6 +69,8 @@ export const NewHarvest = () => {
     }
   };
   useEffect(() => {
+    setEmail(localStorage.getItem("userEmail"));
+
     const fetchData = async () => {
       const room = await getRoomsData();
       const formattedRoomData = room?.slice(1)?.map((row) => ({

@@ -37,16 +37,16 @@ export const Login = () => {
       });
 
       console.log("login response", formData.get("username"));
-      console.log("login response data", response.status);
+      console.log("login response data", response);
 
       //here data === "Success" is important to validate the response
-      if (response.status === 200 && response.data === "Success") {
+      if (response.status === 200 && response.data.status === "success") {
         alert("Login Successful");
 
         setLoading(false);
         navigate("/");
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("username", formData.get("username"));
+        localStorage.setItem("username", response.data.user.email);
       } else {
         setLoading(false);
         setError(

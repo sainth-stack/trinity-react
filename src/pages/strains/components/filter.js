@@ -93,7 +93,7 @@ const FilterBar = ({
         </label>
       </div>
     </div>
-    <div className="submit_btn">
+    <div className="submit_btn ">
       <button className="btn btn-primary " onClick={handleFilter}>
         Submit
       </button>
