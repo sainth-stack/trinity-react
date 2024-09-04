@@ -45,8 +45,8 @@ const Register = () => {
       const response = await axios.post(baseURL, formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      if (response.status === 200) {
+      console.log(response.status === 200 , response.data ==="Success")
+      if (response.status === 200 && response.data ==="Success") {
         console.log("Registration successful:", response.data);
         navigate("/login");
       } else {
@@ -56,7 +56,7 @@ const Register = () => {
       console.error("Error during registration:", error);
       setErrorMessage(
         error.response?.data?.message ||
-          "Registration failed. Please try again."
+        "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -90,10 +90,9 @@ const Register = () => {
                     className="form-group d-flex flex-column"
                     style={{ textAlign: "start" }}
                   >
-                    <label className="label2 fs13">{`${
-                      field.charAt(0).toUpperCase() +
+                    <label className="label2 fs13">{`${field.charAt(0).toUpperCase() +
                       field.slice(1).replace("_", " ")
-                    }*`}</label>
+                      }*`}</label>
                     <input
                       style={{ borderRadius: "40px" }}
                       type={
@@ -153,23 +152,21 @@ const Register = () => {
         </div>
       </div>
 
-      <div className="col-md-6 p-0 m-0 bg-biscuit text-center pt-4 pb-4 d-none d-lg-block">
-        <h5 className="text-green font-weight-bold mt-2 text-uppercase">
+      <div className="col-md-6 p-0 m-0 bg-biscuit text-center d-none d-lg-block">
+        {/* <h5 className="text-green font-weight-bold mt-2 text-uppercase">
           WELCOME TO cannatwin
-        </h5>
+        </h5> */}
 
         <div className="d-flex justify-content-center">
-          <div className="col-md-10">
-            <img
-              className="img-fluid p-3"
-              src={loginbg}
-              alt="Background"
-              style={{
-                width: "100%",
-                height: "90%",
-              }}
-            />
-          </div>
+          <img
+            className="img-fluid"
+            src={loginbg}
+            alt="Background"
+            style={{
+              width: "100%",
+              height: "90%",
+            }}
+          />
         </div>
       </div>
     </div>

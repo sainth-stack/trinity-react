@@ -5,11 +5,12 @@ import eye2 from "../../assets/svg/eye-slash.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LoadingIndicator } from "../../components/loader";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import "./styles.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const baseURL = "https://cannatwin.com/api/login/";
+const googleLoginURL = `https://cannatwin.com/api/googlelogin/`;
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -30,65 +31,100 @@ export const Login = () => {
         password: password,
       })
       .then((response) => {
-        setLoading(false);
-        navigate("/");
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("username", response.data.username);
+        if (response.status === 200 && response.status === "Success") {
+          setLoading(false);
+          navigate("/");
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("username", response.data.username);
+        } else {
+          setLoading(false);
+          setError(
+            error.response?.data?.message ||
+            "An error occurred. Please try again."
+          );
+        }
       })
       .catch((error) => {
         setLoading(false);
         setError(
           error.response?.data?.message ||
-            "An error occurred. Please try again."
+          "An error occurred. Please try again."
         );
       });
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
+
+
+  const getUserInfo = async (token) => {
     try {
-      const response = await axios.post(`${baseURL}/googlelogin`, {
-        token: credentialResponse.credential,
-      });
-      setLoading(false);
-      navigate("/timesheet");
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("username", response.data.username);
-    } catch (error) {
-      setLoading(false);
-      setError(
-        error.response?.data?.message ||
-          "An error occurred with Google login. Please try again."
+      const response = await axios.get(
+        "https://www.googleapis.com/oauth2/v1/userinfo",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      GoogleLogin(response.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
     }
   };
 
-  const handleGoogleFailure = () => {
-    setError("Google login failed. Please try again.");
+  const GoogleLogin = (data) => {
+    var formData = new FormData();
+    formData.append("username", `${data.name.replaceAll(" ", "_")}`);
+    formData.append("id", data.id);
+    formData.append("email", data.email);
+
+    axios
+      .post(googleLoginURL, formData)
+      .then((response) => {
+        console.log(response);
+        setLoading(false);
+        if (response.status == 200) {
+          navigate("/");
+          console.log(data);
+          localStorage.setItem("username", `${data.name.replaceAll(" ", "_")}`);
+          localStorage.setItem("email", data.email);
+          localStorage.setItem("token", `${response.data}`);
+        } else {
+          setError(response.data);
+          console.log("Login Failed");
+          // window.alert("Incorrect Password")
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      getUserInfo(tokenResponse.access_token);
+    },
+  });
 
   return (
     <div
       className="container-fluid row m-0 p-0"
-      style={{ background: "#808080", height: "100vh" }}
+      style={{ background: "#808080", height: "90vh" }}
     >
-      <div className="col-md-6 p-0 m-0 bg-biscuit text-center pt-4 pb-4 d-none d-lg-block">
-        <h5 className="text-green font-weight-bold mt-2 text-uppercase">
+      <div className="col-md-6 p-0 m-0 bg-white text-center d-none d-lg-block">
+        {/* <h5 className="text-green font-weight-bold mt-2 text-uppercase">
           WELCOME TO cannatwin
-        </h5>
+        </h5> */}
 
         <div className="d-flex justify-content-center">
-          <div className="mx-5">
-            <img
-              className="img-fluid p-3"
-              src={loginbg}
-              alt="Background"
-              style={{
-                width: "100%",
-                height: "80%",
-              }}
-            />
-          </div>
+          <img
+            className="img-fluid"
+            src={loginbg}
+            alt="Background"
+            style={{
+              width: "100%",
+              height: "90%",
+            }}
+          />
         </div>
       </div>
 
@@ -115,11 +151,28 @@ export const Login = () => {
           }}
         >
           <div className="col-md-9 col-lg-9 col-sm-12 col-xs-12 mx-auto">
-            <div className="d-flex justify-content-center google-login-wrapper">
+            {/* <div className="d-flex justify-content-center google-login-wrapper">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleFailure}
               />
+              
+            </div> */}
+            <div style={{ width: "100% !important" }}>
+              <button
+                className="custom-google-login-button"
+                onClick={() => {
+                  login();
+                }}
+              >
+                <img
+                  src={
+                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAORSURBVHgBtZfNbxNHGMaf2d0EB/qxLpUsLIduLlVUqWXTSlUvldakPVZF6qGoF5JzVSXtpZeoWdo/oEY99FQ5qEItEohEHDgQ4eWCICDiXIgFElk+JGQg8oaIxCHxvLzjiChOduOv5JHW9s6M5zfzzjvPzgo0qDnbMvWO2DEBYUPgAy6y+DJB8Pk+kKAZKeH13Cp4jfQn6gK/6HUMqQ0xwIEgE/WlBpIxVmjiUL7go1nw+gy7RoXAMFqTL0BuaqpwumHwnN1rGZ0ih/VwtiU9kcgkL3o/by03thY8tj+yqQMMbSisdVUpFp2w8hqwmil10gWopNkd5df2L6fDKrSaUdQJr5E67OuEYUOjnu6pWaEu7jgOSWkCateSyFPQHs8PwvraWONHn/eO8q0bSiQRCI1Opm7MZrCDeAdYvAP+JNDC4anZgZ3aVsHLOVhLE4nc0rX3rFAokE7dvJPHLmo91BLOgW+K1oH+Z9saCCGHdxta7Vd9lCcxzb9s9Xv1/n4snkuiUupgKI2lbhQGsQcSKsxCYm5zoYK++LcbKHb2HLoe7T7tyJAV2PoWG9Hjq4j/dN+LfcX2t4O+H5nMCKEdQbOSlZOGIN4+4cY5U+//AgpKDpqUBCY0EWEWRAiwR+KMNrXI2piFvZTGjhPuLCv+btlmBFhEJJCG5pOmYarmi1IOZpdEaXP5k7Uu/Pr8E9x99U5ffvByy+ZxfORKjg8PzrYKKdNaPM2hFvDelN0um/jx6ae49+otnrQcQos67uasUCir/NLIV5OLKriqvs++6GboZzzjWLUBr/+Ane0/hla0VnHDK8gbz6SDKrhsIDMy/3GQCT7c1oy3W9bOfm2jCf3wW26I/fZEWJ0Q+pj6roJVuCcXE6ci+jEF5LT9z9GGzl7OX7+MSpJRj0//v9/T1ed2jWf1ZY9OQx1fo+WzsbgQlZn8oFdNOjvrqG1nadC+JQg1OPP90pc4yNdWsb0OhIK5E4ttUMHb3sOxlQSSxe/QsbbR1dj/f/RvPOlqnItn4RMkn5Gobbss7yviUfIMlmIP1K1f1rWak+Y2y1QhZHgfw320qVVjAQ+TZzyG9o276ZrJRB7o/57OWucLl9z58vwJtCQKCNqp/OCkG1Zb9xVGrTtId/mNosEBMJDEaU7AjFq6qFZ1wZsGwFmiO+odKt5lHimVA7y7721rYWXRPxiLB/PLpQectuPsHHkG1s2R17KaTnlOqfV9AAAAAElFTkSuQmCC"
+                  }
+                  alt=""
+                />
+                Sign in with Google
+              </button>
             </div>
             <div
               style={{
