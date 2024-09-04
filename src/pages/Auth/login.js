@@ -44,9 +44,9 @@ export const Login = () => {
         alert("Login Successful");
 
         setLoading(false);
-        navigate("/");
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("username", response.data.user.email);
+        navigate("/");
       } else {
         setLoading(false);
         setError(

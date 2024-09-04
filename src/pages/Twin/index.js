@@ -92,7 +92,6 @@ export const Twin = () => {
     } catch (error) {
       setLoading(false);
       console.error("Error uploading room file:", error);
-      alert("Error uploading room file", error);
     }
   };
 

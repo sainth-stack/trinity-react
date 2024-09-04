@@ -23,7 +23,7 @@ const DataSource = () => {
     if (!harvestFile) return;
     const formData = new FormData();
     formData.append("file", harvestFile);
-    formData.append('email', "kingrevi@gmail.com");
+    formData.append('email',localStorage.getItem('email'));
     try {
       await axios.post(
         "https://cannatwin.com/api/harvestfileupload/",
@@ -59,7 +59,7 @@ const DataSource = () => {
     if (!roomFile) return;
     const formData = new FormData();
     formData.append('file', roomFile);
-    formData.append('email', "kingrevi@gmail.com");
+    formData.append('email', localStorage.getItem('email'));
     try {
       const res = await axios.post('https://cannatwin.com/api/fileupload/', formData);
       alert('Room file uploaded successfully!');

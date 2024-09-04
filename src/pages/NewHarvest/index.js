@@ -50,7 +50,6 @@ export const NewHarvest = () => {
     } catch (error) {
       setLoadingR(false);
       console.error("Error uploading room file:", error);
-      alert("Error uploading room file", error);
     }
   };
   const getHarvestData = async () => {
@@ -59,13 +58,12 @@ export const NewHarvest = () => {
     try {
       setLoadingH(true);
       const response = await axios.get(
-        `${baseUrl}${localStorage.getItem("username")}`
+        `https://cannatwin.com/api/getharvestdata/?email=kingrevi@gmail.com`
       );
       setLoadingH(false);
       return response?.data[0];
     } catch (error) {
       setLoadingH(false);
-      alert("Error uploading room file", error);
     }
   };
   useEffect(() => {
@@ -103,7 +101,7 @@ export const NewHarvest = () => {
   }, []);
 
   const calculateAverages = (data) => {
-    const total = data.reduce(
+    const total = data?.reduce(
       (acc, curr) => {
         acc.temperature += parseFloat(curr["Ch:1 - Temperature (°C)"]);
         acc.rh += parseFloat(curr["Ch:2 - RH (%)"]);
@@ -115,14 +113,14 @@ export const NewHarvest = () => {
       { temperature: 0, rh: 0, dewPoint: 0, co2: 0, lsi: 0 }
     );
 
-    const length = data.length;
+    const length = data?.length;
 
     return {
-      avgTemp: parseFloat(total.temperature / length).toFixed(2),
-      avgHum: parseFloat(total.rh / length).toFixed(2),
-      avgDew: parseFloat(total.dewPoint / length).toFixed(2),
-      avgCo2: parseFloat(total.co2 / length).toFixed(2),
-      avgLsi: parseFloat(total.lsi / length).toFixed(2),
+      avgTemp: parseFloat(total?.temperature / length)?.toFixed(2),
+      avgHum: parseFloat(total?.rh / length)?.toFixed(2),
+      avgDew: parseFloat(total?.dewPoint / length)?.toFixed(2),
+      avgCo2: parseFloat(total?.co2 / length)?.toFixed(2),
+      avgLsi: parseFloat(total?.lsi / length)?.toFixed(2),
     };
   };
 
@@ -390,10 +388,9 @@ export const NewHarvest = () => {
       handleCheckboxChange({ hb: null });
     }
   }, [selectedValue]);
-
   return (
     <div>
-      {harvestData?.length > 0 && roomData?.length > 0 ? (
+      {harvestData?.length > 0 && roomData?.length > 0 && (
         <div className="p-2 mt-1">
           <div className="row">
             <div className="col-md-3">
@@ -562,10 +559,8 @@ export const NewHarvest = () => {
             </div>
           </div>
         </div>
-      ) : (
-        <PrepLoader />
       )}
-      {!loadingH && !loadingR && (
+      {!loadingH && !loadingR ? (
         <div
           style={{
             display: "flex",
@@ -574,10 +569,11 @@ export const NewHarvest = () => {
             fontSize: "20px",
           }}
         >
-          {harvestData?.length === 0 &&
-            roomData?.length === 0 &&
+          {!(harvestData?.length === 0 && roomData?.length === 0) &&
             "Upload Rooms and Harvest data"}
         </div>
+      ) : (
+        <PrepLoader />
       )}
     </div>
   );
