@@ -199,7 +199,9 @@ export const Login = () => {
                 className="form-group d-flex flex-column"
                 style={{ textAlign: "start" }}
               >
-                <label className="label2 fs13 ">{"username"}*</label>
+                <label className="label2 fs13 text-capitalize">
+                  {"username"}*
+                </label>
                 <input
                   style={{ borderRadius: "40px" }}
                   //type="email"
@@ -264,7 +266,7 @@ export const Login = () => {
                 </Link>
               </div>
               <button
-                className="font-weight-bold text-uppercase w-100 text-white border-0 login2"
+                className="font-weight-bold text-uppercase w-100 auth text-white border-0 login2"
                 style={{
                   background: "#466657",
                   borderRadius: "40px",

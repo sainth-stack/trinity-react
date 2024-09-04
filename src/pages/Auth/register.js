@@ -124,7 +124,7 @@ const Register = () => {
               )}
 
               <button
-                className="font-weight-bold text-uppercase w-100 text-white border-0 login2"
+                className="font-weight-bold text-uppercase auth w-100 text-white border-0 login2"
                 style={{
                   backgroundColor: "#466657",
                   borderRadius: "40px",
