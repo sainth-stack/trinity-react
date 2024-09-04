@@ -78,7 +78,7 @@ export const Twin = () => {
     try {
       setLoading(true)
       const response = await axios.get(
-        `https://cannatwin.com/api/getroomsdata/?email=kingrevi@gmail.com`,
+        `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem('email')}`,
         fromDate,
         toDate,
       );
@@ -88,7 +88,6 @@ export const Twin = () => {
     } catch (error) {
       setLoading(false)
       console.error("Error uploading room file:", error);
-      alert("Error uploading room file", error);
     }
   };
 
