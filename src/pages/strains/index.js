@@ -94,7 +94,9 @@ export const Photosynthesis = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://cannatwin.com/api/getroomsdata/?email=kingrevi@gmail.com`,
+          `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem(
+            "email"
+          )}`,
           {
             params: {
               fromDate: fromDate.toISOString().split("T")[0],
@@ -127,7 +129,9 @@ export const Photosynthesis = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://cannatwin.com/api/getharvestdata/?email=kingrevi@gmail.com`
+          `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem(
+            "email"
+          )}`
         );
 
         console.log("Strain Data API Response:", response.data);

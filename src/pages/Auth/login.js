@@ -45,7 +45,9 @@ export const Login = () => {
 
         setLoading(false);
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("username", response.data.user.email);
+        localStorage.setItem("username", response.data.user.username);
+
+        localStorage.setItem("email", response.data.user.email);
         navigate("/");
       } else {
         setLoading(false);
@@ -91,8 +93,8 @@ export const Login = () => {
         if (response.status == 200) {
           navigate("/");
           console.log(data);
-          localStorage.setItem("username", `${data.name.replaceAll(" ", "_")}`);
-          localStorage.setItem("email", data.email);
+          localStorage.setItem("username", data.user.username);
+          localStorage.setItem("email", data.user.email);
           localStorage.setItem("token", `${response.data}`);
         } else {
           setError(response.data);

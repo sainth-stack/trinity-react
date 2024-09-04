@@ -5,51 +5,16 @@ import DatePicker from "react-datepicker";
 import { addDays } from "date-fns";
 import moment from "moment";
 import { useMediaQuery } from "@mui/material";
+import axios from "axios";
 
 const Dashboard = () => {
   const [toDate, setToDate] = useState(new Date("2023-01-01"));
   const [fromDate, setFromDate] = useState(new Date("2023-01-6"));
   const [finalData, setFinalData] = useState(true);
+  const [plantsData, setPlantsData] = useState([]);
+  const [wetWeightData, setWetWeightData] = useState([]);
+  const [gPerPlantData, setGPerPlantData] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width:600px)");
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-        display: true,
-      },
-      title: {
-        display: false,
-        text: "Chart.js Line Chart",
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Date",
-          color: "black",
-          fontWeight: 700,
-          padding: 5,
-        },
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Temperature",
-          color: "black",
-          fontWeight: 700,
-          padding: 5,
-        },
-        grid: {
-          display: false,
-        },
-      },
-    },
-  };
 
   const handleFilter = (min, max) => {
     if (finalData) {
@@ -209,7 +174,7 @@ const Dashboard = () => {
     return data;
   };
 
-  const plantsData = () => {
+  /* const plantsData = () => {
     const data = handleFilter(40, 60);
     const averageData = data.datasets
       .reduce((average, dataset) => {
@@ -229,6 +194,114 @@ const Dashboard = () => {
       fill: false,
     });
     return data;
+  }; */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://cannatwin.com/api/getharvestdata/?email=avinash11@gmail.com"
+        );
+
+        const dataArray = response.data[0];
+
+        // Extract values
+        const plants = dataArray.map((item) => item.Plants);
+        const wetWeight = dataArray.map((item) => item["Wet Weight"]);
+        const gPerPlant = dataArray.map((item) => item["g/plant"]);
+
+        setPlantsData(plants);
+        setWetWeightData(wetWeight);
+        setGPerPlantData(gPerPlant);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const plantsChartData = {
+    labels: plantsData.map((_, index) => `Entry ${index + 1}`),
+    datasets: [
+      {
+        label: "Plants",
+        data: plantsData,
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  // Chart data for Wet Weight
+  const wetWeightChartData = {
+    labels: wetWeightData.map((_, index) => `Entry ${index + 1}`),
+    datasets: [
+      {
+        label: "Wet Weight",
+        data: wetWeightData,
+        borderColor: "rgba(153, 102, 255, 1)",
+        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  // Chart data for g/plant
+  const gPerPlantChartData = {
+    labels: gPerPlantData.map((_, index) => `Entry ${index + 1}`),
+    datasets: [
+      {
+        label: "g/Plant",
+        data: gPerPlantData,
+        borderColor: "rgba(255, 159, 64, 1)",
+        backgroundColor: "rgba(255, 159, 64, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  // Chart options
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Index",
+          color: "black",
+          fontWeight: 700,
+          padding: 5,
+        },
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Values",
+          color: "black",
+          fontWeight: 700,
+          padding: 5,
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
   };
 
   return (
@@ -265,7 +338,7 @@ const Dashboard = () => {
           </h5>
           <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
-              data={plantsData()}
+              data={plantsChartData}
               height={120}
               options={{
                 ...options,
@@ -298,7 +371,7 @@ const Dashboard = () => {
           </h5>
           <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
-              data={getGramsPerPlantData()}
+              data={gPerPlantChartData}
               height={120}
               options={{
                 ...options,
@@ -336,7 +409,7 @@ const Dashboard = () => {
             style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}
           >
             <LineChart
-              data={getGramsData()}
+              data={wetWeightChartData}
               height={120}
               options={{
                 ...options,
