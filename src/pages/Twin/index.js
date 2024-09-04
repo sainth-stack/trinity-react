@@ -71,26 +71,22 @@ export const Twin = () => {
   const [fromDate, setFromDate] = useState(new Date("2024-04-30"));
   const [tag, setTag] = useState("Room1");
   const [facility, setFacility] = useState("Facility1");
-  const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(false)
   /* get rooms */
-
-  console.log(excelData);
+  console.log(excelData)
   const checkApi = async () => {
-    const baseUrl = "https://cannatwin.com/api/getroomsdata/?email=";
-
     try {
-      setLoading(true);
+      setLoading(true)
       const response = await axios.get(
-        `${baseUrl}${localStorage.getItem("username")}`,
+        `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem('email')}`,
         fromDate,
-        toDate
+        toDate,
       );
-      setLoading(false);
-      setExcelData(response?.data[0]);
-      return response?.data[0];
+      setLoading(false)
+      setExcelData(response?.data[0])
+      return response?.data[0]
     } catch (error) {
-      setLoading(false);
+      setLoading(false)
       console.error("Error uploading room file:", error);
     }
   };
@@ -235,7 +231,7 @@ export const Twin = () => {
   };
 
   const groupDataByDay = (data) => {
-    console.log(data);
+    console.log(data)
     const groupedData = {};
     data?.forEach((obj) => {
       const date = new Date(obj["Date"]);
@@ -260,13 +256,13 @@ export const Twin = () => {
         count: 0,
       };
       dayData.forEach((obj) => {
-        total["Ch:1 - Temperature (°C)"] +=
-          parseFloat(obj["Ch:1 - Temperature   (°C)"]) || 0;
-        total["Ch:2 - RH (%)"] =
-          total["Ch:2 - RH (%)"] + parseFloat(obj["Ch:2 - RH   (%)"]);
+        total["Ch:1 - Temperature (°C)"] += parseFloat(
+          obj["Ch:1 - Temperature   (°C)"]
+        ) || 0;
+        total["Ch:2 - RH (%)"] = total["Ch:2 - RH (%)"] + (parseFloat(obj["Ch:2 - RH   (%)"]));
         total["CO2"] = total["CO2"] + parseFloat(obj["CO2"]);
         total["LSI"] = total["LSI"] + parseFloat(obj["LSI (Red)"] || 0);
-        total["count"] = total["count"] + 1;
+        total['count'] = total['count'] + 1;
       });
       averages[day] = {
         "Average Temperature (°C)":
@@ -431,6 +427,9 @@ export const Twin = () => {
   useEffect(() => {
     handleFilter();
   }, []);
+
+
+
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -617,28 +616,22 @@ export const Twin = () => {
                     <LineChart data={data} options={true} />
                 </div> */}
 
-        {excelData?.length > 0 && !loading && (
-          <div
-            className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
-            style={{ height: "fit-content", width: "100%", overflowX: "auto" }}
-          >
-            <Heading title="Overall Cultivation" data={[]} employees={[]} />
-            <hr />
-            <CustomLegend datasets={data2} toggleDataset={toggleDataset} />
-            <div style={{ minWidth: isSmallScreen ? `${70 * 20}px` : "100%" }}>
-              <LineChart
-                data={data2}
-                options={true}
-                width={isSmallScreen ? "" : null}
-              />
-            </div>
+        {(excelData?.length > 0 && !loading) && <div
+          className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
+          style={{ height: "fit-content", width: "100%", overflowX: "auto" }}
+        >
+          <Heading title="Overall Cultivation" data={[]} employees={[]} />
+          <hr />
+          <CustomLegend datasets={data2} toggleDataset={toggleDataset} />
+          <div style={{ minWidth: isSmallScreen ? `${70 * 20}px` : "100%" }}>
+            <LineChart
+              data={data2}
+              options={true}
+              width={isSmallScreen ? "" : null}
+            />
           </div>
-        )}
-        {excelData?.length == 0 && !loading ? (
-          <div>No Data Found!</div>
-        ) : (
-          <>{loading && <PrepLoader />}</>
-        )}
+        </div>}
+        {(excelData?.length == 0 && !loading) ? <div>No Data Found!</div> : <>{loading && <PrepLoader />}</>}
       </div>
       {/* <div className="click_btn">
         <button onClick={checkApi}>click for test </button>

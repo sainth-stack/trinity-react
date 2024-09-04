@@ -26,7 +26,6 @@ export const NewHarvest = () => {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [roomData, setRoomData] = useState([]);
   const [harvestData, setHarvestData] = useState([]);
-  const [email, setEmail] = useState("");
   const [graphData, setGraphData] = useState({
     labels: [],
   });
@@ -37,13 +36,11 @@ export const NewHarvest = () => {
   const [avg, setAvg] = useState({});
 
   const getRoomsData = async () => {
-    const baseUrl = "https://cannatwin.com/api/getroomsdata/?email=";
-
     console.log("get rooms api called");
     try {
       setLoadingR(true);
       const response = await axios.get(
-        `${baseUrl}${localStorage.getItem("username")}`
+        `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem('email')}`
       );
       setLoadingR(false);
       return response?.data[0];
@@ -53,12 +50,10 @@ export const NewHarvest = () => {
     }
   };
   const getHarvestData = async () => {
-    const baseUrl = "https://cannatwin.com/api/getroomsdata/?email=";
-
     try {
       setLoadingH(true);
       const response = await axios.get(
-        `https://cannatwin.com/api/getharvestdata/?email=kingrevi@gmail.com`
+        `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem('email')}`
       );
       setLoadingH(false);
       return response?.data[0];
@@ -67,8 +62,6 @@ export const NewHarvest = () => {
     }
   };
   useEffect(() => {
-    setEmail(localStorage.getItem("userEmail"));
-
     const fetchData = async () => {
       const room = await getRoomsData();
       const formattedRoomData = room?.slice(1)?.map((row) => ({
@@ -390,7 +383,7 @@ export const NewHarvest = () => {
   }, [selectedValue]);
   return (
     <div>
-      {harvestData?.length > 0 && roomData?.length > 0 && (
+      {(harvestData?.length > 0 && roomData?.length > 0) && (
         <div className="p-2 mt-1">
           <div className="row">
             <div className="col-md-3">
@@ -572,9 +565,7 @@ export const NewHarvest = () => {
           {!(harvestData?.length === 0 && roomData?.length === 0) &&
             "Upload Rooms and Harvest data"}
         </div>
-      ) : (
-        <PrepLoader />
-      )}
+      ) : <PrepLoader />}
     </div>
   );
 };
