@@ -45,8 +45,8 @@ const Register = () => {
       const response = await axios.post(baseURL, formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(response.status === 200 , response.data ==="Success")
-      if (response.status === 200 && response.data ==="Success") {
+      console.log(response.status === 200, response.data === "Success");
+      if (response.status === 200 && response.data === "Success") {
         console.log("Registration successful:", response.data);
         navigate("/login");
       } else {
@@ -56,7 +56,7 @@ const Register = () => {
       console.error("Error during registration:", error);
       setErrorMessage(
         error.response?.data?.message ||
-        "Registration failed. Please try again."
+          "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -90,9 +90,10 @@ const Register = () => {
                     className="form-group d-flex flex-column"
                     style={{ textAlign: "start" }}
                   >
-                    <label className="label2 fs13">{`${field.charAt(0).toUpperCase() +
+                    <label className="label2 fs13">{`${
+                      field.charAt(0).toUpperCase() +
                       field.slice(1).replace("_", " ")
-                      }*`}</label>
+                    }*`}</label>
                     <input
                       style={{ borderRadius: "40px" }}
                       type={

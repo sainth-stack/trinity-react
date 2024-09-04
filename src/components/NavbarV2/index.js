@@ -15,6 +15,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -51,7 +52,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
           top: 0,
           left: isSmallScreen ? 0 : 250,
           right: 0,
-          width: isSmallScreen ? '100%':"85%",
+          width: isSmallScreen ? "100%" : "85%",
           background: "white",
         }}
       >
@@ -91,6 +92,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
           style={{ color: "black" }}
         >
           <img
+            alt="avatar"
             src={avatar}
             style={{ width: "32px", marginRight: "5px" }}
             id="logo_RL"
@@ -106,7 +108,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
             style={{ textDecoration: "none", color: "black" }}
           >
             <span className="fs14 text-dark" title={"Admin"}>
-              {localStorage.getItem("userName") || "admin"}
+              {localStorage.getItem("username") || ""}
             </span>
             <i class="bi bi-caret-down-fill"></i>
           </a>

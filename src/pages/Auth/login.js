@@ -25,35 +25,41 @@ export const Login = () => {
     setLoading(true);
     setError("");
 
-    await axios
-      .post(baseURL, {
-        username: username,
-        password: password,
-      })
-      .then((response) => {
-        if (response.status === 200 && response.status === "Success") {
-          setLoading(false);
-          navigate("/");
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("username", response.data.username);
-        } else {
-          setLoading(false);
-          setError(
-            error.response?.data?.message ||
-            "An error occurred. Please try again."
-          );
-        }
-      })
-      .catch((error) => {
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    try {
+      const response = await axios.post(baseURL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("login response", formData.get("username"));
+      console.log("login response data", response.status);
+
+      //here data === "Success" is important to validate the response
+      if (response.status === 200 && response.data === "Success") {
+        alert("Login Successful");
+
+        setLoading(false);
+        navigate("/");
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("username", formData.get("username"));
+      } else {
         setLoading(false);
         setError(
-          error.response?.data?.message ||
-          "An error occurred. Please try again."
+          response.data?.message || "An error occurred. Please try again."
         );
-      });
+      }
+    } catch (error) {
+      setLoading(false);
+      setError(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    }
   };
-
-
 
   const getUserInfo = async (token) => {
     try {
