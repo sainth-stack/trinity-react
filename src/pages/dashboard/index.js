@@ -206,11 +206,13 @@ const Dashboard = () => {
 
         // Extract values
         const plants = dataArray.map((item) => item.Plants);
-        const wetWeight = dataArray.map((item) => item["Wet Weight"]);
+        /* const wetWeight = dataArray.map((item) => item["Wet Weight"]); */
         const gPerPlant = dataArray.map((item) => item["g/plant"]);
 
+        /* console.log("wet weight", wetWeight); */
+
         setPlantsData(plants);
-        setWetWeightData(wetWeight);
+        /* setWetWeightData(wetWeight); */
         setGPerPlantData(gPerPlant);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -220,43 +222,30 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const plantsChartData = {
-    labels: plantsData.map((_, index) => `Entry ${index + 1}`),
+  // Prepare the chart data
+  const chartData = {
+    labels: Array.from({ length: plantsData.length }, (_, i) => i + 1),
     datasets: [
       {
         label: "Plants",
         data: plantsData,
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        fill: true,
+        fill: false,
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
       },
-    ],
-  };
-
-  // Chart data for Wet Weight
-  const wetWeightChartData = {
-    labels: wetWeightData.map((_, index) => `Entry ${index + 1}`),
-    datasets: [
       {
         label: "Wet Weight",
         data: wetWeightData,
-        borderColor: "rgba(153, 102, 255, 1)",
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        fill: true,
+        fill: false,
+        backgroundColor: "rgba(255,99,132,0.4)",
+        borderColor: "rgba(255,99,132,1)",
       },
-    ],
-  };
-
-  // Chart data for g/plant
-  const gPerPlantChartData = {
-    labels: gPerPlantData.map((_, index) => `Entry ${index + 1}`),
-    datasets: [
       {
-        label: "g/Plant",
+        label: "g/plant",
         data: gPerPlantData,
-        borderColor: "rgba(255, 159, 64, 1)",
-        backgroundColor: "rgba(255, 159, 64, 0.2)",
-        fill: true,
+        fill: false,
+        backgroundColor: "rgba(153,102,255,0.4)",
+        borderColor: "rgba(153,102,255,1)",
       },
     ],
   };
@@ -338,7 +327,7 @@ const Dashboard = () => {
           </h5>
           <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
-              data={plantsChartData}
+              data={chartData}
               height={120}
               options={{
                 ...options,
@@ -371,7 +360,7 @@ const Dashboard = () => {
           </h5>
           <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
             <LineChart
-              data={gPerPlantChartData}
+              data={chartData}
               height={120}
               options={{
                 ...options,
@@ -409,7 +398,7 @@ const Dashboard = () => {
             style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}
           >
             <LineChart
-              data={wetWeightChartData}
+              data={chartData}
               height={120}
               options={{
                 ...options,
