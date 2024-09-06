@@ -2,218 +2,88 @@ import { LineChart } from "../Twin/LineCHart";
 import { useEffect, useState } from "react";
 import "./index.css";
 import DatePicker from "react-datepicker";
-import { addDays } from "date-fns";
 import moment from "moment";
 import { useMediaQuery } from "@mui/material";
 import axios from "axios";
+import Select from "react-select";
 
 const Dashboard = () => {
-  const [toDate, setToDate] = useState(new Date("2023-01-01"));
-  const [fromDate, setFromDate] = useState(new Date("2023-01-6"));
-  const [finalData, setFinalData] = useState(true);
-  const [plantsData, setPlantsData] = useState([]);
-  const [wetWeightData, setWetWeightData] = useState([]);
-  const [gPerPlantData, setGPerPlantData] = useState([]);
+  const [toDate, setToDate] = useState(new Date());
+  const [fromDate, setFromDate] = useState(new Date());
+  const [chartData, setChartData] = useState({});
+  const [selectedStrains, setSelectedStrains] = useState([]);
+  const [allStrains, setAllStrains] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
-  const handleFilter = (min, max) => {
-    if (finalData) {
-      const differenceInTime = fromDate.getTime() - toDate.getTime();
-      const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-      const labels1 = getLabels(toDate, differenceInDays);
-      const data1 = {
-        labels: labels1,
-        datasets: getDataSets(differenceInDays, min, max),
-      };
-      return data1;
-    }
-  };
-
-  const getLabels = (toDate, diff) => {
-    const constantsArray = [];
-    function addConstant(value) {
-      constantsArray.push(value);
-    }
-    for (let i = 0; i <= diff + 1; i++) {
-      addConstant(`${moment(addDays(toDate, i)).format("YYYY-MM-DD")}`);
-    }
-    console.log(constantsArray);
-    return constantsArray;
-  };
-
-  const getRandomData = (diff, min, max) => {
-    const maxi = max ? max : 80;
-    const mini = min ? min : 60;
-    const randomNumbers = [];
-    for (let i = 0; i <= diff + 1; i++) {
-      randomNumbers.push(
-        max === 30
-          ? generateRandomNumber1()
-          : Math.floor(Math.random() * (maxi - mini + 1)) + mini
-      );
-    }
-    return randomNumbers;
-  };
-
-  const generateRandomNumber1 = () => {
-    var randomFactor = Math.floor(Math.random() * 3);
-    // Map the random factor to 10, 20, or 30
-    var result = 10 + randomFactor * 10;
-    return result;
-  };
-
-  const getDataSets = (diff, min, max) => {
-    const dataSets = [
-      {
-        label: "Blue Dream",
-        data: getRandomData(diff, min, max),
-        borderColor: "#332288",
-        backgroundColor: "#332288",
-      },
-      {
-        label: "Sour Diesel",
-        data: getRandomData(diff, min, max),
-        borderColor: "#88CCEE",
-        backgroundColor: "#88CCEE",
-      },
-      {
-        label: "Golden Goat",
-        data: getRandomData(diff, min, max),
-        borderColor: "#44AA99",
-        backgroundColor: "#44AA99",
-      },
-      {
-        label: "Cereal Milk",
-        data: getRandomData(diff, min, max),
-        borderColor: "#117733",
-        backgroundColor: "#117733",
-      },
-      {
-        label: "Ghost Train Haze",
-        data: getRandomData(diff, min, max),
-        borderColor: "#999933",
-        backgroundColor: "#999933",
-      },
-      {
-        label: "Wedding cake",
-        data: getRandomData(diff, min, max),
-        borderColor: "#DDCC77",
-        backgroundColor: "#DDCC77",
-      },
-    ];
-    return dataSets;
-  };
-
-  useEffect(() => {
-    setFinalData(true);
-  }, [finalData]);
-
-  const getQualityData = () => {
-    const data = handleFilter(1, 3);
-    const averageData = data.datasets
-      .reduce((average, dataset) => {
-        dataset.data.forEach((value, index) => {
-          if (!average[index]) {
-            average[index] = 0;
-          }
-          average[index] += value;
-        });
-        return average;
-      }, [])
-      .map((sum) => sum / data.datasets.length);
-    data.datasets.push({
-      label: "Average",
-      data: averageData,
-      borderColor: "balck", // Choose the color for the average line
-      fill: false,
-    });
-    return data;
-  };
-
-  const getGramsData = () => {
-    const data = handleFilter(5000, 15000);
-    const averageData = data.datasets
-      .reduce((average, dataset) => {
-        dataset.data.forEach((value, index) => {
-          if (!average[index]) {
-            average[index] = 0;
-          }
-          average[index] += value;
-        });
-        return average;
-      }, [])
-      .map((sum) => sum / data.datasets.length);
-    data.datasets.push({
-      label: "Average",
-      data: averageData,
-      borderColor: "balck", // Choose the color for the average line
-      fill: false,
-    });
-    return data;
-  };
-
-  const getGramsPerPlantData = () => {
-    const data = handleFilter(200, 400);
-    const averageData = data.datasets
-      .reduce((average, dataset) => {
-        dataset.data.forEach((value, index) => {
-          if (!average[index]) {
-            average[index] = 0;
-          }
-          average[index] += value;
-        });
-        return average;
-      }, [])
-      .map((sum) => sum / data.datasets.length);
-    data.datasets.push({
-      label: "Average",
-      data: averageData,
-      borderColor: "balck", // Choose the color for the average line
-      fill: false,
-    });
-    return data;
-  };
-
-  /* const plantsData = () => {
-    const data = handleFilter(40, 60);
-    const averageData = data.datasets
-      .reduce((average, dataset) => {
-        dataset.data.forEach((value, index) => {
-          if (!average[index]) {
-            average[index] = 0;
-          }
-          average[index] += value;
-        });
-        return average;
-      }, [])
-      .map((sum) => sum / data.datasets.length);
-    data.datasets.push({
-      label: "Average",
-      data: averageData,
-      borderColor: "balck", // Choose the color for the average line
-      fill: false,
-    });
-    return data;
-  }; */
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://cannatwin.com/api/getharvestdata/?email=avinash11@gmail.com"
+          `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem('email')}`
         );
+        const dataArray = response.data;
 
-        const dataArray = response.data[0];
+        const strainData = dataArray[0]?.reduce((acc, item) => {
+          const strain = item.Strain;
+          const date = moment(item.Date).format("YYYY-MM-DD");
 
-        // Extract values
-        const plants = dataArray.map((item) => item.Plants);
-        /* const wetWeight = dataArray.map((item) => item["Wet Weight"]); */
-        const gPerPlant = dataArray.map((item) => item["g/plant"]);
+          if (!acc[strain]) {
+            acc[strain] = {};
+          }
 
-        /* console.log("wet weight", wetWeight); */
+          if (!acc[strain][date]) {
+            acc[strain][date] = {
+              totalPlants: 0,
+              totalGPerPlant: 0,
+              totalYield: 0,
+              totalQuality: 0,
+              count: 0,
+            };
+          }
 
-        setPlantsData(plants);
-        /* setWetWeightData(wetWeight); */
-        setGPerPlantData(gPerPlant);
+          acc[strain][date].totalPlants += item.Plants;
+          acc[strain][date].totalGPerPlant += item["g/plant"];
+          acc[strain][date].totalYield += item["Wet Weight"];
+          acc[strain][date].totalQuality += item.Quality || 0;
+          acc[strain][date].count += 1;
+
+          return acc;
+        }, {});
+
+        const dates = new Set();
+        const strainChartData = Object.keys(strainData).reduce((acc, strain) => {
+          const strainDates = Object.keys(strainData[strain]);
+
+          const plantsData = [];
+          const gPerPlantData = [];
+          const yieldData = [];
+          const qualityData = [];
+
+          strainDates.forEach((date) => {
+            dates.add(date);
+            const avgPlants = strainData[strain][date].totalPlants / strainData[strain][date].count;
+            const avgGPerPlant = strainData[strain][date].totalGPerPlant / strainData[strain][date].count;
+            const avgYield = strainData[strain][date].totalYield / strainData[strain][date].count;
+            const avgQuality = strainData[strain][date].totalQuality / strainData[strain][date].count;
+
+            plantsData.push({ date, value: avgPlants });
+            gPerPlantData.push({ date, value: avgGPerPlant });
+            yieldData.push({ date, value: avgYield });
+            qualityData.push({ date, value: avgQuality });
+          });
+
+          acc[strain] = { plantsData, gPerPlantData, yieldData, qualityData };
+          return acc;
+        }, {});
+
+        const allStrainsList = Object.keys(strainChartData);
+        setAllStrains(allStrainsList);
+
+        const sortedDates = Array.from(dates).sort();
+        setFromDate(new Date(sortedDates[0]));
+        setToDate(new Date(sortedDates[sortedDates.length - 1]));
+
+        setChartData({ strainChartData, dates: sortedDates });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -222,36 +92,11 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // Prepare the chart data
-  const chartData = {
-    labels: Array.from({ length: plantsData.length }, (_, i) => i + 1),
-    datasets: [
-      {
-        label: "Plants",
-        data: plantsData,
-        fill: false,
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
-      },
-      {
-        label: "Wet Weight",
-        data: wetWeightData,
-        fill: false,
-        backgroundColor: "rgba(255,99,132,0.4)",
-        borderColor: "rgba(255,99,132,1)",
-      },
-      {
-        label: "g/plant",
-        data: gPerPlantData,
-        fill: false,
-        backgroundColor: "rgba(153,102,255,0.4)",
-        borderColor: "rgba(153,102,255,1)",
-      },
-    ],
+  const handleStrainSelection = (selectedOptions) => {
+    setSelectedStrains(selectedOptions ? selectedOptions.map((option) => option.value) : []);
   };
 
-  // Chart options
-  const options = {
+  const commonChartOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -269,7 +114,7 @@ const Dashboard = () => {
       x: {
         title: {
           display: true,
-          text: "Index",
+          text: "Date",
           color: "black",
           fontWeight: 700,
           padding: 5,
@@ -293,181 +138,119 @@ const Dashboard = () => {
     },
   };
 
+  const getChartDataset = (metric) => {
+    return selectedStrains.map((strain, index) => {
+      return {
+        label: strain,
+        data: chartData.strainChartData[strain][metric].map((d) => d.value),
+        backgroundColor: `rgba(${(index + 1) * 50},99,132,0.4)`,
+        borderColor: `rgba(${(index + 1) * 50},99,132,1)`,
+        fill: false,
+      };
+    });
+  };
+
+  const strainOptions = allStrains.map((strain) => ({ label: strain, value: strain }));
+
   return (
     <div className="p-3">
       <div className="d-flex mb-2 date_container">
         <div className="me-2">
+          <span className="labelHeading">From:</span>
+          <DatePicker selected={fromDate} onChange={(date) => setFromDate(date)} />
+        </div>
+        <div>
           <span className="labelHeading">To:</span>
           <DatePicker selected={toDate} onChange={(date) => setToDate(date)} />
         </div>
-        <div>
-          <span className="labelHeading">From:</span>
-          <DatePicker
-            selected={fromDate}
-            onChange={(date) => setFromDate(date)}
-          />
-        </div>
-        <div className="ms-2 ">
-          <button
-            onClick={() => handleFilter()}
-            className="btn btn-primary mt-1"
-          >
-            submit
-          </button>
-        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '8px' }}>
+  <span className="labelHeading" style={{ marginTop: '5px' }}>Strains:</span>
+  <Select
+    isMulti
+    options={strainOptions}
+    value={strainOptions.filter((option) => selectedStrains.includes(option.value))}
+    onChange={handleStrainSelection}
+    placeholder="Select Strains"
+    className="mb-3 multiple-calss"
+    closeMenuOnSelect={false} // Keeps dropdown open until clicking outside
+    hideSelectedOptions={false} // Keeps selected options in the dropdown
+    isClearable={true} // Allows clearing selected options
+    components={{
+      MultiValue: ({ data, index }) => {
+        const selectedCount = selectedStrains.length;
+        if (index < 1) { // Show the first two strains
+          return <span>{data.label}</span>;
+        }
+        if (index === 1) { // After two strains, show a summary message
+          return <span>{`+${selectedCount - 2} more`}</span>;
+        }
+        return null; // Hide all other selected strains
+      },
+      MultiValueContainer: ({ children }) => children.slice(0, 3), // Ensure only two strains and the summary are rendered
+    }}
+  />
+</div>
+
       </div>
-      <div className="row">
-        <div
-          className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}
-          style={{ width: "100%", overflow: "auto" }}
-        >
-          <h5 className="mt-2 mb-4">
-            Plants {moment(toDate).format("DD/MM/YYYY")} -{" "}
-            {moment(fromDate).format("DD/MM/YYYY")}
-          </h5>
-          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
-            <LineChart
-              data={chartData}
-              height={120}
-              options={{
-                ...options,
-                scales: {
-                  ...options.scales,
-                  y: {
-                    title: {
-                      display: true,
-                      text: "Plants",
-                      color: "black",
-                      fontWeight: 700,
-                      padding: 5,
-                    },
-                    grid: {
-                      display: false,
-                    },
-                  },
-                },
-              }}
-            />
+
+      {/* Strain Multi-Select Dropdown */}
+
+      {selectedStrains.length > 0 && (
+        <>
+          {/* Plants Graph */}
+          <div className="row">
+            <div className="col gradient-color card shadow rounded m-1 p-1" style={{ height: "fit-content" }}>
+              <h5 className="mt-2 mb-4">Plants (Avg)</h5>
+              <LineChart
+                data={{
+                  labels: chartData.dates,
+                  datasets: getChartDataset("plantsData"),
+                }}
+                height={120}
+                options={commonChartOptions}
+              />
+            </div>
+            <div className="col gradient-color card shadow rounded m-1 p-1" style={{ height: "fit-content" }}>
+              <h5 className="mt-2 mb-4">g/plant (Avg)</h5>
+              <LineChart
+                data={{
+                  labels: chartData.dates,
+                  datasets: getChartDataset("gPerPlantData"),
+                }}
+                height={120}
+                options={commonChartOptions}
+              />
+            </div>
           </div>
-        </div>
-        <div
-          className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}
-          style={{ width: "100%", overflow: "auto" }}
-        >
-          <h5 className="mt-2 mb-4">
-            g/plants {moment(toDate).format("DD/MM/YYYY")} -{" "}
-            {moment(fromDate).format("DD/MM/YYYY")}
-          </h5>
-          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
-            <LineChart
-              data={chartData}
-              height={120}
-              options={{
-                ...options,
-                scales: {
-                  ...options.scales,
-                  y: {
-                    title: {
-                      display: true,
-                      text: "g/plants",
-                      color: "black",
-                      fontWeight: 700,
-                      padding: 5,
-                    },
-                    grid: {
-                      display: false,
-                    },
-                  },
-                },
-              }}
-            />
+
+          {/* Yield Graph */}
+          <div className="row">
+            <div className="col gradient-color card shadow rounded m-1 p-1" style={{ height: "fit-content" }}>
+              <h5 className="mt-2 mb-4">Yield (Avg)</h5>
+              <LineChart
+                data={{
+                  labels: chartData.dates,
+                  datasets: getChartDataset("yieldData"),
+                }}
+                height={120}
+                options={commonChartOptions}
+              />
+            </div>
+            <div className="col gradient-color card shadow rounded m-1 p-1" style={{ height: "fit-content" }}>
+              <h5 className="mt-2 mb-4">Quality (Avg)</h5>
+              <LineChart
+                data={{
+                  labels: chartData.dates,
+                  datasets: getChartDataset("qualityData"),
+                }}
+                height={120}
+                options={commonChartOptions}
+              />
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="row">
-        <div
-          className={`col graph_card gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0`}
-          style={{ width: "100%", overflow: "auto" }}
-        >
-          <h5 className="mt-2 mb-4">
-            Yield (g) {moment(toDate).format("DD/MM/YYYY")} -{" "}
-            {moment(fromDate).format("DD/MM/YYYY")}
-          </h5>
-          <div
-            className="chart_data"
-            style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}
-          >
-            <LineChart
-              data={chartData}
-              height={120}
-              options={{
-                ...options,
-                scales: {
-                  ...options.scales,
-                  y: {
-                    title: {
-                      display: true,
-                      text: "Yield (g)",
-                      color: "black",
-                      fontWeight: 700,
-                      padding: 5,
-                    },
-                    grid: {
-                      display: false,
-                    },
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-        <div
-          className={`col gradient-color card shadow rounded m-1 p-1 graphCardHeight border-0 me-3`}
-          style={{ width: "100%", overflow: "auto" }}
-        >
-          <h5 className="mt-2 mb-4">
-            Quality {moment(toDate).format("DD/MM/YYYY")} -{" "}
-            {moment(fromDate).format("DD/MM/YYYY")}
-          </h5>
-          <div style={{ minWidth: isSmallScreen ? `${40 * 20}px` : "100%" }}>
-            <LineChart
-              data={getQualityData()}
-              height={120}
-              options={{
-                ...options,
-                scales: {
-                  ...options.scales,
-                  y: {
-                    title: {
-                      display: true,
-                      text: "rating",
-                      color: "black",
-                      fontWeight: 700,
-                      padding: 5,
-                    },
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      // forces step size to be 50 units
-                      stepSize: 1,
-                      callback: function (value, index, ticks) {
-                        if (value == 1) {
-                          return "A";
-                        } else if (value == 2) {
-                          return "B";
-                        } else if (value == 3) {
-                          return "C";
-                        }
-                      },
-                    },
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div>
+
+        </>
+      )}
     </div>
   );
 };

@@ -72,7 +72,7 @@ const DataSource = () => {
   return (
     <div className="data-source-container">
       <div className="upload-section">
-        <h2>Upload Room Data</h2>
+        <h2>Room Data</h2>
         <input
           type="file"
           accept=".csv,.xlsx,.xls" // Adjust accepted file types as needed
@@ -84,7 +84,7 @@ const DataSource = () => {
       </div>
 
       <div className="upload-section">
-        <h2>Upload Harvest Data</h2>
+        <h2>Harvest Data</h2>
         <input
           type="file"
           accept=".csv,.xlsx,.xls" // Adjust accepted file types as needed
@@ -95,13 +95,13 @@ const DataSource = () => {
         </button>
       </div>
       <div className="upload-section">
-        <h2>Upload Flower Data</h2>
+        <h2>Flower Data</h2>
         <input
           type="file"
           accept=".csv,.xlsx,.xls" // Adjust accepted file types as needed
           onChange={handleFlowerData}
         />
-        <button onClick={uploadFlowerFile} disabled={!harvestFile}>
+        <button onClick={uploadFlowerFile} disabled={!flowerFile}>
           Upload Flower Data
         </button>
       </div>

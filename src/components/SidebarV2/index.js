@@ -49,7 +49,7 @@ export default function SidebarV2({ isSidebarOpen, setIsSidebarOpen }) {
           />
           <SidebarItem
             to="/dashboard"
-            label="Stains"
+            label="Strains"
             selected={selectedItem === "/dashboard"}
           />
           <SidebarItem
@@ -87,7 +87,7 @@ function SidebarItem({ to, label, selected }) {
     >
       <Link to={to} className="nav-link align-middle px-2 nav-item">
         <span
-          className="ms-1 px-1"
+          className={`${"ms-1 px-1"} ${selected ? "sidebat-text" :''}`}
           style={{ color: selected ? "white" : "black" }}
         >
           {label}

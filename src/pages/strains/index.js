@@ -119,7 +119,7 @@ export const Photosynthesis = () => {
         }
       } catch (error) {
         console.error("Error fetching room data:", error);
-        alert("Error fetching room data");
+        // alert("Error fetching room data");
       } finally {
         setLoading(false);
       }
@@ -148,7 +148,7 @@ export const Photosynthesis = () => {
         }
       } catch (error) {
         console.error("Error fetching strain data:", error);
-        alert("Error fetching strain data");
+        // alert("Error fetching strain data");
       } finally {
         setLoading(false);
       }
