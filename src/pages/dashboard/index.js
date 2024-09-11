@@ -14,7 +14,6 @@ const Dashboard = () => {
   const [selectedStrains, setSelectedStrains] = useState([]);
   const [allStrains, setAllStrains] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width:600px)");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -164,38 +163,38 @@ const Dashboard = () => {
           <DatePicker selected={toDate} onChange={(date) => setToDate(date)} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '8px' }}>
-  <span className="labelHeading" style={{ marginTop: '5px' }}>Strains:</span>
-  <Select
-    isMulti
-    options={strainOptions}
-    value={strainOptions.filter((option) => selectedStrains.includes(option.value))}
-    onChange={handleStrainSelection}
-    placeholder="Select Strains"
-    className="mb-3 multiple-calss"
-    closeMenuOnSelect={false} // Keeps dropdown open until clicking outside
-    hideSelectedOptions={false} // Keeps selected options in the dropdown
-    isClearable={true} // Allows clearing selected options
-    components={{
-      MultiValue: ({ data, index }) => {
-        const selectedCount = selectedStrains.length;
-        if (index < 1) { // Show the first two strains
-          return <span>{data.label}</span>;
-        }
-        if (index === 1) { // After two strains, show a summary message
-          return <span>{`+${selectedCount - 2} more`}</span>;
-        }
-        return null; // Hide all other selected strains
-      },
-      MultiValueContainer: ({ children }) => children.slice(0, 3), // Ensure only two strains and the summary are rendered
-    }}
-  />
-</div>
+          <span className="labelHeading" style={{ marginTop: '5px' }}>Strains:</span>
+          <Select
+            isMulti
+            options={strainOptions}
+            value={strainOptions.filter((option) => selectedStrains.includes(option.value))}
+            onChange={handleStrainSelection}
+            placeholder="Select Strains"
+            className="mb-3 multiple-calss"
+            closeMenuOnSelect={false} // Keeps dropdown open until clicking outside
+            hideSelectedOptions={false} // Keeps selected options in the dropdown
+            isClearable={true} // Allows clearing selected options
+            components={{
+              MultiValue: ({ data, index }) => {
+                const selectedCount = selectedStrains.length;
+                if (index < 1) { // Show the first two strains
+                  return <span>{data.label}</span>;
+                }
+                if (index === 1) { // After two strains, show a summary message
+                  return <span>{`+${selectedCount - 2} more`}</span>;
+                }
+                return null; // Hide all other selected strains
+              },
+              MultiValueContainer: ({ children }) => children.slice(0, 3), // Ensure only two strains and the summary are rendered
+            }}
+          />
+        </div>
 
       </div>
 
       {/* Strain Multi-Select Dropdown */}
 
-      {selectedStrains.length > 0 && (
+      {selectedStrains?.length > 0 ? (
         <>
           {/* Plants Graph */}
           <div className="row">
@@ -250,7 +249,7 @@ const Dashboard = () => {
           </div>
 
         </>
-      )}
+      ) : <div style={{display:'flex',justifyContent:'center'}}>Please Select Strains</div>}
     </div>
   );
 };

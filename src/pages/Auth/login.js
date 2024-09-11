@@ -93,9 +93,9 @@ export const Login = () => {
         if (response.status == 200) {
           navigate("/");
           console.log(data);
-          localStorage.setItem("username", data.user.username);
-          localStorage.setItem("email", data.user.email);
-          localStorage.setItem("token", `${response.data}`);
+          localStorage.setItem("username", data?.name);
+          localStorage.setItem("email", data?.email);
+          localStorage.setItem("token", `${response?.data}`);
         } else {
           setError(response.data);
           console.log("Login Failed");

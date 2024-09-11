@@ -43,6 +43,7 @@ export const NewHarvest = () => {
         `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem('email')}`
       );
       setLoadingR(false);
+      console.log(response?.data[0])
       return response?.data[0];
     } catch (error) {
       setLoadingR(false);
