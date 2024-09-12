@@ -5,8 +5,9 @@ import "./style.css";
 import { Outlet, Navigate, useNavigate } from "react-router-dom";
 export function AdminLayout(props) {
   const isAuthenticated = () => {
-    const accessToken = localStorage.getItem("token");
-    return true;
+    const accessToken = localStorage.getItem("email");
+    console.log(accessToken)
+    return accessToken;
   };
   return (
     <div className="row p-0 m-0">

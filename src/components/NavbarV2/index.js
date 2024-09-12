@@ -16,6 +16,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.clear()
     navigate("/login");
   };
 

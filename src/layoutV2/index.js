@@ -8,8 +8,9 @@ import NavbarV2 from "../components/NavbarV2";
 import { useMediaQuery } from "@mui/material";
 export function AdminLayoutV2(props) {
   const isAuthenticated = () => {
-    const accessToken = localStorage.getItem("token")
-    return true
+    const accessToken = localStorage.getItem("email")
+    console.log(accessToken)
+    return accessToken
   }
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isSmallScreen = useMediaQuery("(max-width:600px)");
