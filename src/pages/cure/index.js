@@ -97,7 +97,7 @@ export const CureRooms = () => {
           .map((harvest) => ({
             strain: harvest.Strain,
             weight: harvest["Bud (g)"] || harvest["Shake/Trim (g):"],
-            type: harvest.Type.toLowerCase(), // Either 'bud' or 'shake'
+            type: harvest?.Type?.toLowerCase(), // Either 'bud' or 'shake'
           }));
 
         // Find or create the facility
@@ -175,7 +175,7 @@ export const CureRooms = () => {
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [data, setData] = useState(defaultData);
-
+console.log(data)
   const handleFacilityChange = (e) => {
     const value = e.target.value;
     setSelectedFacilities((prev) =>
@@ -474,7 +474,7 @@ export const CureRooms = () => {
                                     marginBottom: "10px",
                                   }}
                                 >
-                                  <div>Strain</div>
+                                  <div>Plant Type</div>
                                   <div>Q</div>
                                   <div>Type</div>
                                 </div>
@@ -491,7 +491,7 @@ export const CureRooms = () => {
                                     >
                                       <span>{strain.strain}</span>
                                       <span>{strain.weight}g</span>
-                                      <span>{strain.type}</span>
+                                      <span>{"Bud"}</span>
                                     </div>
                                   ))}
                                 </div>

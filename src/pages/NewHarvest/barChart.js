@@ -10,20 +10,20 @@ const GroupedBarChart = ({ selBatches,height }) => {
     const labels = []
     const datasets = [
       {
-        label: 'Bud',
+        label: 'Start',
         data: [],
         backgroundColor: '#1b3c7a',
         borderColor: '#1b3c7a',
       },
       {
-        label: 'Shake/Trim',
+        label: 'Growth',
         data: [],
         backgroundColor: '#427ae3',
         borderColor: '#427ae3',
         
       },
       {
-        label: 'Popcorn',
+        label: 'Final',
         data: [],
         backgroundColor: '#3dc7d1',
         borderColor: '#3dc7d1',

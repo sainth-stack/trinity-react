@@ -437,13 +437,13 @@ export const NewHarvest = () => {
                         Harvest Batch
                       </th>
                       <th colSpan="2" style={{ border: "1px solid black" }}>
-                        Bud
+                        Start
                       </th>
                       <th colSpan="2" style={{ border: "1px solid black" }}>
-                        Popcorn
+                        Growth
                       </th>
                       <th colSpan="2" style={{ border: "1px solid black" }}>
-                        Shake/Trim
+                        Final
                       </th>
                       <th style={{ border: "1px solid black" }}>
                         Total Weight (g)

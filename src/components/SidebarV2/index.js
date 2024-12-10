@@ -49,7 +49,7 @@ export default function SidebarV2({ isSidebarOpen, setIsSidebarOpen }) {
           />
           <SidebarItem
             to="/dashboard"
-            label="Strains"
+            label="Plant Type"
             selected={selectedItem === "/dashboard"}
           />
           <SidebarItem

@@ -24,7 +24,7 @@ export const FormatData = () => {
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
       // Process the data
-      const processedData = processData(jsonData);
+      const processedData = generateSyntheticData();
 
       // Convert processed data back to a worksheet
       const newWorksheet = XLSX.utils.json_to_sheet(processedData);
@@ -41,7 +41,7 @@ export const FormatData = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'updated-data.xlsx';
+      a.download = 'Latest_Cannatwin_Data.xlsx';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -50,36 +50,55 @@ export const FormatData = () => {
     reader.readAsArrayBuffer(file);
   };
 
-  const processData = (data) => {
-    // Extract the dates from the data
-    const dates = data.map(row => moment(row.Date, 'M/D/YYYY, h:mm:ss A', true)).filter(date => date.isValid());
-
-    if (dates.length === 0) return data;
-
-    // Determine the old and new date ranges
-    const oldStartDate = moment(dates[0]);
-    const oldEndDate = moment(dates[dates.length - 1]);
-    const newStartDate = moment('4/1/2024', 'M/D/YYYY');
-    const newEndDate = moment('4/30/2024', 'M/D/YYYY');
-    const newInterval = 30; // minutes
-
-    // Generate new dates within the new range at the specified interval
-    const newDates = [];
-    let currentDate = newStartDate.clone();
-
-    while (currentDate <= newEndDate) {
-      newDates.push(currentDate.clone());
-      currentDate.add(newInterval, 'minutes');
+  const generateSyntheticData = () => {
+    // Helper function to generate random numbers within a range
+    const randomInRange = (min, max) => {
+      return (Math.random() * (max - min) + min).toFixed(2);
+    };
+  
+    const startDate = moment('01/01/2024', 'MM/DD/YYYY');
+    const endDate = moment('12/31/2024', 'MM/DD/YYYY');
+    const syntheticData = [];
+  
+    let currentDate = startDate.clone();
+  
+    // Generate synthetic data for each day
+    while (currentDate <= endDate) {
+      const facility = `Facility${Math.floor(Math.random() * 5) + 1}`; // Randomly pick a facility (1-5)
+      const room = `Room${Math.floor(Math.random() * 10) + 1}`; // Randomly pick a room (1-10)
+      
+      // Generate random values for each metric
+      const temperature = randomInRange(15, 30); // Temperature in °C
+      const humidity = randomInRange(30, 70); // Humidity in %
+      const dewPoint = randomInRange(0, 20); // Dew Point in °C
+      const co2 = randomInRange(400, 1500); // CO2 levels in ppm
+      const lsi = randomInRange(400, 1000); // LSI (Red)
+  
+      // Create a new record for the current day
+      syntheticData.push({
+        Facility: facility,
+        Room: room,
+        Date: currentDate.format('M/D/YYYY'),
+        "Ch:1 - Temperature   (°C)": temperature,
+        "Ch:2 - RH   (%)": humidity,
+        "Dew Point   (°C)": dewPoint,
+        CO2: co2,
+        "LSI (Red)": lsi,
+        Time: "12:00:00 AM" // Set default time for each day
+      });
+  
+      // Move to the next day
+      currentDate.add(1, 'days');
     }
-
-    // Map old data to new dates, ensuring the new dates cover the entire range
-    return data.map((row, index) => {
-      if (index < newDates.length) {
-        row.Date = newDates[index].format('M/D/YYYY, h:mm:ss A');
-      }
-      return row;
-    });
+  
+    return syntheticData;
   };
+  
+  // Example usage
+  const yearData = generateSyntheticData();
+  console.log(yearData);
+  
+  
 
   // Helper function to convert a string to an ArrayBuffer
   const s2ab = (s) => {

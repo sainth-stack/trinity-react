@@ -114,7 +114,7 @@ const getOptions = (data) => {
         position: 'right',
         title: {
           display: true,
-          text: !vpd ? "VPD" : 'CO2 & LSI',
+          text: '',
           color: 'black',
           fontWeight: 700,
           padding: 5
@@ -125,7 +125,7 @@ const getOptions = (data) => {
         position: 'left',
         title: {
           display: true,
-          text: 'Temperature & humidity',
+          text: '',
           color: 'black',
           fontWeight: 700,
           padding: 5

@@ -163,13 +163,13 @@ const Dashboard = () => {
           <DatePicker selected={toDate} onChange={(date) => setToDate(date)} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '8px' }}>
-          <span className="labelHeading" style={{ marginTop: '5px' }}>Strains:</span>
+          <span className="labelHeading" style={{ marginTop: '5px' }}>Plant Type:</span>
           <Select
             isMulti
             options={strainOptions}
             value={strainOptions.filter((option) => selectedStrains.includes(option.value))}
             onChange={handleStrainSelection}
-            placeholder="Select Strains"
+            placeholder="Select Plant Type"
             className="mb-3 multiple-calss"
             closeMenuOnSelect={false} // Keeps dropdown open until clicking outside
             hideSelectedOptions={false} // Keeps selected options in the dropdown
@@ -249,7 +249,7 @@ const Dashboard = () => {
           </div>
 
         </>
-      ) : <div style={{display:'flex',justifyContent:'center'}}>Please Select Strains</div>}
+      ) : <div style={{display:'flex',justifyContent:'center'}}>Please Select Plant Type</div>}
     </div>
   );
 };

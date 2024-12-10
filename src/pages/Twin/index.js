@@ -300,7 +300,7 @@ export const Twin = () => {
         datasets: [
           {
             hidden: false,
-            label: "Temperature",
+            // label: "Temperature",
             data: temp,
             borderColor: "#88CCEE",
             backgroundColor: "#88CCEE",
@@ -308,7 +308,7 @@ export const Twin = () => {
           },
           {
             hidden: false,
-            label: "Humidity",
+            // label: "Humidity",
             data: humidity,
             borderColor: "#44AA99",
             backgroundColor: "#44AA99",
@@ -323,7 +323,7 @@ export const Twin = () => {
           // },
           {
             hidden: false,
-            label: "CO2",
+            // label: "CO2",
             data: co2,
             borderColor: "#332288",
             backgroundColor: "#332288",
@@ -331,7 +331,7 @@ export const Twin = () => {
           },
           {
             hidden: false,
-            label: "LSI",
+            // label: "LSI",
             data: lsi,
             borderColor: "#999933",
             backgroundColor: "#999933",
@@ -339,7 +339,7 @@ export const Twin = () => {
           },
           {
             hidden: true,
-            label: "VPD",
+            // label: "VPD",
             data: vpd,
             borderColor: "#DDCC77",
             backgroundColor: "#DDCC77",
@@ -620,7 +620,7 @@ export const Twin = () => {
           className={`col-12 overall_card gradient-color card shadow rounded m-1 p-1 border-0 me-3`}
           style={{ height: "fit-content", width: "100%", overflowX: "auto" }}
         >
-          <Heading title="Overall Cultivation" data={[]} employees={[]} />
+          <Heading title="" data={[]} employees={[]} />
           <hr />
           <CustomLegend datasets={data2} toggleDataset={toggleDataset} />
           <div style={{ minWidth: isSmallScreen ? `${70 * 20}px` : "100%" }}>

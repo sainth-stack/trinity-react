@@ -39,7 +39,7 @@ function NavbarV2({ isSidebarOpen, setIsSidebarOpen }) {
     } else if (location.pathname == "/strains") {
       setName("Photosynthesis");
     } else if (location.pathname == "/dashboard") {
-      setName("Strains");
+      setName("Plant Types");
     } else if (location.pathname == "/cure-rooms") {
       setName("Cure Rooms");
     }

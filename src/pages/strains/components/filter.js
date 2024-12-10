@@ -57,7 +57,7 @@ const FilterBar = ({
       </label>
       <label>
         <span className="labelHeading" style={{ fontWeight: 500 }}>
-          Strain:
+          Plant Type:
         </span>
         <select
           className="select-css2"
