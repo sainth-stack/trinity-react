@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import axios from "axios";
 import PrepLoader from "../../components/prep-loader/loader";
+import { baseURL } from "../const";
 
 export const CureRooms = () => {
   const [loadingH, setLoadingH] = useState(false);
@@ -77,7 +78,7 @@ export const CureRooms = () => {
     try {
       setLoadingH(true);
       const response = await axios.get(
-        `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem('email')}`
+        `${baseURL}getharvestdata/?email=${localStorage.getItem('email')}`
       );
       setLoadingH(false);
       const hardata = response?.data[0];

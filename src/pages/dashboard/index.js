@@ -6,7 +6,7 @@ import moment from "moment";
 import { useMediaQuery } from "@mui/material";
 import axios from "axios";
 import Select from "react-select";
-
+import { baseURL } from "../const";
 const Dashboard = () => {
   const [toDate, setToDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(new Date());
@@ -18,7 +18,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem('email')}`
+          `${baseURL}getharvestdata/?email=${localStorage.getItem('email')}`
         );
         const dataArray = response.data;
 

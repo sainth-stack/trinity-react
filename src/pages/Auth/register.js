@@ -7,8 +7,7 @@ import eye from "../../assets/svg/eye-fill.svg";
 import eye2 from "../../assets/svg/eye-slash.svg";
 import { LoadingIndicator } from "../../components/loader";
 import "./styles.css";
-
-const baseURL = "https://cannatwin.com/api/register/";
+import { baseURL } from "../const";
 
 const Register = () => {
   const [formData, setFormData] = useState({

@@ -9,8 +9,7 @@ import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import "./styles.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const baseURL = "https://cannatwin.com/api/login/";
-const googleLoginURL = `https://cannatwin.com/api/googlelogin/`;
+import { baseURL, googleLoginURL } from "../const";
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +29,7 @@ export const Login = () => {
     formData.append("password", password);
 
     try {
-      const response = await axios.post(baseURL, formData, {
+      const response = await axios.post(`${baseURL}login/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -41,14 +40,12 @@ export const Login = () => {
 
       //here data === "Success" is important to validate the response
       if (response.status === 200 && response.data.status === "success") {
-        alert("Login Successful");
-
         setLoading(false);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("username", response.data.user.username);
 
         localStorage.setItem("email", response.data.user.email);
-        navigate("/");
+        navigate("/data-source");
       } else {
         setLoading(false);
         setError(

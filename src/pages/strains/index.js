@@ -4,6 +4,7 @@ import FilterBar from "./components/filter";
 import FacilitySection from "./components/facilitySection";
 import "./index.css";
 import PrepLoader from "../../components/prep-loader/loader";
+import { baseURL } from "../const";
 
 export const Photosynthesis = () => {
   const [toDate, setToDate] = useState(new Date("2023-01-01"));
@@ -94,7 +95,7 @@ export const Photosynthesis = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem(
+          `${baseURL}getroomsdata/?email=${localStorage.getItem(
             "email"
           )}`,
           {
@@ -129,7 +130,7 @@ export const Photosynthesis = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem(
+          `${baseURL}/getharvestdata/?email=${localStorage.getItem(
             "email"
           )}`
         );

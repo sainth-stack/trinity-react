@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./styles.css"; // Make sure to create and include your CSS file
 import { read, utils } from "xlsx";
+import { baseURL } from "../../const";
 
 const DataSource = () => {
   const [roomFile, setRoomFile] = useState(null);
@@ -27,7 +28,7 @@ const DataSource = () => {
     formData.append('email', localStorage.getItem('email'));
     try {
       await axios.post(
-        "https://cannatwin.com/api/harvestfileupload/",
+        `${baseURL}harvestfileupload/`,
         formData
       );
       alert("Harvest file uploaded successfully!");
@@ -97,7 +98,7 @@ const DataSource = () => {
     formData.append('file', roomFile);
     formData.append('email', localStorage.getItem('email'));
     try {
-      const res = await axios.post('https://cannatwin.com/api/fileupload/', formData);
+      const res = await axios.post(`${baseURL}fileupload/`, formData);
       alert('Room file uploaded successfully!');
       setRoomFile(null)
     } catch (error) {

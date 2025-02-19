@@ -5,6 +5,7 @@ import GroupedBarChart from "./barChart";
 import { InputData } from "./InputData";
 import axios from "axios";
 import PrepLoader from "../../components/prep-loader/loader";
+import { baseURL } from "../const";
 
 const generateRandomData = (length, value) => {
   return Array.from({ length }, () => Math.floor(Math.random() * 100));
@@ -40,7 +41,7 @@ export const NewHarvest = () => {
     try {
       setLoadingR(true);
       const response = await axios.get(
-        `https://cannatwin.com/api/getroomsdata/?email=${localStorage.getItem('email')}`
+        `${baseURL}getroomsdata/?email=${localStorage.getItem('email')}`
       );
       setLoadingR(false);
       console.log(response?.data[0])
@@ -54,7 +55,7 @@ export const NewHarvest = () => {
     try {
       setLoadingH(true);
       const response = await axios.get(
-        `https://cannatwin.com/api/getharvestdata/?email=${localStorage.getItem('email')}`
+        `${baseURL}getharvestdata/?email=${localStorage.getItem('email')}`
       );
       setLoadingH(false);
       return response?.data[0];
