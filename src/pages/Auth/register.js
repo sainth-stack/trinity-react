@@ -41,7 +41,7 @@ const Register = () => {
     });
 
     try {
-      const response = await axios.post(baseURL, formDataObj, {
+      const response = await axios.post(`${baseURL}register/`, formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.status === 200, response.data === "Success");
