@@ -78,7 +78,7 @@ export const Twin = () => {
     try {
       setLoading(true)
       const response = await axios.get(
-        `${baseURL}/getroomsdata/?email=${localStorage.getItem('email')}`,
+        `${baseURL}getroomsdata/?email=${localStorage.getItem('email')}`,
         fromDate,
         toDate,
       );
