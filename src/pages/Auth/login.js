@@ -113,7 +113,7 @@ export const Login = () => {
   return (
     <div
       className="container-fluid row m-0 p-0"
-      style={{ background: "#808080", height: "90vh" }}
+      style={{ background: "#808080", height: "100vh" }}
     >
       <div className="col-md-6 p-0 m-0 bg-white text-center d-none d-lg-block">
         {/* <h5 className="text-green font-weight-bold mt-2 text-uppercase">

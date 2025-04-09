@@ -1,1 +1,1 @@
-export const baseURL = "https://meraki.cannatwin.com/api/";
+export const baseURL = "https://meraki.canatwin.com/api/";
